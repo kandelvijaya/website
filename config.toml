@@ -1,0 +1,6 @@
+baseurl = "http://kandelvijaya.com/"
+languageCode = "en-us"
+title = "Kandelvijaya"
+newContentEditor = "subl"
+theme = "beautifulhugo"
+pygmentsStyle = "native"
