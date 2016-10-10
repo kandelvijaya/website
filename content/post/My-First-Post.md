@@ -10,8 +10,7 @@ This is my first post on the site.  I hope that you like it!
 
 Here is a little Python function to welcome you:
 
-{{< highlight swift >}}
-func say() {
-    print("hello man!")
-}
-{{< /highlight >}}
+
+    func say() {
+        print("hello man!")
+    }

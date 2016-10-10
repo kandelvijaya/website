@@ -1,6 +1,24 @@
 baseurl = "http://kandelvijaya.com/"
-languageCode = "en-us"
 title = "Kandelvijaya"
-newContentEditor = "subl"
-theme = "beautifulhugo"
-pygmentsStyle = "native"
+theme = "ghostwriter"
+languageCode = "en-us"
+copyright = "Vijaya P. Kandelvijaya"
+googleAnalytics = "XXX"
+disqusShortname = "XXX"
+
+[Author]
+    name = "kandelvijaya"
+
+[Taxonomies]
+    tag = "tags"
+
+[Params]
+    intro = true
+    headline = "NSBlogging!"
+    github = "https://github.com/kandelvijaya"
+    linkedin = "https://linkedin.com/in/kandelvijaya/"
+    twitter = "https://twitter.com/kandelvijaya"
+    opengraph = true
+
+[Permalinks]
+    post = "/:year/:month/:day/:filename/"
