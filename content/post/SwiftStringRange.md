@@ -1,9 +1,9 @@
 +++
-author = “kandelvijaya”
-date = “2016-12-10T21:57:04+02:00”
-description = “Constrasting Range<String.Index> and NSRange API”
-tags = [“Swift3”, “iOS Engineering”]
-title = “Why String Manipulation is alien in Swift3?”
+author = "kandelvijaya"
+date = "2016-12-10T21:57:04+02:00"
+description = "Constrasting Range<String.Index> and NSRange API"
+tags = ["Swift3", "iOS Engineering"]
+title = "Why String Manipulation is alien in Swift3?"
 
 +++
 
@@ -16,6 +16,7 @@ Finding a range, replacing, splitting or chopping are some few tricks off the ba
         public var length: Int
     }
 
+Lets say we wanted to extract just the name from a JSON string we got. 
 
     let a: NSString = “name: Bj P. Kandel”
     let name = a.substring(from: (“name: “ as NSString).length)
@@ -24,7 +25,7 @@ Finding a range, replacing, splitting or chopping are some few tricks off the ba
 # Swift3 Era
 
     let aSwift = “name: Bj P. Kandel”
-    let nameSwift = aSwift.substring(from: String.Index>) 
+    let nameSwift = aSwift.substring(from: <String.Index>) 
 
 ## So what is the mess with String.Index?
 
@@ -35,33 +36,35 @@ NSString (and its NSRange) is not unicode aware. Swift intends to have great sup
     let emojiOBJC: NSString = “🤓”
     emojiOBJC.length   //2 
 
-You can see the emoji is actually 1 character for you and our user. But NSString doesn’t co-relate to natural understanding. Thankfully we didn’t substring emojis. Or should we.
+You can see the emoji is actually 1 character for you and our user. But NSString doesn’t co-relate to natural understanding. It thinks its 2 character. If we were to substring the Emoji, we could get this familiar unknown representation symbol.
 
     emojiOBJC.substring(from: 1) //� 
 
 ### Why?
-`NSString` uses `UTF-16` or 16 bits to encode a character into memory. When reading, 16 bit of memory is 1 character. So to find the length of a string, count the 16 bit memory. Straightforward. But lets wait a second and think. 
+`NSString` uses `UTF-16` or 16 bits to encode a character into memory. When reading, __16 bit of memory is treated as 1 character__. So to find the length of a string, count the 16 bit memory. Straightforward. Shall we think a bit more. 
 
 >16 bits == 2^16 possibilities == 65536 distinct characters that can be represented uniquely
 
-> However, There are roughly 6,500 spoken languages in the world today. However, about 2,000 of those languages have fewer than 1,000 speakers. The most popular language in the world is Mandarin Chinese. There are 1,213,000,000 people in the world that speak that language. _This representation cannot represent all of these language_
+> However, There are roughly 6,500 spoken languages in the world today. However, about 2,000 of those languages have fewer than 1,000 speakers. The most popular language in the world is Mandarin Chinese.  __This 16 bit cannot all the characters from all of those language + emojis__
 
-That’s why Swift String were made more __unicode__ correct. Unicode is somehow not limited to specify `16 bits` for 1 Character or `64 bits` should suffice. It doesn’t matter if a 😘 takes `32 bit` or `128 bit`(_just example_) for user, you, me and the other, its 1 character. 
+That’s why Swift String were made more __unicode__ correct. Unicode is somehow not limited to specify `16 bits` for 1 Character or `64 bits` . It doesn’t matter if a 😘 takes `32 bit` or `128 bit`(_just example_) for user.  You, me and the other developers. Its 1 character afterall. 
 
-__Hence, counting X bit memory to find number of characters went like PUFF! Length didn’t make sense.__ And came swifty `Range`
+__Hence, counting X bit memory to find number of characters went like PUFF! Length didn’t make sense.__ 
 
     let swiftyEmoji = (emojiOBJC as String)
     (emojiOBJC as String).characters.count   // 1
     (emojiOBJC as String).utf16.count        // 2 :: like the Objc length
 
-If you think swift treats all characters as `32 bit` memory then thats wrong. We don’t care how it stores. We care, the interface it provides to us. 
+If you think swift treats all characters as `32 bit` memory then thats wrong. We don’t care how it stores. The interface that swift provides is what we care.
 
     “go”.characters.count   //2
+
+For us, developers, `"go"` is 2 character String. So is `"🍻👯"` is 2 character String. Swift manages the details for us. __String.characters__ provides the most unicode aware interface to us. However, feel free to visit the UTF16 and UTF8 view. Remember those are just a `VIEW` to the String. 
+
     “go”.utf16.count        //2
     “go”.utf8.count         //2
 
-__String.characters__ provides the most unicode aware interface to us. 
-
+Okay lets move on to substring some Swifty String. And came swifty `Range`
 
 ## Swifty String Manipulation
 
