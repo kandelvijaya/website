@@ -66,16 +66,16 @@ After all we care, because mainly we are a fashionable technology company. All r
 ## Technical Side
 I prefer to run down the tech side by data flow or message flow.
  
-  * When user presses, Editor  -> XcodeFormatter  -> Correct All: Xcode sends the file content to our App Extension. 
-  * The app extension, choses a certain formatting method based on the command user clicked. 
-  * Inside the app extension, there are  `RegexMatch ` and  `CodeBlockAnalyzer ` which stays at the heart of matching the wrong style. 
-  * Inside the app extension, there are  `MatchCorrection ` and  `EmptyLineCorrection ` which stays at the heart of correcting the matched code. 
-  *  `MatchCorrectionInfo ` is used to correct the match in case of  `MatchCorrection `. Idea is to replace the Capture Group.  `MatchCorrectionInfo ` provides a  `[Int: String] ` with int for index of Capture Group and String for what to replace the found match with. 
-  *  `EmptyLineCorrection ` does not need a correction rule as it trivially inserts/removes empty line above/below each  `CodePosition ` passed into correct. 
-  * All the matches and analyzation happens if the current character in code is not inside a  `//Comment ` or  `"String quote" ` 
-  * When everything is done, the  `XCSourceEditorExtension ` gets the corrected data, uses it to put the changes back into the  `NSMutableArray ` of lines Xcode provided us initially. 
-  * This change is then reflected in Xcode once the completion handler is called. 
-  * Boom! Done! 
+* When user presses, Editor  -> XcodeFormatter  -> Correct All: Xcode sends the file content to our App Extension. 
+* The app extension, choses a certain formatting method based on the command user clicked. 
+* Inside the app extension, there are  `RegexMatch ` and  `CodeBlockAnalyzer ` which stays at the heart of matching the wrong style. 
+* Inside the app extension, there are  `MatchCorrection ` and  `EmptyLineCorrection ` which stays at the heart of correcting the matched code. 
+*  `MatchCorrectionInfo ` is used to correct the match in case of  `MatchCorrection `. Idea is to replace the Capture Group.  `MatchCorrectionInfo ` provides a  `[Int: String] ` with int for index of Capture Group and String for what to replace the found match with. 
+*  `EmptyLineCorrection ` does not need a correction rule as it trivially inserts/removes empty line above/below each  `CodePosition ` passed into correct. 
+* All the matches and analyzation happens if the current character in code is not inside a  `//Comment ` or  `"String quote" ` 
+* When everything is done, the  `XCSourceEditorExtension ` gets the corrected data, uses it to put the changes back into the  `NSMutableArray ` of lines Xcode provided us initially. 
+* This change is then reflected in Xcode once the completion handler is called. 
+* Boom! Done! 
  
 ### A more deeper level working will be covered when this article is updated.
 For details, check the readme file on github. [XcodeFormatter On Github](https://github.com/kandelvijaya/XcodeFormatter)
