@@ -1,6 +1,6 @@
 +++
 author = "kandelvijaya"
-date = "2016-12-10T21:57:04+02:00"
+date = "2016-10-11T21:57:04+02:00"
 description = "Constrasting Range<String.Index> and NSRange API"
 tags = ["Swift3", "iOS Engineering"]
 title = "Why String Manipulation is alien in Swift3?"
