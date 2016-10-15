@@ -1,0 +1,75 @@
++++
+author = ""
+date = "2016-10-15T13:53:43+02:00"
+description = "Would you love to have a fancy and productive CLI? Lets see how."
+tags = []
+title = "Spicing up OSX terminal experience!"
+
++++
+
+# Why?
+
+Let me show you how my terminal looks like. 
+![](/img/myTerminal.png)
+
+I got this idea from a good friend and collegue of mine while at work. I am always fond of good UI but i love to stick to command line when possible. Reasons: many. This customization has made me love terminal and never get out of it. In fact, while at work, i have 1 monitor dedicated to full screen terminal. 
+
+Now, if you want similar termnial then keep reading. Not everything is easy and comes with a `dmg` file to double click. So be ready to type in few commadns on your uglish terminal. 
+
+# Agenda
+1. Simple and easy customization with __OH-MY-ZSH__
+2. Powerline and the cool styles
+3. TMUX and beyond _Im not a tmux expert user._
+4. Few handy plugins
+
+There will be some headaches while we get to point __3__ due. Installing __powerline-status__ is not as straightforward as the outdated documentation misses to say. Anyways, i will provide how i got it working. 
+
+## OH-MY-ZSH
+This Open source project has more than `1000` contributors, more than `Swift`. This has a pack with it. Lots of themes to choose, plugins to utilize and customization point. 
+
+I wouldnt get into more detail becasue the [repo](https://github.com/robbyrussell/oh-my-zsh) site is quite self documenting. To install, copy paste the command.
+
+    $ sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+
+My preferred theme is `agnoster`. To use this type this commands
+
+    $ cd 
+    $ nano .zshrc
+
+Inside nano text editor, edit the file at the Theme point. Change it from `robbyrussel` to `agnoster`
+
+    ZSH_THEME="agnoster"
+
+Then to take this into effect, issue this command:
+
+    $ source ~/.zshrc
+
+Theres a good chance the icons are broken and you see weird characters. Its all goo. This theme uses special patched characters which, by default, the system doesnot have. To get those fonts and install, issue this commands:
+
+    $ git clone https://github.com/powerline/fonts.git
+    $ sh fonts/install.sh
+
+Now the fonts should be installed. If the terminal is not displaying the proper beautiful characters then you might want to restart the terminal. Hopefully agnoster should be up and running. You should see similar screen to this:
+![](https://cloud.githubusercontent.com/assets/2618447/6316862/70f58fb6-ba03-11e4-82c9-c083bf9a6574.png)
+
+
+## Few things to get done before leving for next topic
+1. You probably dont want to see `yourusername@mac.local` or similar stuff all the time before the directory. To get rid of this, do these things
+    
+        $ nano ~/.zshrc
+
+    And inside the `.zshrc` file, add a line at the top.
+
+        #To supress long username 
+        export DEFAULT_USER=yourusername
+
+    Then, source the modified file like so:
+
+        $ source ~/.zshrc
+
+2. You might want to make zsh your default prompt by this time. 
+    
+        $ sudo chsh -s $(which zsh)
+
+3. Hopefully, you now start to enjoy terminal experience. 
+4. 
