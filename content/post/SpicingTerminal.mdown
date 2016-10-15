@@ -36,7 +36,7 @@ My preferred theme is `agnoster`. To use this type this commands
     $ cd 
     $ nano .zshrc
 
-Inside nano text editor, edit the file at the Theme point. Change it from `robbyrussel` to `agnoster`
+Inside nano text editor, edit the file at the Theme point. Change it from `robbyrussell` to `agnoster`
 
     ZSH_THEME="agnoster"
 
@@ -53,7 +53,7 @@ Now the fonts should be installed. If the terminal is not displaying the proper 
 ![](https://cloud.githubusercontent.com/assets/2618447/6316862/70f58fb6-ba03-11e4-82c9-c083bf9a6574.png)
 
 
-## Few things to get done before leving for next topic
+### Few things to get done before leving for next topic
 1. You probably dont want to see `yourusername@mac.local` or similar stuff all the time before the directory. To get rid of this, do these things
     
         $ nano ~/.zshrc
@@ -72,4 +72,124 @@ Now the fonts should be installed. If the terminal is not displaying the proper 
         $ sudo chsh -s $(which zsh)
 
 3. Hopefully, you now start to enjoy terminal experience. 
-4. 
+
+
+## [Powerline-status](https://github.com/powerline/powerline)
+
+So you want more in the same terminal line. Welcome to `powerline`. This works really well with `vim` and `tmux`.  
+
+> __What was the line on the bottom of your terminal?__
+
+Good question: I used [TMUX](). So what is tmux?
+> Its a windows/panes manager for terminal. 
+
+To read more about it, take 2 minutes and go thorough this [awesome crash course](http://www.hamvocke.com/blog/a-quick-and-easy-guide-to-tmux/).
+
+Anyways, tmux uses that line to show the status of various things. And what it shows, can be customized including the color and font.
+
+_Okay enough talk_, lets install the `powerline-status` first off. Im assuming, you are using OSX. For other platforms, please refer to the githublink and the [documentation page](https://powerline.readthedocs.io/en/latest/).
+
+#### Before we proceed, we need 2 things. [`Brew`](http://brew.sh) and `pip`
+1. `brew` awesome package manager for OSX. I use it all the times to install and remove software.
+2. `Python3` and its packagemanage `pip`.
+
+Go, on and run this command to install brew.
+
+    $ /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+
+
+Cool, now lets install `python3`. _I tried using systems Python2.7 but for some weird reason i want able to make powerline-status working for 4 hours. Then i switched gears._
+
+    $ brew install python3
+
+Python comes with pip. Make sure we are using the right `python` version by issuing this command.
+
+    $ which python
+
+which should output, `/usr/local/bin/python`
+
+OKAY, lets finally install powerline-status.
+
+    $ pip install --user powerline-status
+
+To see where it was installed, issue this command and copy the installed path.
+
+    $ pip show powerline-status
+
+Then, lets add the powerline-status to `.zshrc`
+    
+    $ nano ~/.zshrc
+
+Add the following line at the end of the file. Replace `{installed path}`` with the path we copied above using `pip show powerline-status`
+    
+    source {installed path}/powerline/bindings/zsh/powerline.zsh
+
+Save and Quit. Resource. 
+
+    $ source ~/.zshrc
+
+Now your agnoster theme is not present but powerline theme is. It looks similar but its not agnoster. If you need agnoster, then comment out this line in `.zshrc` file.
+
+    #source {installed path}/powerline/bindings/zsh/powerline.zsh
+
+We are back to agnoster theme. Now we are ready to have `tmux`.
+
+# tmux
+
+To install `tmux` issue this commnad:
+
+    $ brew install tmux
+
+and then to run `tmux`, issue this command
+    
+    $ tmux
+
+You should see a green/yellow bar with some information on the bottom. Thats already great. Keep in mind, TMUX is a session/windows/pane manager. 
+
+You can see the `powerline-status` docs to see how to configure `tmux`. I however preferred to use themes for `tmux`. For now, lets get out of `tmux` by `$ exit` 
+
+### Using [tmux-thempack](https://github.com/jimeh/tmux-themepack)
+
+Issue the following command:
+
+    $ cd
+    $ git clone https://github.com/jimeh/tmux-themepack.git ~/.tmux-themepack
+
+Create a `.tmux.conf` file if there is none. Else we will use that. 
+    
+    $ touch .tmux.conf
+    $ nano .tmux.conf
+
+Add this line to the tmux.conf file
+    
+    . "${HOME}/.tmux-themepack/powerline/block/green.tmuxtheme" 
+
+And here you can choose a theme. I personally use green. To use that replace the current line you inserted with this one. 
+
+    . "${HOME}/.tmux-themepack/powerline/double/green.tmuxtheme" 
+
+Start `tmux`,
+    
+    $ tmux
+
+And if you dont see the changes or the expected theme, then `$ exit`.
+
+    $ cd
+    $ cd .tmux-themepack
+    $ sh themepack.tmux
+
+And if the default (Blue) theme is applied, then edit the `themepack.tmux` file. Inside the file there is a declaration, 
+
+    default_theme='double/blue'
+
+Change this to whichever one you like. Then run `$ sh themepack-tmux.sh` to see the effect. 
+
+## 4. Few handy plugins
+
+I hope this is already too much. Forgive me if i did some typo and made your head sping for little longer. I aggregated this knowledge because i spent almost a day shuffling all over the internet to get powerline and tmux working like i wanted. Hope this helps. 
+
+For the plugins and more themes, i will update the post sometime later. I think i already took wrote quite long. 
+
+Next up: __Powerline9K__ to boost up your `git` workflow. And my personal `git` aliases ontop.
+
+Cheers!
