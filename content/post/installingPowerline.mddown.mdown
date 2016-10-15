@@ -1,0 +1,67 @@
++++
+author = "kandelvijaya"
+date = "2016-10-15T13:53:43+02:00"
+description = "Powerful terminal."
+tags = ["terminal","cli"]
+title = "Installing Powerline-Status OSX"
+published = "false"
++++
+
+_Okay enough talk_, lets install the `powerline-status` first off. Im assuming, you are using OSX. For other platforms, please refer to the githublink and the [documentation page](https://powerline.readthedocs.io/en/latest/).
+
+~~Cool, now lets install `python3`. _I tried using systems Python2.7 but for some weird reason i want able to make powerline-status working for 4 hours. Then i switched gears._~~ Maybe in some other issues too. 
+
+Python comes with pip. Make sure we are using the right `python` version by issuing this command.
+
+    $ which python
+
+which should output, `/usr/local/bin/python`
+
+
+Check that you have `python` 2.7 or above.
+
+    $ python --version
+
+If not go ahead and get python from `brew` sunig `$ brew install python` or `$ brew install python3`
+
+#### NOTE:
+
+We and `powerline-status` wants `powerline-status` to be installed at this location:
+
+    /usr/local/lib/python2.7/site-packages/powerline/
+
+However, if you are using systems `python` then its highly suggested to try out once and see where `pip` installs the powerline tools. 
+    
+    $ pip install powerline-status
+    $ pip show powerline-status    #watch out for location
+
+If the location is `/usr/local/lib.....` then head over to __After installing powerline__
+
+    $ pip uninstall powerline-status
+
+If you were using `brew` to manage other software and python already, chances are if you run 
+
+    $ brew doctor
+
+It complains about various `$PATH` and `linking problems`, which typically includes some package for python too. Previosuly python used to store downloaded scripts into `~/Library/Python/....` but in the recent times it will put into `/usr/local/bin/python/....`. So now go on and fix all those warnings given by Homebrew. 
+
+Hurray, you took the time to fix those issues. Issue this command just to be 100% python will put the downloaded script where we want to.
+
+    $ export PATH=/usr/local/sbin:$PATH
+
+OKAY, lets finally install powerline-status.
+
+    $ pip install --user powerline-status
+
+
+### After installing powerline
+
+To see where it was installed, issue this command and copy the installed path.
+
+    $ pip show powerline-status
+
+Add the following line at the end of the file. Replace `{installed path}`` with the path we copied above using `pip show powerline-status`
+    
+    source {installed path}/powerline/bindings/zsh/powerline.zsh
+
+Now your agnoster theme is not present but powerline theme is. It looks similar but its not agnoster. If you need agnoster, then comment out this line in `.zshrc` file.  __OR__ you might have got _no such file or directory error_. Either way dont panic. We will soon get rid off it. 
