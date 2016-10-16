@@ -3,8 +3,8 @@ title = "Kandelvijaya"
 theme = "ghostwriter"
 languageCode = "en-us"
 copyright = "Vijaya P. Kandelvijaya"
-googleAnalytics = "XXX"
-disqusShortname = "XXX"
+googleAnalytics = "UA-46775685-3"
+disqusShortname = "kandelvijayacom"
 
 [Author]
     name = "kandelvijaya"
@@ -22,3 +22,15 @@ disqusShortname = "XXX"
 
 [Permalinks]
     post = "/:year/:month/:day/:filename/"
+
+
+# Apply this settings once the gtx page is ready
+#[[menu.main]]
+#    name = "Blog"
+#    url = "/post/"
+#    weight = 1
+
+#[[menu.main]]
+#    name = "GTX weekly"
+#    url = "/gtxWeekly/"
+#    weight = 2
