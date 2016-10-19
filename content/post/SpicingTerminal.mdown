@@ -22,6 +22,20 @@ Now, if you want similar termnial then keep reading. Not everything is easy and 
 3. tmux theme pack and customization
 4. Few handy plugins
 
+
+
+## OSX default terminal UI sucks
+
+If you ever used Ubuntu then there are 2 things you will miss. Keep Window on Top is my favorite while its beautiful Terminal is second. Ubuntu has pretty decent UI for it. On mac, it sucks. Its typing bunch of black text on white background. All monochrome. 
+
+So the dumbest upgrade first is Installing color theme for the terminal. I found [Beautiful Tomorrow theme](https://github.com/chriskempson/tomorrow-theme) library to be really good one. There is another for those preferring Sublime Text flavor [Monokai](https://github.com/stephenway/monokai.terminal). I use Beautiful Tomorrow Bright as shown in the screenshot above. 
+
+Download any theme you like and double click `.terminal` file to install. Then head over to Terminal app, Preferences and then choose the theme that you installed. 
+
+Now you get the color, color highlight for file and directory. And better readability. 
+
+
+
 ## OH-MY-ZSH
 This Open source project has more than `1000` contributors, more than `Swift`. Numbers doesnot tell a lot anyways. It comes with a bunch of themes and plugins. 
 
