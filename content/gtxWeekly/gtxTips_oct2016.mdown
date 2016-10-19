@@ -24,3 +24,56 @@ Lets start by not rewritting history. Just the normal rebase.
     (featureBranch)$ git rebase master 
 
 This will take all the changeset that were made in this `featureBranch` and insert it on top of `master` branch.
+
+Now lets rewrite history.
+
+     $ glog # git alias:: glog="git log --oneline --decorate --graph"
+     1ad2  Added support for X device
+     2ad3  Dummy Commit
+     3ad4  Empty line removal
+     4ad5  Algorithm to find view on the screen done!
+
+The above sequence of git log is normal to find on your local branch. Lets admit sometimes we just add `,` and call it a fix. Or Dummy Commit. I prefer to push my work as perfect commits when possible. 
+
+    (featureBranch)$ git rebase -i 4ad5
+
+Then you will see bunch of text in the terminal, dont be afraid. Its all documented nicely in the git comments below.
+
+I would do something like this:
+
+     pick 4ad5  Algorithm to find view on the screen done!
+     s 3ad4  Empty line removal
+     s 2ad3  Dummy Commit
+     r 1ad2  Added support for X device
+
+Save and quit. (`:wq` for default editor).
+`s` is to squash to the last commit. `r` is to reword the commit message. Follow along with the git interruption where you can modify commits and then save and return. 
+
+After, all is done. It looks something like this:
+
+    (featureBranch)$glog
+    7ed8 Added support for That device and editied something.
+    6ed7 Algorithm to find view on the screen done!
+
+See we did rewrite the history. Nice commits. One thing to note is, git takes the changeset and applies follwing the commands like pick, reword, edit ... In the process it creates new commit hash. Its entirely new hash and commit. 
+
+CAUTION: Dont rebase what you have already pushed. Don't dare to rebase when you have many teammates working on that branch. Do it preferably before making pull request.
+
+## 2. Terminal
+
+1. Removing a list of local branches except the current one. 
+        
+        (master)$ git branch | grep -v master | xargs git branch -d 
+
+Some branches which cannot be removed can be cleaned with `git branch -D` command but be responsible for this. `xargs` is the utility to process list of lines as arguments. Read more on the man pages. 
+
+2. Colorful man pages. 
+
+If you have installed `oh-my-zsh` plugin for terminal then you can simply find these:  `plugins=(git)` line in `~/.zshrc` with `plugins=(git, colored-man-pages)`. [Check this post](http://kandelvijaya.com/2016/10/15/spicingterminal/) to install and configure Oh-My-Zsh.
+
+ELSE, follow this link on [SO](http://unix.stackexchange.com/a/147) to know how things actually work and set it up.
+
+
+## 3. Xcode
+
+This series is all about shortcuts. 
