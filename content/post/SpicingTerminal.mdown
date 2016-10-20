@@ -7,7 +7,7 @@ title = "Spicing up OSX terminal experience!"
 
 +++
 
-# Why? ..
+# Why?
 
 Let me show you how my terminal looks like. 
 ![](/img/myTerminal.png)
