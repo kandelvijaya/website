@@ -25,12 +25,12 @@ disqusShortname = "kandelvijayacom"
 
 
 # Apply this settings once the gtx page is ready
-#[[menu.main]]
-#    name = "Blog"
-#    url = "/post/"
-#    weight = 1
+[[menu.main]]
+    name = "Blog"
+    url = "/post/"
+    weight = 1
 
-#[[menu.main]]
-#    name = "GTX weekly"
-#    url = "/gtxWeekly/"
-#    weight = 2
+[[menu.main]]
+    name = "GTX Monthly"
+    url = "/gtxMonthly/"
+    weight = 2
