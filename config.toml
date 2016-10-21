@@ -31,6 +31,6 @@ disqusShortname = "kandelvijayacom"
     weight = 1
 
 [[menu.main]]
-    name = "GTX weekly"
-    url = "/gtxWeekly/"
+    name = "GTX Monthly"
+    url = "/gtxMonthly/"
     weight = 2

@@ -1,0 +1,102 @@
++++
+author = "kandelvijaya"
+date = "2016-10-16T16:10:42+02:00"
+description = "Bj's new finding for GTX every month!"
+tags = ["git","terminal","xcode","gtx"]
+title = "GTX [Git, Terminal, Xcode] 2tips for October"
+
++++
+
+### GTX: 
+
+I planned to find 2 tips for Git, Terminal and Xcode each, last weekend. Which should help me be more productive at work. Later, I thought to write it up and shere. This should be a series of mini tips, each month. 
+
+GTX stands for Git, Terminal and Xcode. This abbreviation has local scope to this blog only. Other way to say, I made this GTX shortform. 
+
+# GTX October 2016
+
+## 1. Git
+
+This time is about rewriting history. Yes, `rebase`. 
+
+First, lets start by not rewritting history. Just the normal rebase.
+
+    (featureBranch)$ git rebase master 
+
+This will take all the changeset that were made in this `featureBranch` and insert it on top of `master` branch. 
+
+Now lets rewrite history. Here is a typical log on git during work.
+
+     $ git log --oneline
+     1ad2  Added support for X device
+     2ad3  Dummy Commit
+     3ad4  Empty line removal
+     4ad5  Algorithm to find view on the screen done!
+
+Let's admit sometimes we just add `,` or remove `//TODO:` and call it a fix. Or Dummy Commit. However, I prefer to push my work as perfect commits when possible. Would it be nice, if we could not push those Dummy commit and minor typos we typically make while wrting commits. Well, its pretty easy. 
+
+    (featureBranch)$ git rebase -i 4ad5
+
+Then you will see bunch of text in the terminal, dont be afraid. Its all documented nicely in the git comments if you just look below the bunch of text.
+
+I would do something like this:
+_`s` is to squash to the last commit. `r` is to reword the commit message._
+
+     pick 4ad5  Algorithm to find view on the screen done!
+     s 3ad4  Empty line removal
+     s 2ad3  Dummy Commit
+     r 1ad2  Added support for X device
+
+Save and quit. (`:wq` for default editor).
+Follow along with the git interruption where you can modify commits. Each time save and return, after changing something.  
+
+After, all is done. It looks something like this:
+
+    (featureBranch)$glog
+    7ed8 Added support for That device and editied something.
+    6ed7 Algorithm to find view on the screen done!
+
+See we did rewrite the history. Nice commits. One thing to note is, git takes the changeset and applies follwing the commands like pick, reword, edit ... In the process it creates new commit hash. Its entirely new hash and commit. For the sake of simplicity, commit hash are 4 chars long in this example. 
+
+CAUTION: Dont rebase what you have already pushed. Don't dare to rebase when you have teammates working on that branch. Do it on yout unpushed branch. 
+
+However, if you are 100% certain, that noone except you is working on the pushed branch, then issue this command to force the push to work after rebase. 
+
+    $ git push -f
+
+## 2. Terminal
+
+__Removing a list of local branches except the current one.__ 
+        
+        (master)$ git branch | grep -v master | xargs git branch -d 
+
+Some branches which cannot be removed can be cleaned with `git branch -D` command but be responsible for this. `xargs` is the utility to process list of lines as arguments. Read more on the man pages. 
+
+__Colorful man pages__
+
+If you have installed `oh-my-zsh` plugin for terminal then you can simply find these:  `plugins=(git)` line in `~/.zshrc` with `plugins=(git, colored-man-pages)`. [Check this post](http://kandelvijaya.com/2016/10/15/spicingterminal/) to install and configure Oh-My-Zsh.
+
+ELSE, follow this link on [SO](http://unix.stackexchange.com/a/147) to know how things actually work and set it up.
+
+
+## 3. Xcode
+
+Trying to find where `Indent` option is under the menu bar in Xcode. Or say there is a command you know should exist but don't know where it is nested. For example, you want to insert `Special character`.  Do you google? OR do you open each menu option and search. Theres a better way. 
+
+**Command + Shift + /**
+
+Press this keys and type the command you think your looking for. In this case, I'm looking to insert emoji. Thanks to my friend Andrii who showed me this tip.
+
+![Cmd+Shift+/](/img/commandShiftSearch.jpg)
+
+The cool part is this command works on every single Mac app. Its a great way to quickly find menu options that you forgot the location, shortcut or existance. Speaking about shortcut, lets get into the second tip of this month.
+
+Learning shortcuts makes you productive. Using keyboard to work and navigate is faster. If you want to discuss on mouse vs keybindings then reach out to `vim` or `emacs` user. _It would be quite interesting if I were able to show you how many kilometers your finger glide for a month wile working full time as software engineer. Maybe I will post it in comments, if I do that experiment. While you can be the first one too. From my rough estimation, in a month your finger moves 2.5 KM while moving the trackpad._ 
+
+Anyways, theres this app called [__cheatsheet__](https://www.mediaatelier.com/CheatSheet/) which displays current application's most important shortcuts while you press and hold __Command__ key for little longer thn 3 seconds. It really helps memorize the key bindings and gives you reference ontop of the app context. This app also works on any Mac app. 
+
+
+## Cheers!
+
+That's all for October. Lets see whats for November. Have fun!
+
