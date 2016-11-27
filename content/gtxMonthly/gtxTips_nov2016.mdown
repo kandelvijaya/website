@@ -1,0 +1,153 @@
++++
+author = "kandelvijaya"
+date = "2016-11-20T14:28:01+01:00"
+description = "GTX November 2016. Some emacy tips!!"
+tags = ["gtx", "git", "terminal", "XCode"]
+title = "GTX Nov: Bisecting, Emacs and killing line. "
+
++++
+
+Welcome to this months GTX. How are you? Its cold here in Berlin. Lets get to this months 
+GTX(Git, Terminal, XCode) tips. 
+
+## Git
+### 1. Finding which commit broke the project first
+`git-bisect` is the command you are looking for if you happen to search for a commit in the 
+past week which silently broke the project and the CI is failing. 
+
+I was introduced to this command while at work from my colleague, @ramy_kfoury.
+
+	$ git bisect start
+    $ git bisect bad                 # Current version is bad
+    $ git bisect good v2.6.13-rc2    # v2.6.13-rc2 is known to be good
+
+Then git will stop at the middle commit. It uses binary search to narrow down possibilities. Then 
+you can test that commit. Testing can be running unit tests at that point, or a set of scripts or 
+manually validating the functionality. Depending on if the error is present or not. 
+	
+	$ git bisect good               # bad if the commit has problem
+
+Eventually we will be left with 1 commit, which is the one that introduced some faults. For more 
+in-depth usage please [read this brief reference guide](https://git-scm.com/docs/git-bisect).
+
+### 2. GitHub style diff on terminal
+Ever wanted to see beautiful and clean diff on terminal? We've got one. 
+
+__Diff_So_Fancy__ is a plugin that does exactly like GitHub UI diff. To install,
+
+	$ brew install diff-so-fancy
+
+And to use when required:
+	
+	$git diff --color | diff-so-fancy
+
+The good part, to make it default, which i recommend, issue this command:
+
+	$git config --global core.pager "diff-so-fancy | less --tabs=4 -RFX"
+
+For more customization, take a look at the [diff_so_fancy GitHub repo](https://github.com/so-fancy/diff-so-fancy)
+
+If for some reason, you prefer side-by-side diff, then there are 2 projects that are worth looking:
+1. [cdiff](https://github.com/ymattw/cdiff)
+2. [icdiff](https://github.com/jeffkaufman/icdiff)
+
+I personally haven't used `icdiff` and have limited exposure to `cdiff`. I will continue with this topic 
+for the next month. Until then have fun bisecting. 
+
+# Terminal 
+## 1. Emacs: Editor of lifetime (for some)
+Emacs was started 25 years ago but still remains both the source of inspiration to other 
+text editors and a powerful extensible text editor. I wouldn't mind to call it more than 
+a text editor to a mini operating system. You can browse web, create web browser and reply
+email. There's more. This is how Emacs differs from Vi/Vim. Its great. 
+
+I always like to do as much possible without losing context. Terminal is a most for me as 
+I learned and used Git to manage my projects. I don't use GUI. So I must use terminal every 
+couple of minutes. I wanted terminal to do more. I wanted to use the text editor inside the 
+terminal. I wanted my text editor to be able to quickly edit commit message, Swift source 
+files and write my notes. I will probably go into the details of why I love text based note 
+taking and journal in some future blog post. 
+
+Okay lets get Emacs. You can see for yourself. 
+
+``` 
+$ brew update
+$ brew install emacs --with-cocoa
+$ brew linkapps emacs
+```
+You then should be able to run `emacs` by issuing `$ emacs -nw` in the terminal. If not, chances are 
+you have a conflicting system `emacs`. On OSX/ mac OS emacs is installed by default. If your 
+installation doesn't work then you can hop on this [website guide](http://www.wikemacs.org/wiki/Installing_Emacs_on_OS_X)
+for troubleshooting. 
+
+If you want the GUI Emacs then just issue `$emacs`, the GUI is fairly simple but 2 superior things 
+to terminal mode is that the Fonts/Themes have broader color and size options. Second, you can use 
+the mouse. I don't know if that's actually a + point or not. 
+
+I cannot however go into the details of setting up Emacs in one post or in tips. I would nonetheless 
+provide an [awesome YouTube channel for Emacs starter guide](https://www.youtube.com/watch?v=mMcc0IF1hV0). 
+I highly recommend this guy's series if you want to see how traditional editor is more than capable of 
+making you productive in the long run. 
+
+To get more inspired/see whats possible then [this video might be useful for starter](https://www.youtube.com/watch?v=B6jfrrwR10k).
+
+This [video( The editor of lifetime)](https://www.youtube.com/watch?v=VADudzQGvU8) might be good for your weekend to see the history, design decision and the evolution of Emacs. 
+
+Anyway, enough of Emacs. Hopefully, next month I will write my experience with __org-mode__ and other 
+ plugins I used daily.
+
+## 2. Tmux: Spliting Panes
+So the idea of sitting in the Terminal continues. I want my terminal to support 2 windows, 1 for `zsh` and 
+the other for `emacs`. I use emacs for taking notes, work logs and journal with `org-mode`. I occasionally 
+need to edit swift code in Emacs but I can if I have to. 
+
+To install __tmux__, please [refer to this blog](http://kandelvijaya.com/2016/10/15/spicingterminal/) I wrote 
+last month. Anyways, issue this command to quickly install tmux. 
+
+```
+$ brew install tmux
+$ tmux ;; to run tmux
+```
+
+Splitting the pane with tmux. 
+1. `CTRL + b` then type `%` 
+   creates a pane vertically.
+2. `CTRL + b` then type `"` 
+   creates a pane horizontally.
+3. `CTRL + b` then type `o` (not Zero)
+   switches to another pane
+4. `$exit`
+   close the current pane
+
+On my setup, I usually put a pane on top for git related work. The lower on runs `emacs` and I have TODOs and
+work log on that. Its quite handy.
+
+
+# XCode
+## 1. Delete to the end of line
+Like the most people, to delete a entire line, we Select it and then delete selection. i.e 
+CMD + SHIFT + -> , then DEL. Or you use the mouse to make the selection and then delete it. 
+The point is this is 2 step process. Wait, there is a 1 key binding to do it. 
+`CONTROL + K`. That's it.
+
+This will delete to the end of the line. The same key binding works for Emacs too. 
+
+## 2. Final Resort
+This one might be a old school tips, nonetheless it needs to be put into picture. When everything is fine, 
+and XCode does something beyond your expectation. All you need is to clear artifacts. Every iOS developer 
+knows this: 
+
+1. Clean build, Try 
+2. Quit and Restart XCode, Try
+3. Remove derived data, or change the path, Try.
+4. Restart your mac. [This is the least recommended]
+
+As of this writing, I'm using Xcode8 and I had 2 interesting issue:
+
+1. If somewhere in your code base there is a extension on `UIButton`, you cant connect `@IBAction` from 
+xib to UIView subclass. 
+2. When compiling large project, the compiler optionally stops at various points and gives compile error.
+I knew there was no error in it. I just changed some trivial code. However, I just run `CMD + R` multiple 
+times to bypass each false error. 
+
+I hope Xcode 8.2 fixes those issues. Until then, Cheers! 
