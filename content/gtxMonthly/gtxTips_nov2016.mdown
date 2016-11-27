@@ -54,8 +54,8 @@ If for some reason, you prefer side-by-side diff, then there are 2 projects that
 I personally haven't used `icdiff` and have limited exposure to `cdiff`. I will continue with this topic 
 for the next month. Until then have fun bisecting. 
 
-# Terminal 
-## 1. Emacs: Editor of lifetime (for some)
+## Terminal 
+### 1. Emacs: Editor of lifetime (for some)
 Emacs was started 25 years ago but still remains both the source of inspiration to other 
 text editors and a powerful extensible text editor. I wouldn't mind to call it more than 
 a text editor to a mini operating system. You can browse web, create web browser and reply
@@ -96,7 +96,7 @@ This [video( The editor of lifetime)](https://www.youtube.com/watch?v=VADudzQGvU
 Anyway, enough of Emacs. Hopefully, next month I will write my experience with __org-mode__ and other 
  plugins I used daily.
 
-## 2. Tmux: Spliting Panes
+### 2. Tmux: Spliting Panes
 So the idea of sitting in the Terminal continues. I want my terminal to support 2 windows, 1 for `zsh` and 
 the other for `emacs`. I use emacs for taking notes, work logs and journal with `org-mode`. I occasionally 
 need to edit swift code in Emacs but I can if I have to. 
@@ -123,8 +123,8 @@ On my setup, I usually put a pane on top for git related work. The lower on runs
 work log on that. Its quite handy.
 
 
-# XCode
-## 1. Delete to the end of line
+## XCode
+### 1. Delete to the end of line
 Like the most people, to delete a entire line, we Select it and then delete selection. i.e 
 CMD + SHIFT + -> , then DEL. Or you use the mouse to make the selection and then delete it. 
 The point is this is 2 step process. Wait, there is a 1 key binding to do it. 
@@ -132,7 +132,7 @@ The point is this is 2 step process. Wait, there is a 1 key binding to do it.
 
 This will delete to the end of the line. The same key binding works for Emacs too. 
 
-## 2. Final Resort
+### 2. Final Resort
 This one might be a old school tips, nonetheless it needs to be put into picture. When everything is fine, 
 and XCode does something beyond your expectation. All you need is to clear artifacts. Every iOS developer 
 knows this: 
