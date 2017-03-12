@@ -158,4 +158,7 @@ After Swift came out, LLDB gets broken for various reason. It complains a lot. I
 ### Thanks To
 1. [Ahmed Rashad Basuony](https://twitter.com/arashadbm)
 
+### Contributing
+Suggesting / Commenting or editing this post can be done via [github](https://github.com/kandelvijaya/com/blob/master/content/gtxMonthly/gtxTips_mar2017.mdown).
+
 __Thanks for reading until this point. Comments, suggestions and edits are appreciated. Cheers!__
