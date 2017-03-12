@@ -7,8 +7,170 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Vijaya P. Kandelvijaya</copyright>
-    <lastBuildDate>Sun, 20 Nov 2016 14:28:01 +0100</lastBuildDate>
+    <lastBuildDate>Sun, 12 Mar 2017 17:16:52 +0100</lastBuildDate>
     <atom:link href="http://kandelvijaya.com/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>GTX March: Basic tips</title>
+      <link>http://kandelvijaya.com/gtxmonthly/gtxTips_mar2017/</link>
+      <pubDate>Sun, 12 Mar 2017 17:16:52 +0100</pubDate>
+      
+      <guid>http://kandelvijaya.com/gtxmonthly/gtxTips_mar2017/</guid>
+      <description>
+
+&lt;h2 id=&#34;git&#34;&gt;Git&lt;/h2&gt;
+
+&lt;p&gt;Last few months, I spent my off work time migrating one of the old app to self hosted
+Parse Server. Although, writing about Parse Server on dedicated Linux machine is out of scope for
+this post, I got few useful points regarding the use of terminal and git.&lt;/p&gt;
+
+&lt;p&gt;Lets say you have a website. You want to use &lt;code&gt;git&lt;/code&gt;. When you &lt;code&gt;git push&lt;/code&gt;, it should
+deploy your site automatically. Plus, your teammate should also be able to push and pull.
+Lets do this.&lt;/p&gt;
+
+&lt;h3 id=&#34;1-creating-a-bare-repo&#34;&gt;1. Creating a bare repo&lt;/h3&gt;
+
+&lt;p&gt;Bare repo is used for sharing code. Typically shared for collaboration.&lt;/p&gt;
+
+&lt;p&gt;Bare repos have &lt;code&gt;.git&lt;/code&gt;(&lt;em&gt;for most case&lt;/em&gt;) extension on their path. For more detail
+    read this blog post. &lt;a href=&#34;http://www.saintsjd.com/2011/01/what-is-a-bare-git-repository/&#34;&gt;Difference between bare and normal git repo&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;To make a bare repo for a existing repository (which is usually the case).&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ git clone --bare ~/my-website ~/my-website.git
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;em&gt;my-website should be a normal git repository.&lt;/em&gt;
+Creating a bare repo is easy too.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ git clone --bare init
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;em&gt;Read Terminal Section for; how to push the bare repo to server.&lt;/em&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;2-git-hooks&#34;&gt;2. Git hooks&lt;/h3&gt;
+
+&lt;p&gt;Hooks are like callbacks. Maybe that&amp;rsquo;s a programming view. Anyways, hooks let you run script after some event occurs on git. The event could be push, commit, merge, pull or etc. Here, we will focus on &lt;code&gt;post-receive&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Now say you moved the bare repo to the server machine, and want to configure git to
+deploy the site when someone pushes to this repo.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ cd &amp;lt;yourpath&amp;gt;/&amp;lt;yourbarerepo.git&amp;gt;/hooks/
+$ touch post-receive  // (1)
+$ nano post-receive   
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;em&gt;(1)&lt;/em&gt;:: &lt;em&gt;Hooks are just shell script with special filename.&lt;/em&gt;
+Now we will clone the repo to a public website serving directory.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!/bin/bash
+
+GIT_REPO=$HOME/&amp;lt;yourbarerepo.git&amp;gt;
+WORKING_DIRECTORY=$HOME/WWW/&amp;lt;yourwebsitePublicDir&amp;gt;/
+
+set -e
+
+rm -rf $WORKING_DIRECTORY       # remove old files
+
+git clone $GIT_REPO $WORKING_DIRECTORY  #clone new content
+
+trap - EXIT
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Finally, make the hook script executable.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ chmod +x post-receive
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Thats the basics of automatic deployment. For more info please refer to:
+&lt;a href=&#34;https://www.digitalocean.com/community/tutorials/how-to-deploy-a-hugo-site-to-production-with-git-hooks-on-ubuntu-14-04&#34;&gt;This fantastic in depth deployment guide from DigitalOcean&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;terminal&#34;&gt;Terminal&lt;/h2&gt;
+
+&lt;h3 id=&#34;1-background-job-yes-job&#34;&gt;1. Background job, yes job.&lt;/h3&gt;
+
+&lt;p&gt;Did you ever want to run a script repeatedly 1 am in the morning OR every time there is a new content for the app to consume OR database backup, periodic emailing, OR what have you. Enter cron job. Dont get afraid. There&amp;rsquo;s just 1 line. Thats it.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ crontab -e
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then edit the file. Lines starting with &lt;code&gt;#&lt;/code&gt;, as you guessed, are comments.
+At the end of the file, I could do:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;1 1 * * * ~/jobs/backupMongoDb.sh
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Save and exit. Every &lt;em&gt;1(first) minute of every 1(hour) of every * (day) , of every * (week) of every year&lt;/em&gt;
+ run the script &lt;code&gt;~/jobs/backupMongoDb.sh&lt;/code&gt;. Simple and neat right.&lt;/p&gt;
+
+&lt;p&gt;So for the script part.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!/bin/sh
+
+BACKINGDIR=$HOME/backup/
+DESTNAME=&amp;lt;yourappname&amp;gt;+`date +&amp;quot;%m-%d-%y&amp;quot;`
+
+cd $BACKINGDIR
+mongodump --db &amp;lt;yourdbname&amp;gt; -o $DESTNAME
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The last command &lt;code&gt;mongodump&lt;/code&gt; is the one that will dump the database. Finally, make this
+file executable.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ chmod +x ~/jobs/backupMongoDb.sh
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You could extend this script to remove the older directories in order to save space, zip the dumped database. This is left for your research.&lt;/p&gt;
+
+&lt;h3 id=&#34;2-zipping-and-scp-ping&#34;&gt;2. Zipping and Scp(ping)&lt;/h3&gt;
+
+&lt;p&gt;Lets get back to where we created bare cloned repo. Now we need to transfer that to server.
+We want to do it via the terminal.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ scp -r &amp;lt;yourBareRepo.git&amp;gt; &amp;lt;yourname&amp;gt;@&amp;lt;ServerIP-or-domain&amp;gt;:~/website/&amp;lt;yourBareRepo.git&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;SCP, stands for secure copy. For this step, you need to have local machine&amp;rsquo;s SSH Keys added to
+the server beforehand. Transferring a file opens a network connection. Transferring 1000 files might need tons of connection to be opened and closed. This adds latency wherby 20 MB directory that contains 10000 files could take 10 minutes. Lets speed the transfer by transferring 1 file. 1 zipped file.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ tar -czf bareRepo.zip &amp;lt;yourBareRepo.git&amp;gt;
+
+$ scp bareRepo.zip &amp;lt;yourname&amp;gt;@&amp;lt;ServerIP-or-domain&amp;gt;:~/website/bareRepo.zip
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I have left for you to extract the zipped folder in the server. HINT: &lt;code&gt;$ man tar&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Now on the local machine set the remote to be this bare repo on the server.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ git remote add origin &amp;lt;username&amp;gt;@&amp;lt;SERVER_IP_ADDRESS&amp;gt;:website/bareRepo.git
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;xcode&#34;&gt;Xcode&lt;/h2&gt;
+
+&lt;h3 id=&#34;1-regexp-find-and-replace&#34;&gt;1. Regexp find and replace&lt;/h3&gt;
+
+&lt;p&gt;Last week, while at work in Zalando SE, I was refactoring Flexible Layout Kit. Every Element is represented by a &lt;strong&gt;ElementController&lt;/strong&gt; which has &lt;code&gt;var model: &amp;lt;Some&amp;gt;Element?&lt;/code&gt; by conforming to a protocol.
+We have 25 element controller. During the refactor, lets suppose, I want to make all, &lt;code&gt;var model: &amp;lt;Some&amp;gt;Element?&lt;/code&gt; to &lt;code&gt;var model: &amp;lt;Some&amp;gt;Element&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;There are many manual ways. Xcode isn&amp;rsquo;t powerful like AndroidStudio when it comes to refactoring. The way to do it quickly is to regex find replace.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://kandelvijaya.com/img/GTXMarch-Xcode-FindReplace.png&#34; alt=&#34;Regexp find replace&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;(.*)&lt;/strong&gt; is a capture group. It can be used later by referring it via &lt;strong&gt;$1&lt;/strong&gt; which is what we did in the replace section.&lt;/p&gt;
+
+&lt;h3 id=&#34;2-lldb-po-broken-fix&#34;&gt;2. LLDB &amp;lsquo;po&amp;rsquo; broken fix&lt;/h3&gt;
+
+&lt;p&gt;After Swift came out, LLDB gets broken for various reason. It complains a lot. I cant debug effectively without &lt;code&gt;po&lt;/code&gt;. This is how I have been fixing this AST issue with LLDB. This is not the silver bullet.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;First Clean the project. Restart Xcode. Try lldb.&lt;/li&gt;
+&lt;li&gt;(IF above doesn&amp;rsquo;t work) Go to the derived data. Remove everything. Maybe &lt;code&gt;$rm -rf&lt;/code&gt; at that folder. Restart Xcode. Try lldb.&lt;/li&gt;
+&lt;li&gt;(If above doesn&amp;rsquo;t work) Change the derived data directory. &lt;img src=&#34;http://kandelvijaya.com/img/GTX-March-xcodeLLDB.jpg&#34; alt=&#34;Changeing Derived Data directory easy way&#34; /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Thanks for reading until this point. Comments, suggestions and edits are appreciated. Cheers!&lt;/strong&gt;&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>GTX Nov: Bisecting, Emacs and killing line. </title>
@@ -1141,6 +1303,15 @@ After all we care, because mainly we are a fashionable technology company. All r
 &lt;li&gt;linkedin.com/kandelvijaya&lt;/li&gt;
 &lt;/ul&gt;
 </description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>http://kandelvijaya.com/drafts/gtxBacklog/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://kandelvijaya.com/drafts/gtxBacklog/</guid>
+      <description></description>
     </item>
     
     <item>
