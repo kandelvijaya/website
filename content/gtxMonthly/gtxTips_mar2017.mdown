@@ -19,7 +19,8 @@ deploy your site automatically. Plus, your teammate should also be able to push 
 Lets do this.
 
 ### 1. Creating a bare repo
-Bare repo is used for sharing code. Typically shared for collaboration.
+Bare repo is used for sharing code. Typically shared for collaboration. Bare repos are good candidate for remote,
+where all teammates can push the code to.
 
 Bare repos have `.git`(_for most case_) extension on their path. For more detail
     read this blog post. [Difference between bare and normal git repo](http://www.saintsjd.com/2011/01/what-is-a-bare-git-repository/).
@@ -31,7 +32,7 @@ $ git clone --bare ~/my-website ~/my-website.git
 ```
 
 _my-website should be a normal git repository._
-Creating a bare repo is easy too.
+Creating a bare repo is easy too. We wont be using this one for the example case.
 
 ```
 $ git clone --bare init
@@ -66,7 +67,10 @@ git clone $GIT_REPO $WORKING_DIRECTORY  #clone new content
 trap - EXIT
 ```
 
-Finally, make the hook script executable.
+__NOTE__ If you have critical project, I strongly suggest using `rsync` and creating a backup dir during the cloning process.
+ If something goes wrong, the script can back it up easily.
+
+ Finally, make the hook script executable.
 ```
 $ chmod +x post-receive
 ```
@@ -76,10 +80,10 @@ Thats the basics of automatic deployment. For more info please refer to:
 
 ## Terminal
 ### 1. Background job, yes job.
-Did you ever want to run a script repeatedly 1 am in the morning OR every time there is a new content for the app to consume OR database backup, periodic emailing, OR what have you. Enter cron job. Dont get afraid. There's just 1 line. Thats it.
+Did you ever want to run a script repeatedly 1 am in the morning OR every time there is a new content for the app to consume OR database backup, periodic emailing, OR what have you. Enter cron job. Don't get afraid. There's just 1 line. Thats it.
 
 ```
-$ crontab -e
+$ crontab -e    # available by default on Mac and Linux
 ```
 
 Then edit the file. Lines starting with `#`, as you guessed, are comments.
