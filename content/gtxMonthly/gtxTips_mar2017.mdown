@@ -19,7 +19,7 @@ deploy your site automatically. Plus, your teammate should also be able to push 
 Lets do this.
 
 ### 1. Creating a bare repo
-Bare repo is used for sharing code. Typically shared for collaboration. Bare repos are good candidate for remote,
+Bare repo is used for sharing code. Typically shared for collaboration. Bare repos are good candidates for remote,
 where all teammates can push the code to.
 
 Bare repos have `.git`(_for most case_) extension on their path. For more detail
