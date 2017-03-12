@@ -1,9 +1,19 @@
++++
+author = "kandelvijaya"
+date = "2017-03-12T17:16:52+01:00"
+description = "GTX March 2017."
+draft = "true"
+tags = ["gtx", "git", "terminal", "XCode"]
+title = "GTX March: Basic tips"
+
++++
+
 # Reading and Writing Files from Playground
 
 ## What is sandboxing?
 - Limiting the resources including storage, ports, permission to the application.
 - Good to run a third party software without having the device infected.
-- Every process runs in their own region and limits making no cross pollination, infection and so on. 
+- Every process runs in their own region and limits making no cross pollination, infection and so on.
 - Web browser typically runs in a sandbox mode.
 
 
@@ -12,7 +22,7 @@
 
 # iOS specifics
 - You cant access or write outside of sandbox.
-- You can read file from the main bundle resouce. 
+- You can read file from the main bundle resouce.
 - Can you write into bundle's resource folder in iOS?
 	__ANS__: No.
 	__LONG__: You cannot write to this directory. To prevent tampering, the bundle directory is signed at installation time. Writing to this directory changes the signature and prevents your app from launching. You can, however, gain read-only access to any resources stored in the apps bundle.
@@ -30,8 +40,8 @@
 
 # OSX specifics
 - The OS X file system is designed for Macintosh computers, where both users and software have access to the file system.
-- Apps installed from the app store are sandboxed. Third party apps may or maynot be. 
-- 
+- Apps installed from the app store are sandboxed. Third party apps may or maynot be.
+-
 
 
 # The number of file reading APIs:
