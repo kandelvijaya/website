@@ -9,21 +9,19 @@ title = "GTX March: Basic tips"
 
 
 
-I focus on the minor details for this edition.
-
 ## Git
-Last few months, I spent my off time migrating one of the old apps to self hosted
-Parse Server. Although, the Parse Server on dedicated Linux machine is out of scope for
-this post, I found reasonable things on terminal while pounding commands for that duration.
+Last few months, I spent my off work time migrating one of the old app to self hosted
+Parse Server. Although, writing about Parse Server on dedicated Linux machine is out of scope for
+this post, I got few useful points regarding the use of terminal and git.
 
 Lets say you have a website. You want to use `git`. When you `git push`, it should
-deploy your site automatically. Plus, your friend should also be able to push and pull.
-Lets do this today.
+deploy your site automatically. Plus, your teammate should also be able to push and pull.
+Lets do this.
 
 ### 1. Creating a bare repo
-Bare repo is used for sharing code. Typically a remote will be shared for collaboration.
+Bare repo is used for sharing code. Typically shared for collaboration.
 
-This is typically a bare repo. Bare repos have `.git` extension on their path. For more info
+Bare repos have `.git`(_for most case_) extension on their path. For more detail
     read this blog post. [Difference between bare and normal git repo](http://www.saintsjd.com/2011/01/what-is-a-bare-git-repository/).
 
 To make a bare repo for a existing repository (which is usually the case).
@@ -32,17 +30,19 @@ To make a bare repo for a existing repository (which is usually the case).
 $ git clone --bare ~/my-website ~/my-website.git
 ```
 
-_my-website should be a git working directory_.
-To start with a fresh bare repo. In this case the directory will be the bare repo.
+_my-website should be a normal git repository._
+Creating a bare repo is easy too.
 
 ```
 $ git clone --bare init
 ```
+_Read Terminal Section for; how to push the bare repo to server._
+
 
 ### 2. Git hooks
-Hooks are like callbacks. Maybe thats a programming view. However, hooks let you run script after some event on git. The event could be push, commit, merge, pull. We will focus on `post-receive`.
+Hooks are like callbacks. Maybe that's a programming view. Anyways, hooks let you run script after some event occurs on git. The event could be push, commit, merge, pull or etc. Here, we will focus on `post-receive`.
 
-Now say you moved this, bare repo to the server machine, now you want to configure to
+Now say you moved the bare repo to the server machine, and want to configure git to
 deploy the site when someone pushes to this repo.
 ```
 $ cd <yourpath>/<yourbarerepo.git>/hooks/
@@ -50,7 +50,7 @@ $ touch post-receive  // (1)
 $ nano post-receive   
 ```
 _(1)_:: _Hooks are just shell script with special filename._
-Now for the basic setup to clone to a public web directory. Place the following script.
+Now we will clone the repo to a public website serving directory.
 ```
 #!/bin/bash
 
@@ -59,9 +59,9 @@ WORKING_DIRECTORY=$HOME/WWW/<yourwebsitePublicDir>/
 
 set -e
 
-rm -rf $WORKING_DIRECTORY
+rm -rf $WORKING_DIRECTORY       # remove old files
 
-git clone $GIT_REPO $WORKING_DIRECTORY
+git clone $GIT_REPO $WORKING_DIRECTORY  #clone new content
 
 trap - EXIT
 ```
@@ -76,19 +76,19 @@ Thats the basics of automatic deployment. For more info please refer to:
 
 ## Terminal
 ### 1. Background job, yes job.
-Do you ever want to run a script in repeatedly 1 am in the morning, every time there is a new content for the app to consume, database backup, periodic emailing, or what can you. Enter cron job.Dont get afraid. Theres just 1 line. Thats it.
+Did you ever want to run a script repeatedly 1 am in the morning OR every time there is a new content for the app to consume OR database backup, periodic emailing, OR what have you. Enter cron job. Dont get afraid. There's just 1 line. Thats it.
 
 ```
 $ crontab -e
 ```
 
-Then edit the file. Lines begining with `#`, as you guessed, are comments.
+Then edit the file. Lines starting with `#`, as you guessed, are comments.
 At the end of the file, I could do:
 ```
 1 1 * * * ~/jobs/backupMongoDb.sh
 ```
 
-Save and exit. Every 1(first) minute of every 1(hour) of every * (day) , of every * (week) of every year
+Save and exit. Every _1(first) minute of every 1(hour) of every * (day) , of every * (week) of every year_
  run the script `~/jobs/backupMongoDb.sh`. Simple and neat right.
 
 So for the script part.
@@ -96,10 +96,10 @@ So for the script part.
 #!/bin/sh
 
 BACKINGDIR=$HOME/backup/
-destName=<yourappname>+`date +"%m-%d-%y"`
+DESTNAME=<yourappname>+`date +"%m-%d-%y"`
 
 cd $BACKINGDIR
-mongodump --db <yourdbname> -o $destName
+mongodump --db <yourdbname> -o $DESTNAME
 ```
 The last command `mongodump` is the one that will dump the database. Finally, make this
 file executable.
@@ -108,8 +108,7 @@ file executable.
 $ chmod +x ~/jobs/backupMongoDb.sh
 ```
 
-You could extend this script to remove the older directories and to save space, zip the
-dumped database. This is left for your research.
+You could extend this script to remove the older directories in order to save space, zip the dumped database. This is left for your research.
 
 ### 2. Zipping and Scp(ping)
 Lets get back to where we created bare cloned repo. Now we need to transfer that to server.
@@ -119,15 +118,19 @@ We want to do it via the terminal.
 $ scp -r <yourBareRepo.git> <yourname>@<ServerIP-or-domain>:~/website/<yourBareRepo.git>
 ```
 SCP, stands for secure copy. For this step, you need to have local machine's SSH Keys added to
-the server beforehand. Anyways, what if the repo has tons of files (your project consists of lots of html, css, js and other files). Copying this was might take time depeding on numberof files. Lets speed this up.
-
-Before sending over the network, lets zip it. After we receive it on ther server, we will unzip it. It can save 10s of minutes depending on your project size.
+the server beforehand. Transferring a file opens a network connection. Transferring 1000 files might need tons of connection to be opened and closed. This adds latency wherby 20 MB directory that contains 10000 files could take 10 minutes. Lets speed the transfer by transferring 1 file. 1 zipped file.
 ```
 $ tar -czf bareRepo.zip <yourBareRepo.git>
 
 $ scp bareRepo.zip <yourname>@<ServerIP-or-domain>:~/website/bareRepo.zip
 ```
 I have left for you to extract the zipped folder in the server. HINT: `$ man tar`
+
+Now on the local machine set the remote to be this bare repo on the server.
+
+```
+$ git remote add origin <username>@<SERVER_IP_ADDRESS>:website/bareRepo.git
+```
 
 
 ## Xcode
@@ -142,8 +145,10 @@ There are many manual ways. Xcode isn't powerful like AndroidStudio when it come
 __(.*)__ is a capture group. It can be used later by referring it via __$1__ which is what we did in the replace section.
 
 ### 2. LLDB 'po' broken fix
-After Swift came out, LLDB gets broken for various reason. It complains a lot. I cant debug effectively without `po`. This is how i have been fixing this AST issue with LLDB.
+After Swift came out, LLDB gets broken for various reason. It complains a lot. I cant debug effectively without `po`. This is how I have been fixing this AST issue with LLDB. This is not the silver bullet.
 
 - First Clean the project. Restart Xcode. Try lldb.
 - (IF above doesn't work) Go to the derived data. Remove everything. Maybe `$rm -rf` at that folder. Restart Xcode. Try lldb.
 - (If above doesn't work) Change the derived data directory. ![Changeing Derived Data directory easy way](/img/GTX-March-xcodeLLDB.jpg)
+
+__Thanks for reading until this point. Comments, suggestions and edits are appreciated. Cheers!__
