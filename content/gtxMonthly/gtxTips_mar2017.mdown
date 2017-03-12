@@ -155,4 +155,7 @@ After Swift came out, LLDB gets broken for various reason. It complains a lot. I
 - (IF above doesn't work) Go to the derived data. Remove everything. Maybe `$rm -rf` at that folder. Restart Xcode. Try lldb.
 - (If above doesn't work) Change the derived data directory. ![Changeing Derived Data directory easy way](/img/GTX-March-xcodeLLDB.jpg)
 
+### Thanks To
+1. [Ahmed Rashad Basuony](https://twitter.com/arashadbm)
+
 __Thanks for reading until this point. Comments, suggestions and edits are appreciated. Cheers!__
