@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Ios on Kandelvijaya</title>
+    <link>http://kandelvijaya.com/tags/ios/</link>
+    <description>Recent content in Ios on Kandelvijaya</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Vijaya P. Kandelvijaya</copyright>
+    <lastBuildDate>Tue, 25 Oct 2016 19:36:52 +0200</lastBuildDate>
+    <atom:link href="http://kandelvijaya.com/tags/ios/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Precision Timing in iOS &amp; Swift</title>
+      <link>http://kandelvijaya.com/2016/10/25/precisiontiminginios/</link>
+      <pubDate>Tue, 25 Oct 2016 19:36:52 +0200</pubDate>
+      
+      <guid>http://kandelvijaya.com/2016/10/25/precisiontiminginios/</guid>
+      <description>
+
+&lt;blockquote&gt;
+&lt;p&gt;Time is what we want most, but what we use worst. -&lt;em&gt;William Pen&lt;/em&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Timestamp is a very important issue we deal with in every single iOS/OSX project. Unlike timestamp, sometimes we want to measure method performance. Practically, i would use it for fun exploration. However, there are cases especially in games development where the precise time helps maintain consistent gameplay with scores. I explored a bit on how we can leverage the systems provided APIs to just get the current time stamp as precisely as possible.&lt;/p&gt;
+
+&lt;p&gt;Two metrics to consider while going through are the precision in microseconds or beyond is better, i.e &lt;strong&gt;100.0123212321321321&lt;/strong&gt; seconds is better than &lt;strong&gt;100.012321&lt;/strong&gt; seconds. Second, how fast can we retrieve the time.&lt;/p&gt;
+
+&lt;p&gt;Various API that one can use to get the time in iOS/ OSX. Not every method works on Linux.&lt;/p&gt;
+
+&lt;h3 id=&#34;obvious&#34;&gt;Obvious&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;NSDate().timeIntervalSince1970&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;foundation-c-api&#34;&gt;Foundation C API&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;CFAbsoluteTimeGetCurrent()&lt;/li&gt;
+&lt;li&gt;CACurrentMediaTime()&lt;/li&gt;
+&lt;li&gt;ProcessInfo.processInfo.systemUptime&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;kernel-level-c-api&#34;&gt;Kernel level C API&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;getTimeOfDay()&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; var timeOfDay = timeval()
+ gettimeofday(&amp;amp;timeOfDay, nil)
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;mach_absolute_time();
+The finest-grained timepiece available on the system. This is a lower level kernel call. The value depends on the processor and conversion is required to get time information. The process is somewhat tedious and C level. The precision is in Nanoseconds.&lt;/p&gt;
+
+&lt;p&gt;The way to set it up in Swift is as:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;        var info = mach_timebase_info()
+        guard mach_timebase_info(&amp;amp;info) == KERN_SUCCESS else { return -1 }
+        let currentTime = mach_absolute_time()
+        let nanos = currentTime * UInt64(info.numer) / UInt64(info.denom)
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;So the obvious winner for precision is &lt;code&gt;mach_absolute_time()&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;performance-comparison&#34;&gt;Performance comparison:&lt;/h2&gt;
+
+&lt;p&gt;These are calculated on MPB running i7 2.7 Ghz with 8 GB RAM. Take the ratio between different API calls into consideration. Actual run time for each call differs on the hardware and the environment used.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;mach_absolute_time()                            : 0.90 µs/call 
+gettimeofday()                                  : 1.10 µs/call
+CFAbsoluteTimeGetCurrent()                      : 1.13 µs/call
+ProcessInfo.processInfo.systemUptime            : 1.14 µs/call
+CACurrentMediaTime()                            : 1.15 µs/call
+NSDate().timeIntervalSince1970                  : 4.55 µs/call
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;As we saw, &lt;code&gt;mach_absolute_time()&lt;/code&gt; is very fast. Compared to NSDate(), its 5 times faster. The reason is, NSDate has to be allocated and initialized before we access the time. For &lt;code&gt;mach_absolute_time()&lt;/code&gt; we are making kernel level C API call.&lt;/p&gt;
+
+&lt;h3 id=&#34;timing-function-execution&#34;&gt;Timing Function Execution&lt;/h3&gt;
+
+&lt;p&gt;One can time a block of code by using this utility function that I wrote to produce the above comparision result set. You can find the full list of utility &lt;a href=&#34;https://gist.github.com/kandelvijaya/8095de4ec37f225b7e3fee171d8909fb&#34;&gt;on this Gist&lt;/a&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;func timeBlockWithMach(_ block: () -&amp;gt; Void) -&amp;gt; TimeInterval {
+    var info = mach_timebase_info()
+    guard mach_timebase_info(&amp;amp;info) == KERN_SUCCESS else { return -1 }
+
+    let start = mach_absolute_time()
+    //Block execution to time!
+    block()                         
+    let end = mach_absolute_time()
+
+    let elapsed = end - start
+
+    let nanos = elapsed * UInt64(info.numer) / UInt64(info.denom)
+    return TimeInterval(nanos) / TimeInterval(NSEC_PER_SEC)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;final-words&#34;&gt;final words&lt;/h2&gt;
+
+&lt;p&gt;Sometimes, &lt;code&gt;getTimeOfDay()&lt;/code&gt; and &lt;code&gt;CFAbsoluteTimeGetCurrent()&lt;/code&gt; tend to match the efficiency of &lt;code&gt;mach_absolute_time()&lt;/code&gt;. This is at least what i found during my testing in playgrounds. However, &lt;code&gt;mach_absolute_time()&lt;/code&gt; is always the fastest one.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;CACurrentMediaTime()&lt;/code&gt; is a wrapper around the most accurate time function in the system: mach_absolute_time(). &lt;code&gt;mach_absolute_time()&lt;/code&gt; will give you a really accurate number, but it&amp;rsquo;s based on the Mach absolute time unit which doesn&amp;rsquo;t actually map to anything pesky humans think in (and every CPU has a different scale). That&amp;rsquo;s why we have &lt;code&gt;CACurrentMediaTime()&lt;/code&gt; to make our lives easier. Its 0.2 microsecond slow than the &lt;code&gt;mach_absolute_time()&lt;/code&gt; because it runs the conversion on behalf of you from CPU ticks to the human parsable timestamp.&lt;/p&gt;
+
+&lt;p&gt;For the simple API, I would prefer &lt;code&gt;CFAbsoluteTimeGetCurrent()&lt;/code&gt;. Using &lt;code&gt;mach_absolute_time()&lt;/code&gt; would be ideal case for timing method execution. However, a caution to take is that, not always the execution time is the same. Hence, sampling for 100 or so times of a method executing time and averaging will provide a good heuristic.&lt;/p&gt;
+
+&lt;p&gt;A &lt;a href=&#34;https://bendodson.com/weblog/2013/01/29/ca-current-media-time/&#34;&gt;interesting blog post&lt;/a&gt; does cover some pitfalls of both &lt;code&gt;CACurrentMediaTime()&lt;/code&gt; and &lt;code&gt;mach_absolute_time()&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;resources&#34;&gt;Resources&lt;/h2&gt;
+
+&lt;p&gt;A full playground utility and usage of all the above mentioned Timing API can be found on the &lt;a href=&#34;https://gist.github.com/kandelvijaya/8095de4ec37f225b7e3fee171d8909fb&#34;&gt;gist i created&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Hope you enjoy. Cheers!&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

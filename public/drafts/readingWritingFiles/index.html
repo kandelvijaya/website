@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title> &middot; kandelvijaya</title>
+        <meta name="description" content="Reading and Writing Files from Playground What is sandboxing? Limiting the resources including storage, ports, permission to the application. Good to run a third party software without having the device infected. Every process runs in their own region and limits making no cross pollination, infection and so on. Web browser typically runs in a sandbox mode. Playground Playground is Sandboxed so User&rsquo;s directories are not accessible directly. iOS specifics You cant access or write outside of sandbox.">
+        <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="320">
+        <meta name="generator" content="Hugo 0.16" />
+        <meta name="robots" content="index,follow">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta property="og:title" content="">
+<meta property="og:description" content="Reading and Writing Files from Playground What is sandboxing? Limiting the resources including storage, ports, permission to the application. Good to run a third party software without having the device infected. Every process runs in their own region and limits making no cross pollination, infection and so on. Web browser typically runs in a sandbox mode. Playground Playground is Sandboxed so User&rsquo;s directories are not accessible directly. iOS specifics You cant access or write outside of sandbox.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="http://kandelvijaya.com/drafts/readingWritingFiles/">
+        <link rel="stylesheet" href="http://kandelvijaya.com/css/normalize.css">
+        <link rel="stylesheet" href="http://kandelvijaya.com/css/highlight.css">
+        <link rel="stylesheet" href="http://kandelvijaya.com/css/style.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin,cyrillic-ext,latin-ext,cyrillic">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+    </head>
+    <body>
+        
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-46775685-3', 'auto');
+ga('send', 'pageview');
+</script>
+
+
+        <div id="wrapper">
+            <header class="site-header">
+                <div class="container">
+                    <div class="site-title-wrapper">
+                        
+                            <h1 class="site-title">
+                                <a title="Kandelvijaya" href="http://kandelvijaya.com/">Kandelvijaya</a>
+                            </h1>
+                        
+                        <a class="button-square" href="http://kandelvijaya.com/index.xml"><i class="fa fa-rss"></i></a>
+                        
+                            <a class="button-square button-social hint--top" data-hint="Twitter" title="Twitter" href="https://twitter.com/kandelvijaya">
+                                <i class="fa fa-twitter"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Github" title="Github" href="https://github.com/kandelvijaya">
+                                <i class="fa fa-github-alt"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="LinkedIn" title="LinkedIn" href="https://linkedin.com/in/kandelvijaya/">
+                                <i class="fa fa-linkedin"></i>
+                            </a>
+                        
+                        
+                    </div>
+
+                    <ul class="site-nav">
+                        
+    <li class="site-nav-item">
+        <a title="Blog" href="/post/">Blog</a>
+    </li>
+
+    <li class="site-nav-item">
+        <a title="GTX Monthly" href="/gtxmonthly/">GTX Monthly</a>
+    </li>
+
+                    </ul>
+                </div>
+            </header>
+
+            <div id="container">
+
+
+<div class="container">
+    <article class="post-container">
+        <header class="post-header">
+    <h1 class="post-title"></h1>
+    
+</header>
+
+        <div class="post-content clearfix">
+    
+
+    
+
+<h1 id="reading-and-writing-files-from-playground">Reading and Writing Files from Playground</h1>
+
+<h2 id="what-is-sandboxing">What is sandboxing?</h2>
+
+<ul>
+<li>Limiting the resources including storage, ports, permission to the application.</li>
+<li>Good to run a third party software without having the device infected.</li>
+<li>Every process runs in their own region and limits making no cross pollination, infection and so on.</li>
+<li>Web browser typically runs in a sandbox mode.</li>
+</ul>
+
+<h1 id="playground">Playground</h1>
+
+<ul>
+<li>Playground is Sandboxed so User&rsquo;s directories are not accessible directly.</li>
+</ul>
+
+<h1 id="ios-specifics">iOS specifics</h1>
+
+<ul>
+<li>You cant access or write outside of sandbox.</li>
+<li>You can read file from the main bundle resouce.</li>
+<li>Can you write into bundle&rsquo;s resource folder in iOS?
+<strong>ANS</strong>: No.
+<strong>LONG</strong>: You cannot write to this directory. To prevent tampering, the bundle directory is signed at installation time. Writing to this directory changes the signature and prevents your app from launching. You can, however, gain read-only access to any resources stored in the apps bundle.</li>
+<li>An iOS app may create additional directories in the <code>Documents</code>, <code>Library</code>, and <code>tmp</code> directories. You might do this to better organize the files in those locations. For more info, <a href="https://developer.apple.com/library/content/documentation/FileManagement/Conceptual/FileSystemProgrammingGuide/FileSystemOverview/FileSystemOverview.html">see the documentation</a></li>
+</ul>
+
+<h1 id="ios-simulators">iOS Simulators</h1>
+
+<ul>
+<li>They can read file from any location that can be located by the user. For example: a mock json located in Desktop can be used to render contents in the simulator instead of downloading each time.</li>
+<li>Writing file to any place?</li>
+</ul>
+
+<h1 id="osx-specifics">OSX specifics</h1>
+
+<ul>
+<li>The OS X file system is designed for Macintosh computers, where both users and software have access to the file system.</li>
+<li>Apps installed from the app store are sandboxed. Third party apps may or maynot be.</li>
+<li></li>
+</ul>
+
+<h1 id="the-number-of-file-reading-apis">The number of file reading APIs:</h1>
+
+<ul>
+<li>NSFileManager</li>
+<li>NSBundle <code>pathForResource</code></li>
+<li>Direct String <code>string(contentsOfFile: encoding:)</code></li>
+<li>NSSearchPathForDirectoriesInDomains</li>
+</ul>
+
+<p>Although it seems like there are lots of options to read/write files, its not ture. Basically, there are two ways to get the file. If the directory being referred is a standard directory then the system provides bunch of API, like NSBundle and NSFileManager. Whereas if the directory or file is not a well known location then the user is required to build the path and then use the appropriate APIs.</p>
+
+</div>
+
+        <footer class="post-footer clearfix">
+    
+
+    <div class="share">
+        <a class="icon-twitter" href="http://twitter.com/share?text=&url=http%3a%2f%2fkandelvijaya.com%2fdrafts%2freadingWritingFiles%2f"
+            onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+            <i class="fa fa-twitter"></i>
+            <span class="hidden">Twitter</span>
+        </a>
+
+        <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http%3a%2f%2fkandelvijaya.com%2fdrafts%2freadingWritingFiles%2f"
+            onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+            <i class="fa fa-facebook"></i>
+            <span class="hidden">Facebook</span>
+        </a>
+
+        <a class="icon-google-plus" href="https://plus.google.com/share?url=http%3a%2f%2fkandelvijaya.com%2fdrafts%2freadingWritingFiles%2f"
+           onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+           <i class="fa fa-google-plus"></i>
+            <span class="hidden">Google+</span>
+        </a>
+    </div>
+</footer>
+    </article>
+</div>
+
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="site-title-wrapper">
+                    <h1 class="site-title">
+                        <a title="Kandelvijaya" href="http://kandelvijaya.com/">Kandelvijaya</a>
+                    </h1>
+                    <a class="button-square button-jump-top js-jump-top" href="#">
+                        <i class="fa fa-angle-up"></i>
+                    </a>
+                </div>
+
+                <p class="footer-copyright">
+                    <span>&copy; 2016 / Powered by <a href="http://gohugo.io/">Hugo</a></span>
+                </p>
+                <p class="footer-copyright">
+                    <span><a href="https://github.com/roryg/ghostwriter">Ghostwriter theme</a> By <a href="http://jollygoodthemes.com">JollyGoodThemes</a></span>
+                    <span>/ <a href="https://github.com/jbub/ghostwriter">Ported</a> to Hugo By <a href="https://github.com/jbub">jbub</a></span>
+                </p>
+            </div>
+        </footer>
+
+        <script src="http://kandelvijaya.com/js/jquery-1.11.3.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/highlight.min.js"></script>
+        <script src="http://kandelvijaya.com/js/jquery.fitvids.js"></script>
+        <script src="http://kandelvijaya.com/js/scripts.js"></script>
+    </body>
+</html>
+

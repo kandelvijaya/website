@@ -1,0 +1,149 @@
++++
+author = "kandelvijaya"
+date = "2017-03-12T17:16:52+01:00"
+description = "GTX March 2017."
+tags = ["gtx", "git", "terminal", "XCode"]
+title = "GTX March: Basic tips"
+
++++
+
+
+
+I focus on the minor details for this edition.
+
+## Git
+Last few months, I spent my off time migrating one of the old apps to self hosted
+Parse Server. Although, the Parse Server on dedicated Linux machine is out of scope for
+this post, I found reasonable things on terminal while pounding commands for that duration.
+
+Lets say you have a website. You want to use `git`. When you `git push`, it should
+deploy your site automatically. Plus, your friend should also be able to push and pull.
+Lets do this today.
+
+### 1. Creating a bare repo
+Bare repo is used for sharing code. Typically a remote will be shared for collaboration.
+
+This is typically a bare repo. Bare repos have `.git` extension on their path. For more info
+    read this blog post. [Difference between bare and normal git repo](http://www.saintsjd.com/2011/01/what-is-a-bare-git-repository/).
+
+To make a bare repo for a existing repository (which is usually the case).
+
+```
+$ git clone --bare ~/my-website ~/my-website.git
+```
+
+_my-website should be a git working directory_.
+To start with a fresh bare repo. In this case the directory will be the bare repo.
+
+```
+$ git clone --bare init
+```
+
+### 2. Git hooks
+Hooks are like callbacks. Maybe thats a programming view. However, hooks let you run script after some event on git. The event could be push, commit, merge, pull. We will focus on `post-receive`.
+
+Now say you moved this, bare repo to the server machine, now you want to configure to
+deploy the site when someone pushes to this repo.
+```
+$ cd <yourpath>/<yourbarerepo.git>/hooks/
+$ touch post-receive  // (1)
+$ nano post-receive   
+```
+_(1)_:: _Hooks are just shell script with special filename._
+Now for the basic setup to clone to a public web directory. Place the following script.
+```
+#!/bin/bash
+
+GIT_REPO=$HOME/<yourbarerepo.git>
+WORKING_DIRECTORY=$HOME/WWW/<yourwebsitePublicDir>/
+
+set -e
+
+rm -rf $WORKING_DIRECTORY
+
+git clone $GIT_REPO $WORKING_DIRECTORY
+
+trap - EXIT
+```
+
+Finally, make the hook script executable.
+```
+$ chmod +x post-receive
+```
+
+Thats the basics of automatic deployment. For more info please refer to:
+[This fantastic in depth deployment guide from DigitalOcean](https://www.digitalocean.com/community/tutorials/how-to-deploy-a-hugo-site-to-production-with-git-hooks-on-ubuntu-14-04)
+
+## Terminal
+### 1. Background job, yes job.
+Do you ever want to run a script in repeatedly 1 am in the morning, every time there is a new content for the app to consume, database backup, periodic emailing, or what can you. Enter cron job.Dont get afraid. Theres just 1 line. Thats it.
+
+```
+$ crontab -e
+```
+
+Then edit the file. Lines begining with `#`, as you guessed, are comments.
+At the end of the file, I could do:
+```
+1 1 * * * ~/jobs/backupMongoDb.sh
+```
+
+Save and exit. Every 1(first) minute of every 1(hour) of every * (day) , of every * (week) of every year
+ run the script `~/jobs/backupMongoDb.sh`. Simple and neat right.
+
+So for the script part.
+```
+#!/bin/sh
+
+BACKINGDIR=$HOME/backup/
+destName=<yourappname>+`date +"%m-%d-%y"`
+
+cd $BACKINGDIR
+mongodump --db <yourdbname> -o $destName
+```
+The last command `mongodump` is the one that will dump the database. Finally, make this
+file executable.
+
+```
+$ chmod +x ~/jobs/backupMongoDb.sh
+```
+
+You could extend this script to remove the older directories and to save space, zip the
+dumped database. This is left for your research.
+
+### 2. Zipping and Scp(ping)
+Lets get back to where we created bare cloned repo. Now we need to transfer that to server.
+We want to do it via the terminal.
+
+```
+$ scp -r <yourBareRepo.git> <yourname>@<ServerIP-or-domain>:~/website/<yourBareRepo.git>
+```
+SCP, stands for secure copy. For this step, you need to have local machine's SSH Keys added to
+the server beforehand. Anyways, what if the repo has tons of files (your project consists of lots of html, css, js and other files). Copying this was might take time depeding on numberof files. Lets speed this up.
+
+Before sending over the network, lets zip it. After we receive it on ther server, we will unzip it. It can save 10s of minutes depending on your project size.
+```
+$ tar -czf bareRepo.zip <yourBareRepo.git>
+
+$ scp bareRepo.zip <yourname>@<ServerIP-or-domain>:~/website/bareRepo.zip
+```
+I have left for you to extract the zipped folder in the server. HINT: `$ man tar`
+
+
+## Xcode
+### 1. Regexp find and replace
+Last week, while at work in Zalando SE, I was refactoring Flexible Layout Kit. Every Element is represented by a __ElementController__ which has `var model: <Some>Element?` by conforming to a protocol.
+We have 25 element controller. During the refactor, lets suppose, I want to make all, `var model: <Some>Element?` to `var model: <Some>Element`.
+
+There are many manual ways. Xcode isn't powerful like AndroidStudio when it comes to refactoring. The way to do it quickly is to regex find replace.
+
+![Regexp find replace](/img/GTXMarch-Xcode-FindReplace.png)
+
+__(.*)__ is a capture group. It can be used later by referring it via __$1__ which is what we did in the replace section.
+
+### 2. LLDB 'po' broken fix
+After Swift came out, LLDB gets broken for various reason. It complains a lot. I cant debug effectively without `po`. This is how i have been fixing this AST issue with LLDB.
+
+- First Clean the project. Restart Xcode. Try lldb.
+- (IF above doesn't work) Go to the derived data. Remove everything. Maybe `$rm -rf` at that folder. Restart Xcode. Try lldb.
+- (If above doesn't work) Change the derived data directory. ![Changeing Derived Data directory easy way](/img/GTX-March-xcodeLLDB.jpg)

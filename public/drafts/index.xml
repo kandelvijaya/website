@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Drafts on Kandelvijaya</title>
+    <link>http://kandelvijaya.com/drafts/</link>
+    <description>Recent content in Drafts on Kandelvijaya</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Vijaya P. Kandelvijaya</copyright>
+    <atom:link href="http://kandelvijaya.com/drafts/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title></title>
+      <link>http://kandelvijaya.com/drafts/readingWritingFiles/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://kandelvijaya.com/drafts/readingWritingFiles/</guid>
+      <description>
+
+&lt;h1 id=&#34;reading-and-writing-files-from-playground&#34;&gt;Reading and Writing Files from Playground&lt;/h1&gt;
+
+&lt;h2 id=&#34;what-is-sandboxing&#34;&gt;What is sandboxing?&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Limiting the resources including storage, ports, permission to the application.&lt;/li&gt;
+&lt;li&gt;Good to run a third party software without having the device infected.&lt;/li&gt;
+&lt;li&gt;Every process runs in their own region and limits making no cross pollination, infection and so on.&lt;/li&gt;
+&lt;li&gt;Web browser typically runs in a sandbox mode.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&#34;playground&#34;&gt;Playground&lt;/h1&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Playground is Sandboxed so User&amp;rsquo;s directories are not accessible directly.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&#34;ios-specifics&#34;&gt;iOS specifics&lt;/h1&gt;
+
+&lt;ul&gt;
+&lt;li&gt;You cant access or write outside of sandbox.&lt;/li&gt;
+&lt;li&gt;You can read file from the main bundle resouce.&lt;/li&gt;
+&lt;li&gt;Can you write into bundle&amp;rsquo;s resource folder in iOS?
+&lt;strong&gt;ANS&lt;/strong&gt;: No.
+&lt;strong&gt;LONG&lt;/strong&gt;: You cannot write to this directory. To prevent tampering, the bundle directory is signed at installation time. Writing to this directory changes the signature and prevents your app from launching. You can, however, gain read-only access to any resources stored in the apps bundle.&lt;/li&gt;
+&lt;li&gt;An iOS app may create additional directories in the &lt;code&gt;Documents&lt;/code&gt;, &lt;code&gt;Library&lt;/code&gt;, and &lt;code&gt;tmp&lt;/code&gt; directories. You might do this to better organize the files in those locations. For more info, &lt;a href=&#34;https://developer.apple.com/library/content/documentation/FileManagement/Conceptual/FileSystemProgrammingGuide/FileSystemOverview/FileSystemOverview.html&#34;&gt;see the documentation&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&#34;ios-simulators&#34;&gt;iOS Simulators&lt;/h1&gt;
+
+&lt;ul&gt;
+&lt;li&gt;They can read file from any location that can be located by the user. For example: a mock json located in Desktop can be used to render contents in the simulator instead of downloading each time.&lt;/li&gt;
+&lt;li&gt;Writing file to any place?&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&#34;osx-specifics&#34;&gt;OSX specifics&lt;/h1&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The OS X file system is designed for Macintosh computers, where both users and software have access to the file system.&lt;/li&gt;
+&lt;li&gt;Apps installed from the app store are sandboxed. Third party apps may or maynot be.&lt;/li&gt;
+&lt;li&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&#34;the-number-of-file-reading-apis&#34;&gt;The number of file reading APIs:&lt;/h1&gt;
+
+&lt;ul&gt;
+&lt;li&gt;NSFileManager&lt;/li&gt;
+&lt;li&gt;NSBundle &lt;code&gt;pathForResource&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Direct String &lt;code&gt;string(contentsOfFile: encoding:)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;NSSearchPathForDirectoriesInDomains&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Although it seems like there are lots of options to read/write files, its not ture. Basically, there are two ways to get the file. If the directory being referred is a standard directory then the system provides bunch of API, like NSBundle and NSFileManager. Whereas if the directory or file is not a well known location then the user is required to build the path and then use the appropriate APIs.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

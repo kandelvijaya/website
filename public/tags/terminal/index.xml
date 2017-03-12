@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Terminal on Kandelvijaya</title>
+    <link>http://kandelvijaya.com/tags/terminal/</link>
+    <description>Recent content in Terminal on Kandelvijaya</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Vijaya P. Kandelvijaya</copyright>
+    <lastBuildDate>Sun, 20 Nov 2016 14:28:01 +0100</lastBuildDate>
+    <atom:link href="http://kandelvijaya.com/tags/terminal/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>GTX Nov: Bisecting, Emacs and killing line. </title>
+      <link>http://kandelvijaya.com/gtxmonthly/gtxTips_nov2016/</link>
+      <pubDate>Sun, 20 Nov 2016 14:28:01 +0100</pubDate>
+      
+      <guid>http://kandelvijaya.com/gtxmonthly/gtxTips_nov2016/</guid>
+      <description>
+
+&lt;p&gt;Welcome to this months GTX. How are you? Its cold here in Berlin. Lets get to this months
+GTX(Git, Terminal, XCode) tips.&lt;/p&gt;
+
+&lt;h2 id=&#34;git&#34;&gt;Git&lt;/h2&gt;
+
+&lt;h3 id=&#34;1-finding-which-commit-broke-the-project-first&#34;&gt;1. Finding which commit broke the project first&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;git-bisect&lt;/code&gt; is the command you are looking for if you happen to search for a commit in the
+past week which silently broke the project and the CI is failing.&lt;/p&gt;
+
+&lt;p&gt;I was introduced to this command while at work from my colleague, @ramy_kfoury.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ git bisect start
+$ git bisect bad                 # Current version is bad
+$ git bisect good v2.6.13-rc2    # v2.6.13-rc2 is known to be good
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then git will stop at the middle commit. It uses binary search to narrow down possibilities. Then
+you can test that commit. Testing can be running unit tests at that point, or a set of scripts or
+manually validating the functionality. Depending on if the error is present or not.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ git bisect good               # bad if the commit has problem
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Eventually we will be left with 1 commit, which is the one that introduced some faults. For more
+in-depth usage please &lt;a href=&#34;https://git-scm.com/docs/git-bisect&#34;&gt;read this brief reference guide&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&#34;2-github-style-diff-on-terminal&#34;&gt;2. GitHub style diff on terminal&lt;/h3&gt;
+
+&lt;p&gt;Ever wanted to see beautiful and clean diff on terminal? We&amp;rsquo;ve got one.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Diff_So_Fancy&lt;/strong&gt; is a plugin that does exactly like GitHub UI diff. To install,&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ brew install diff-so-fancy
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And to use when required:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$git diff --color | diff-so-fancy
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The good part, to make it default, which i recommend, issue this command:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$git config --global core.pager &amp;quot;diff-so-fancy | less --tabs=4 -RFX&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;For more customization, take a look at the &lt;a href=&#34;https://github.com/so-fancy/diff-so-fancy&#34;&gt;diff_so_fancy GitHub repo&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;If for some reason, you prefer side-by-side diff, then there are 2 projects that are worth looking:
+1. &lt;a href=&#34;https://github.com/ymattw/cdiff&#34;&gt;cdiff&lt;/a&gt;
+2. &lt;a href=&#34;https://github.com/jeffkaufman/icdiff&#34;&gt;icdiff&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;I personally haven&amp;rsquo;t used &lt;code&gt;icdiff&lt;/code&gt; and have limited exposure to &lt;code&gt;cdiff&lt;/code&gt;. I will continue with this topic
+for the next month. Until then have fun bisecting.&lt;/p&gt;
+
+&lt;h2 id=&#34;terminal&#34;&gt;Terminal&lt;/h2&gt;
+
+&lt;h3 id=&#34;1-emacs-editor-of-lifetime-for-some&#34;&gt;1. Emacs: Editor of lifetime (for some)&lt;/h3&gt;
+
+&lt;p&gt;Emacs was started 25 years ago but still remains both the source of inspiration to other
+text editors and a powerful extensible text editor. I wouldn&amp;rsquo;t mind to call it more than
+a text editor to a mini operating system. You can browse web, create web browser and reply
+email. There&amp;rsquo;s more. This is how Emacs differs from Vi/Vim. Its great.&lt;/p&gt;
+
+&lt;p&gt;I always like to do as much possible without losing context. Terminal is a most for me as
+I learned and used Git to manage my projects. I don&amp;rsquo;t use GUI. So I must use terminal every
+couple of minutes. I wanted terminal to do more. I wanted to use the text editor inside the
+terminal. I wanted my text editor to be able to quickly edit commit message, Swift source
+files and write my notes. I will probably go into the details of why I love text based note
+taking and journal in some future blog post.&lt;/p&gt;
+
+&lt;p&gt;Okay lets get Emacs. You can see for yourself.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ brew update
+$ brew install emacs --with-cocoa
+$ brew linkapps emacs
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You then should be able to run &lt;code&gt;emacs&lt;/code&gt; by issuing &lt;code&gt;$ emacs -nw&lt;/code&gt; in the terminal. If not, chances are
+you have a conflicting system &lt;code&gt;emacs&lt;/code&gt;. On OSX/ mac OS emacs is installed by default. If your
+installation doesn&amp;rsquo;t work then you can hop on this &lt;a href=&#34;http://www.wikemacs.org/wiki/Installing_Emacs_on_OS_X&#34;&gt;website guide&lt;/a&gt;
+for troubleshooting.&lt;/p&gt;
+
+&lt;p&gt;If you want the GUI Emacs then just issue &lt;code&gt;$emacs&lt;/code&gt;, the GUI is fairly simple but 2 superior things
+to terminal mode is that the Fonts/Themes have broader color and size options. Second, you can use
+the mouse. I don&amp;rsquo;t know if that&amp;rsquo;s actually a + point or not.&lt;/p&gt;
+
+&lt;p&gt;I cannot however go into the details of setting up Emacs in one post or in tips. I would nonetheless
+provide an &lt;a href=&#34;https://www.youtube.com/watch?v=mMcc0IF1hV0&#34;&gt;awesome YouTube channel for Emacs starter guide&lt;/a&gt;.
+I highly recommend this guy&amp;rsquo;s series if you want to see how traditional editor is more than capable of
+making you productive in the long run.&lt;/p&gt;
+
+&lt;p&gt;To get more inspired/see whats possible then &lt;a href=&#34;https://www.youtube.com/watch?v=B6jfrrwR10k&#34;&gt;this video might be useful for starter&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;This &lt;a href=&#34;https://www.youtube.com/watch?v=VADudzQGvU8&#34;&gt;video( The editor of lifetime)&lt;/a&gt; might be good for your weekend to see the history, design decision and the evolution of Emacs.&lt;/p&gt;
+
+&lt;p&gt;Anyway, enough of Emacs. Hopefully, next month I will write my experience with &lt;strong&gt;org-mode&lt;/strong&gt; and other
+ plugins I used daily.&lt;/p&gt;
+
+&lt;h3 id=&#34;2-tmux-spliting-panes&#34;&gt;2. Tmux: Spliting Panes&lt;/h3&gt;
+
+&lt;p&gt;So the idea of sitting in the Terminal continues. I want my terminal to support 2 windows, 1 for &lt;code&gt;zsh&lt;/code&gt; and
+the other for &lt;code&gt;emacs&lt;/code&gt;. I use emacs for taking notes, work logs and journal with &lt;code&gt;org-mode&lt;/code&gt;. I occasionally
+need to edit swift code in Emacs but I can if I have to.&lt;/p&gt;
+
+&lt;p&gt;To install &lt;strong&gt;tmux&lt;/strong&gt;, please &lt;a href=&#34;http://kandelvijaya.com/2016/10/15/spicingterminal/&#34;&gt;refer to this blog&lt;/a&gt; I wrote
+last month. Anyways, issue this command to quickly install tmux.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ brew install tmux
+$ tmux ;; to run tmux
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Splitting the pane with tmux.
+1. &lt;code&gt;CTRL + b&lt;/code&gt; then type &lt;code&gt;%&lt;/code&gt;
+   creates a pane vertically.
+2. &lt;code&gt;CTRL + b&lt;/code&gt; then type &lt;code&gt;&amp;quot;&lt;/code&gt;
+   creates a pane horizontally.
+3. &lt;code&gt;CTRL + b&lt;/code&gt; then type &lt;code&gt;o&lt;/code&gt; (not Zero)
+   switches to another pane
+4. &lt;code&gt;$exit&lt;/code&gt;
+   close the current pane&lt;/p&gt;
+
+&lt;p&gt;On my setup, I usually put a pane on top for git related work. The lower on runs &lt;code&gt;emacs&lt;/code&gt; and I have TODOs and
+work log on that. Its quite handy.&lt;/p&gt;
+
+&lt;h2 id=&#34;xcode&#34;&gt;XCode&lt;/h2&gt;
+
+&lt;h3 id=&#34;1-delete-to-the-end-of-line&#34;&gt;1. Delete to the end of line&lt;/h3&gt;
+
+&lt;p&gt;Like the most people, to delete a entire line, we Select it and then delete selection. i.e
+CMD + SHIFT + -&amp;gt; , then DEL. Or you use the mouse to make the selection and then delete it.
+The point is this is 2 step process. Wait, there is a 1 key binding to do it.
+&lt;code&gt;CONTROL + K&lt;/code&gt;. That&amp;rsquo;s it.&lt;/p&gt;
+
+&lt;p&gt;This will delete to the end of the line. The same key binding works for Emacs too.&lt;/p&gt;
+
+&lt;h3 id=&#34;2-final-resort&#34;&gt;2. Final Resort&lt;/h3&gt;
+
+&lt;p&gt;This one might be a old school tips, nonetheless it needs to be put into picture. When everything is fine,
+and XCode does something beyond your expectation. All you need is to clear artifacts. Every iOS developer
+knows this:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Clean build, Try&lt;/li&gt;
+&lt;li&gt;Quit and Restart XCode, Try&lt;/li&gt;
+&lt;li&gt;Remove derived data, or change the path, Try.&lt;/li&gt;
+&lt;li&gt;Restart your mac. [This is the least recommended]&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;As of this writing, I&amp;rsquo;m using Xcode8 and I had 2 interesting issue:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;If somewhere in your code base there is a extension on &lt;code&gt;UIButton&lt;/code&gt;, you cant connect &lt;code&gt;@IBAction&lt;/code&gt; from
+xib to UIView subclass.&lt;/li&gt;
+&lt;li&gt;When compiling large project, the compiler optionally stops at various points and gives compile error.
+I knew there was no error in it. I just changed some trivial code. However, I just run &lt;code&gt;CMD + R&lt;/code&gt; multiple
+times to bypass each false error.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;I hope Xcode 8.2 fixes those issues. Until then, Cheers!&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>GTX [Git, Terminal, Xcode] 2tips for October</title>
+      <link>http://kandelvijaya.com/gtxmonthly/gtxTips_oct2016/</link>
+      <pubDate>Sun, 16 Oct 2016 16:10:42 +0200</pubDate>
+      
+      <guid>http://kandelvijaya.com/gtxmonthly/gtxTips_oct2016/</guid>
+      <description>
+
+&lt;h3 id=&#34;gtx&#34;&gt;GTX:&lt;/h3&gt;
+
+&lt;p&gt;I planned to find 2 tips for Git, Terminal and Xcode each, last weekend. Which should help me be more productive at work. Later, I thought to write it up and shere. This should be a series of mini tips, each month.&lt;/p&gt;
+
+&lt;p&gt;GTX stands for Git, Terminal and Xcode. This abbreviation has local scope to this blog only. Other way to say, I made this GTX shortform.&lt;/p&gt;
+
+&lt;h1 id=&#34;gtx-october-2016&#34;&gt;GTX October 2016&lt;/h1&gt;
+
+&lt;h2 id=&#34;1-git&#34;&gt;1. Git&lt;/h2&gt;
+
+&lt;p&gt;This time is about rewriting history. Yes, &lt;code&gt;rebase&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;First, lets start by not rewritting history. Just the normal rebase.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;(featureBranch)$ git rebase master 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This will take all the changeset that were made in this &lt;code&gt;featureBranch&lt;/code&gt; and insert it on top of &lt;code&gt;master&lt;/code&gt; branch.&lt;/p&gt;
+
+&lt;p&gt;Now lets rewrite history. Here is a typical log on git during work.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; $ git log --oneline
+ 1ad2  Added support for X device
+ 2ad3  Dummy Commit
+ 3ad4  Empty line removal
+ 4ad5  Algorithm to find view on the screen done!
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Let&amp;rsquo;s admit sometimes we just add &lt;code&gt;,&lt;/code&gt; or remove &lt;code&gt;//TODO:&lt;/code&gt; and call it a fix. Or Dummy Commit. However, I prefer to push my work as perfect commits when possible. Would it be nice, if we could not push those Dummy commit and minor typos we typically make while wrting commits. Well, its pretty easy.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;(featureBranch)$ git rebase -i 4ad5
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then you will see bunch of text in the terminal, dont be afraid. Its all documented nicely in the git comments if you just look below the bunch of text.&lt;/p&gt;
+
+&lt;p&gt;I would do something like this:
+&lt;em&gt;&lt;code&gt;s&lt;/code&gt; is to squash to the last commit. &lt;code&gt;r&lt;/code&gt; is to reword the commit message.&lt;/em&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; pick 4ad5  Algorithm to find view on the screen done!
+ s 3ad4  Empty line removal
+ s 2ad3  Dummy Commit
+ r 1ad2  Added support for X device
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Save and quit. (&lt;code&gt;:wq&lt;/code&gt; for default editor).
+Follow along with the git interruption where you can modify commits. Each time save and return, after changing something.&lt;/p&gt;
+
+&lt;p&gt;After, all is done. It looks something like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;(featureBranch)$glog
+7ed8 Added support for That device and editied something.
+6ed7 Algorithm to find view on the screen done!
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;See we did rewrite the history. Nice commits. One thing to note is, git takes the changeset and applies follwing the commands like pick, reword, edit &amp;hellip; In the process it creates new commit hash. Its entirely new hash and commit. For the sake of simplicity, commit hash are 4 chars long in this example.&lt;/p&gt;
+
+&lt;p&gt;CAUTION: Dont rebase what you have already pushed. Don&amp;rsquo;t dare to rebase when you have teammates working on that branch. Do it on yout unpushed branch.&lt;/p&gt;
+
+&lt;p&gt;However, if you are 100% certain, that noone except you is working on the pushed branch, then issue this command to force the push to work after rebase.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ git push -f
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;2-terminal&#34;&gt;2. Terminal&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Removing a list of local branches except the current one.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    (master)$ git branch | grep -v master | xargs git branch -d 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Some branches which cannot be removed can be cleaned with &lt;code&gt;git branch -D&lt;/code&gt; command but be responsible for this. &lt;code&gt;xargs&lt;/code&gt; is the utility to process list of lines as arguments. Read more on the man pages.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Colorful man pages&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;If you have installed &lt;code&gt;oh-my-zsh&lt;/code&gt; plugin for terminal then you can simply find these:  &lt;code&gt;plugins=(git)&lt;/code&gt; line in &lt;code&gt;~/.zshrc&lt;/code&gt; with &lt;code&gt;plugins=(git, colored-man-pages)&lt;/code&gt;. &lt;a href=&#34;http://kandelvijaya.com/2016/10/15/spicingterminal/&#34;&gt;Check this post&lt;/a&gt; to install and configure Oh-My-Zsh.&lt;/p&gt;
+
+&lt;p&gt;ELSE, follow this link on &lt;a href=&#34;http://unix.stackexchange.com/a/147&#34;&gt;SO&lt;/a&gt; to know how things actually work and set it up.&lt;/p&gt;
+
+&lt;h2 id=&#34;3-xcode&#34;&gt;3. Xcode&lt;/h2&gt;
+
+&lt;p&gt;Trying to find where &lt;code&gt;Indent&lt;/code&gt; option is under the menu bar in Xcode. Or say there is a command you know should exist but don&amp;rsquo;t know where it is nested. For example, you want to insert &lt;code&gt;Special character&lt;/code&gt;.  Do you google? OR do you open each menu option and search. Theres a better way.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Command + Shift + /&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Press this keys and type the command you think your looking for. In this case, I&amp;rsquo;m looking to insert emoji. Thanks to my friend Andrii who showed me this tip.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://kandelvijaya.com/img/commandShiftSearch.jpg&#34; alt=&#34;Cmd+Shift+/&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The cool part is this command works on every single Mac app. Its a great way to quickly find menu options that you forgot the location, shortcut or existance. Speaking about shortcut, lets get into the second tip of this month.&lt;/p&gt;
+
+&lt;p&gt;Learning shortcuts makes you productive. Using keyboard to work and navigate is faster. If you want to discuss on mouse vs keybindings then reach out to &lt;code&gt;vim&lt;/code&gt; or &lt;code&gt;emacs&lt;/code&gt; user. &lt;em&gt;It would be quite interesting if I were able to show you how many kilometers your finger glide for a month wile working full time as software engineer. Maybe I will post it in comments, if I do that experiment. While you can be the first one too. From my rough estimation, in a month your finger moves 2.5 KM while moving the trackpad.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;Anyways, theres this app called &lt;a href=&#34;https://www.mediaatelier.com/CheatSheet/&#34;&gt;&lt;strong&gt;cheatsheet&lt;/strong&gt;&lt;/a&gt; which displays current application&amp;rsquo;s most important shortcuts while you press and hold &lt;strong&gt;Command&lt;/strong&gt; key for little longer thn 3 seconds. It really helps memorize the key bindings and gives you reference ontop of the app context. This app also works on any Mac app.&lt;/p&gt;
+
+&lt;h2 id=&#34;cheers&#34;&gt;Cheers!&lt;/h2&gt;
+
+&lt;p&gt;That&amp;rsquo;s all for October. Lets see whats for November. Have fun!&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

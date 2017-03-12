@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Xcode8 on Kandelvijaya</title>
+    <link>http://kandelvijaya.com/tags/xcode8/</link>
+    <description>Recent content in Xcode8 on Kandelvijaya</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Vijaya P. Kandelvijaya</copyright>
+    <lastBuildDate>Mon, 10 Oct 2016 21:57:04 +0200</lastBuildDate>
+    <atom:link href="http://kandelvijaya.com/tags/xcode8/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Xcode8 ZStyle Code Formatter: How to write consistent styled code?</title>
+      <link>http://kandelvijaya.com/2016/10/10/xcode-code-zstyle-code-formatter/</link>
+      <pubDate>Mon, 10 Oct 2016 21:57:04 +0200</pubDate>
+      
+      <guid>http://kandelvijaya.com/2016/10/10/xcode-code-zstyle-code-formatter/</guid>
+      <description>
+
+&lt;p&gt;Yet again somebody missed to insert a empty line before the end of file, I missed to provide a empty space after dictionary Key  &lt;code&gt;[AnyHashable:Any]&lt;/code&gt; and you might miss to leave any of these kinds of code:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;//.......
+    return data
+}
+func compute(a:Int,b:Int)-&amp;gt;Int{
+//.......
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Which should have been:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;//.......
+return data
+}   
+
+func compute(a: Int, b: Int) -&amp;gt; Int {
+//.......
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;So you see where I&amp;rsquo;m heading with this.&lt;/p&gt;
+
+&lt;h2 id=&#34;bigger-picture&#34;&gt;Bigger Picture&lt;/h2&gt;
+
+&lt;p&gt;To just briefly explain the scenario, we are 12 iOS Engineers working harder than before (pun intended), cramming hundreds of line of code daily.
+We have bunch of features to roll out, release deadline to meet and a generation next to come and read the code we wrote with great thought.
+We couldn&amp;rsquo;t possibly achieve if, each of us, with unique style  &lt;code&gt;(tabs vs spaces)&lt;/code&gt; worked on. Thus, we have a Zalando iOS coding guidelines.
+Which keeps us in the same fashion. But like again, there is no way to actually force the project to have a strict guidelines and we humans are error prone.&lt;/p&gt;
+
+&lt;h2 id=&#34;problem&#34;&gt;Problem&lt;/h2&gt;
+
+&lt;p&gt;Some empty line or no empty spaces sneaks in the code base. We need a tool to correct out the our style to Zalando iOS style.
+After all we care, because mainly we are a fashionable technology company. All right!&lt;/p&gt;
+
+&lt;h2 id=&#34;solutions-available&#34;&gt;Solutions Available&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/realm/SwiftLint&#34;&gt;Swift Lint&lt;/a&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Its a good library but we have some serious issue with it.&lt;/li&gt;
+&lt;li&gt;We have a large build time and this adds some more.&lt;/li&gt;
+&lt;li&gt;We already have hundreds of TODO and FIXME that are signaling warnings. This adds even more errors/warnings.&lt;/li&gt;
+&lt;li&gt;The tool has limited possibility of correction. Our solution is not to give things to the devs to correct. They are already busy. It is to work for them.
+&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&#34;our-attempt&#34;&gt;Our Attempt&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Before&lt;/strong&gt; WWDC 2016&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Integrate SwiftLint and use regex to auto correct. But still the disadvantage was bigger than advantage.&lt;/li&gt;
+&lt;li&gt;Abandoned!
+&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;After&lt;/strong&gt; WWDC 2016&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Source Kit Extension API announced.&lt;/li&gt;
+&lt;li&gt;I started secretly using this extension to auto correct only things we cared.&lt;/li&gt;
+&lt;li&gt;The &lt;strong&gt;birth of XcodeFormatter!&lt;/strong&gt;
+&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;xcodeformatter&#34;&gt;XcodeFormatter&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Its a file based auto formatter. It wont warn or error. It just silently formats to the ZStyle. Pretty silently.&lt;/li&gt;
+&lt;li&gt;Reach out to the Editor -&amp;gt; XFormatter -&amp;gt; &amp;hellip;(options)&lt;/li&gt;
+&lt;li&gt;When you absolutely don&amp;rsquo;t want to, then don&amp;rsquo;t.&lt;/li&gt;
+&lt;li&gt;If you want to, which you should, then provide a shortcut or if you are mouse ninja then reach in the Editor  -&amp;gt;&lt;/li&gt;
+&lt;li&gt;Done!&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;technical-side&#34;&gt;Technical Side&lt;/h2&gt;
+
+&lt;p&gt;I prefer to run down the tech side by data flow or message flow.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;When user presses, Editor  -&amp;gt; XcodeFormatter  -&amp;gt; Correct All: Xcode sends the file content to our App Extension.&lt;/li&gt;
+&lt;li&gt;The app extension, choses a certain formatting method based on the command user clicked.&lt;/li&gt;
+&lt;li&gt;Inside the app extension, there are  &lt;code&gt;RegexMatch&lt;/code&gt; and  &lt;code&gt;CodeBlockAnalyzer&lt;/code&gt; which stays at the heart of matching the wrong style.&lt;/li&gt;
+&lt;li&gt;Inside the app extension, there are  &lt;code&gt;MatchCorrection&lt;/code&gt; and  &lt;code&gt;EmptyLineCorrection&lt;/code&gt; which stays at the heart of correcting the matched code.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;MatchCorrectionInfo&lt;/code&gt; is used to correct the match in case of  &lt;code&gt;MatchCorrection&lt;/code&gt;. Idea is to replace the Capture Group.  &lt;code&gt;MatchCorrectionInfo&lt;/code&gt; provides a  &lt;code&gt;[Int: String]&lt;/code&gt; with int for index of Capture Group and String for what to replace the found match with.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;EmptyLineCorrection&lt;/code&gt; does not need a correction rule as it trivially inserts/removes empty line above/below each  &lt;code&gt;CodePosition&lt;/code&gt; passed into correct.&lt;/li&gt;
+&lt;li&gt;All the matches and analyzation happens if the current character in code is not inside a  &lt;code&gt;//Comment&lt;/code&gt; or  &lt;code&gt;&amp;quot;String quote&amp;quot;&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;When everything is done, the  &lt;code&gt;XCSourceEditorExtension&lt;/code&gt; gets the corrected data, uses it to put the changes back into the  &lt;code&gt;NSMutableArray&lt;/code&gt; of lines Xcode provided us initially.&lt;/li&gt;
+&lt;li&gt;This change is then reflected in Xcode once the completion handler is called.&lt;/li&gt;
+&lt;li&gt;Boom! Done!&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;a-more-deeper-level-working-will-be-covered-when-this-article-is-updated&#34;&gt;A more deeper level working will be covered when this article is updated.&lt;/h3&gt;
+
+&lt;p&gt;For details, check the readme file on github. &lt;a href=&#34;https://github.com/kandelvijaya/XcodeFormatter&#34;&gt;XcodeFormatter On Github&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;cheers&#34;&gt;Cheers!&lt;/h2&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
