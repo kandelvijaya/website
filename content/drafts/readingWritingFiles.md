@@ -14,7 +14,7 @@ title = "GTX March: Basic tips"
 - Limiting the resources including storage, ports, permission to the application.
 - Good to run a third party software without having the device infected.
 - Every process runs in their own region and limits making no cross pollination, infection and so on.
-- Web browser typically runs in a sandbox mode.
+- Web browser typically run in a sandbox mode.
 
 
 # Playground
@@ -22,7 +22,7 @@ title = "GTX March: Basic tips"
 
 # iOS specifics
 - You cant access or write outside of sandbox.
-- You can read file from the main bundle resouce.
+- You can read file from the main bundle resource.
 - Can you write into bundle's resource folder in iOS?
 	__ANS__: No.
 	__LONG__: You cannot write to this directory. To prevent tampering, the bundle directory is signed at installation time. Writing to this directory changes the signature and prevents your app from launching. You can, however, gain read-only access to any resources stored in the apps bundle.
