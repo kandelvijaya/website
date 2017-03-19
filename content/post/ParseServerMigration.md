@@ -118,4 +118,8 @@ Hope you could manage to code your big app using a simple Parse backend.
 
 As always, you can contribute to make this article more accurate or extend openly via [Github repo](https://github.com/kandelvijaya/com/tree/master/content/post)
 
+### Thanks for Contribution
+1. [Ahmed Rashad Basuony](https://twitter.com/arashadbm)
+
+
 ### Cheers!
