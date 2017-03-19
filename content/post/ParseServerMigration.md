@@ -44,7 +44,7 @@ its pretty easy.
 
     - This command is all you need to get and install __parse-server__.
     - __dont install mongodb-runner__. Mongodb-runner is for 1 time testing only.
-6. If you want easy way to get started then, cloning this __parse-server-exanple__ is a valid option. [Check the details in the Readme](https://github.com/ParsePlatform/parse-server-example).
+6. If you want easy way to get started then, cloning this __parse-server-example__ is a valid option. [Check the details in the Readme](https://github.com/ParsePlatform/parse-server-example).
     - This is how I got my first parse server working in a maintainable way.
     - If you clone this repo, this will download __parse-server__ as a dependency; if not found or installed previously.
     - Modify your __index.js__ file to customize. Refer to the Readme if its little confusing. Don't panic, if you are afraid of javascript. We wont need much of it. Just some variable assignment.
@@ -59,7 +59,7 @@ Apache is a well known Web Server but we will be using NGINX on this particular 
 2. Open up port 4040 if you want to view the dashboard served from the server. _If you want the dashboard to be client side then thats totally fine._
     - `$ sudo ufw allow 4040/tcp`
 3. Install __parse-dashboard__.
-    - I prefer dashboard be in server. The reasons are 2. First, I can access server from any machine on the go. Second, it just a website interface to the parse-server. I would rather expose parse-dashboard then parse-server to the outside world.
+    - I prefer dashboard be in server. The reasons are 2. First, I can access server from any machine on the go. Second, it just a website interface to the parse-server. I would rather expose parse-dashboard than parse-server to the outside world.
     - install via  
 
     ```
@@ -89,7 +89,7 @@ Enter __pm2__. A easy way to manage process. _We will use pm2 to restart parse-s
     ```
 
     - To make this _pm2_ package start on reboot or crash, you need to configure _Systemd_ or _Service_. [Look at PM2 section on this exhustive article](https://www.digitalocean.com/community/tutorials/how-to-set-up-a-node-js-application-for-production-on-ubuntu-16-04)
-    - Start the parse server using `$pm2 start <your-Parse-app-SerevrPath>/index.js --name <yourappname>`
+    - Start the parse server using `$pm2 start <your-Parse-app-ServerPath>/index.js --name <yourappname>`
     - Start the parse dashboard using `$pm2 start <dashboardPath>/index.js --name <dashboardName>`
     - Now you should be able to see the running process via `$pm2 list`
     - To see logs for specific process, you can use `$pm2 logs <either app name or process id assigned by pm2>`. This will be helpful in debugging certain queries and cloud code or in general what the server is doing.
@@ -99,7 +99,7 @@ Enter __pm2__. A easy way to manage process. _We will use pm2 to restart parse-s
 2. If you want to associate this IP to a domain name.
     - To get the domain name, I prefer [Namecheap](www.namecheap.com)
     - To configure DNS for the domain with common domain name registrars, [read this guide.](https://www.digitalocean.com/community/tutorials/how-to-point-to-digitalocean-nameservers-from-common-domain-registrars)
-    - [How to configire to use domain name in the droplet](https://www.digitalocean.com/community/tutorials/how-to-set-up-a-host-name-with-digitalocean)
+    - [How to configure to use domain name in the droplet](https://www.digitalocean.com/community/tutorials/how-to-set-up-a-host-name-with-digitalocean)
     - To encrypt your domain name for free with TLS and have _https:_ [follow this guide](https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-16-04).
         - Make sure to forward-proxy `ipaddress:4040` to `domainname.com/dashboardPath`.
         - Look at [Configuring HTTPS for NGINX section on this article](https://www.digitalocean.com/community/tutorials/how-to-set-up-a-node-js-application-for-production-on-ubuntu-16-04)
