@@ -1,6 +1,6 @@
 +++
 author = "kandelvijaya"
-date = "2017-03-15T23:02:15+01:00"
+date = "2017-03-19T23:02:15+01:00"
 description = "Running self hosted Parse Server with dashboard."
 tags = []
 title = "Backend As Service from Scratch"
