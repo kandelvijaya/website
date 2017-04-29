@@ -13,14 +13,15 @@ URLProtocol and testing
 
 >An NSURLProtocol object handles the loading of protocol-specific URL data. The NSURLProtocol class itself is an abstract class that provides the infrastructure for processing URLs with a specific URL scheme. You create subclasses for any custom protocols or URL schemes that your app supports.
 
-The main point is:
+The main point is: 
+
 >All you have to do is define your protocol class and call the **registerClass(_:)** class method during your app’s launch time so that the system is aware of your protocol.
 
 The bright idea in me was: what if I have a custom MockURLProtocol class which will intercept and store all requests. Thereby, during unit test; I could register this custom class and test the application logic without ever hitting the network layer (the wire/less).
 
 >Tests should be fast and reliable. 
 
-This approach could be perfect candidate. But I found the hard way that this was not possible easily. Nonetheless, I wrote this post just to highlight first: the **URLProtocol** itself and second, lacking documentation for the **behaviour.**
+This approach could be perfect candidate. But I found the hard way that this was not possible for all cases. Nonetheless, I wrote this post just to highlight first: the **URLProtocol** itself and second, lacking documentation for the **behaviour.**
 
 ## The custom MockURLProtocol
 ```swift
@@ -50,7 +51,7 @@ final class MockURLProtocol: URLProtocol {
 
 
 ## Registering custom URLProtocol
-And heres **one** way of registering it only for the test target. Note that this AppDelegate is for the test target. 
+And here is **one** way of registering custom protocol class only for the test target. 
 ```swift
 class TestingAppDelegate: AppDelegate {
 
@@ -86,21 +87,34 @@ final class NativeContentEndpointTests: XCTestCase {
 
     func testWhenConfigProtocolClassIsExplicitlyModified_thenRequestIsIntercepted() {
         let url = URL(string: "www.google.com")!
+		
+	//1
         let config = URLSessionConfiguration.default
         config.protocolClasses = [MockURLProtocol.self]
+		
         let session = URLSession(configuration: config)
         let task = session.dataTask(with: url)
         task.resume()
 
+	//2 
         sleep(1)
 
         XCTAssertNotNil(MockURLProtocol.lastTriedRequest.last?.url)
         XCTAssertEqual(url, MockURLProtocol.lastTriedRequest.last?.url!)
     }
+```
+1. This is how we could specify explicitly to use our custom URLProtocol subclass. 
+2. `sleep(1)` might not be required. Its used here in the assumption that there might 
+   be delay on the task execution.
 
+
+```swift
     func testWhenURLProtocolIsRegisteredGlobally_thenRequestIsNotIntercepted() {
         let url = URL(string: "www.google2.com")!
+		
+	//1
         URLProtocol.registerClass(MockURLProtocol.self)
+		
         let session = URLSession(configuration: .default)
         let task = session.dataTask(with: url)
         task.resume()
@@ -108,6 +122,11 @@ final class NativeContentEndpointTests: XCTestCase {
         sleep(1)
         XCTAssertNil(MockURLProtocol.lastTriedRequest.last?.url)
     }
+```
+1. This is how one would register URLProtocol subclass globally. However, `URLSession` and its 
+   counterpart API wont respect this value. 
+
+```swift
 
     func testWhenURLProtocolIsRegistedGloballyWhileUsingAlamofire_thenRequestIsNotIntercepted() {
         /*
