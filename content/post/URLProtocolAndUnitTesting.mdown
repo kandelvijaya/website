@@ -7,23 +7,31 @@ title = "Testing Network Calls with URLProtocol"
 
 +++
 
-URLProtocol and testing
-===================
+URLProtocol and Unit Testing
+============================
 
 
 >An NSURLProtocol object handles the loading of protocol-specific URL data. The NSURLProtocol class itself is an abstract class that provides the infrastructure for processing URLs with a specific URL scheme. You create subclasses for any custom protocols or URL schemes that your app supports.
 
-The main point is: 
+The main point is:
 
 >All you have to do is define your protocol class and call the **registerClass(_:)** class method during your app’s launch time so that the system is aware of your protocol.
 
 The bright idea in me was: what if I have a custom MockURLProtocol class which will intercept and store all requests. Thereby, during unit test; I could register this custom class and test the application logic without ever hitting the network layer (the wire/less).
 
->Tests should be fast and reliable. 
+>Tests should be fast and reliable.
 
-This approach could be perfect candidate. But I found the hard way that this was not possible for all cases. Nonetheless, I wrote this post just to highlight first: the **URLProtocol** itself and second, lacking documentation for the **behaviour.**
+This approach could be perfect candidate. But I found the hard way that this was not possible for every cases. Nonetheless, I wrote this post just to highlight first: the **URLProtocol** itself and second, lacking documentation for this **behaviour.**
 
 ## The custom MockURLProtocol
+Subclassing the `URLProtocol` is straightforward.
+
+1. `canInit(with: URLRequest)` is called to check if the Protocol can handle given kind of request.
+2.  If it can, then `canonicalRequest(` is called. For starters, we are returning the same request here.
+3.  Then comes the actual fetching part. This are handled by `startLoading()` which is responsible to do all it can to fetch remote content. `stopLoading()` can be called to either cancel or mark completion.
+
+Here is a basic subclass implementation. Keep in mind, we are not interested to fetch content but rather to intercept the request that would otherwise be used to make actual fetch.
+
 ```swift
 final class MockURLProtocol: URLProtocol {
 
@@ -51,7 +59,15 @@ final class MockURLProtocol: URLProtocol {
 
 
 ## Registering custom URLProtocol
-And here is **one** way of registering custom protocol class only for the test target. 
+After all, we need to tell the URL Loading system to use our custom protocol.
+
+### .registerClass() documentation
+>When the URL loading system begins to load a request, each registered protocol class is consulted in turn to see if it can be initialized with the specified request. The first NSURLProtocol subclass to return true when sent a **canInit(with:)** message is used to perform the URL load. There is no guarantee that all registered protocol classes will be consulted.
+**Classes are consulted in the reverse order of their registration**. A similar design governs the process to create the canonical form of a request with canonicalRequest(for:).
+
+
+
+And here is **one** way of registering custom protocol class only for the test target.
 ```swift
 class TestingAppDelegate: AppDelegate {
 
@@ -64,14 +80,9 @@ class TestingAppDelegate: AppDelegate {
 ```
 
 
-## .registerClass() documentation
->When the URL loading system begins to load a request, each registered protocol class is consulted in turn to see if it can be initialized with the specified request. The first NSURLProtocol subclass to return true when sent a **canInit(with:)** message is used to perform the URL load. There is no guarantee that all registered protocol classes will be consulted.
-**Classes are consulted in the reverse order of their registration**. A similar design governs the process to create the canonical form of a request with canonicalRequest(for:).
+I actually prefer to register the mock protocol class at the site of use. So my preferred way is to register in each **testcase**.
 
-
-I actually prefer to register the mock class at the site of use. So my preferred way is to register in each **testcase**.
-
-## The Catch
+## Unit Tests and the Catch
 
 ```swift
 import XCTest
@@ -87,34 +98,34 @@ final class NativeContentEndpointTests: XCTestCase {
 
     func testWhenConfigProtocolClassIsExplicitlyModified_thenRequestIsIntercepted() {
         let url = URL(string: "www.google.com")!
-		
+
 	//1
         let config = URLSessionConfiguration.default
         config.protocolClasses = [MockURLProtocol.self]
-		
+
         let session = URLSession(configuration: config)
         let task = session.dataTask(with: url)
         task.resume()
 
-	//2 
+	//2
         sleep(1)
 
         XCTAssertNotNil(MockURLProtocol.lastTriedRequest.last?.url)
         XCTAssertEqual(url, MockURLProtocol.lastTriedRequest.last?.url!)
     }
 ```
-1. This is how we could specify explicitly to use our custom URLProtocol subclass. 
-2. `sleep(1)` might not be required. Its used here in the assumption that there might 
-   be delay on the task execution.
+1. This is how we could specify explicitly to use our custom URLProtocol subclass.
+2. `sleep(1)` might not be required. Its used here assuming that there might
+   be delay on request execution.
 
 
 ```swift
     func testWhenURLProtocolIsRegisteredGlobally_thenRequestIsNotIntercepted() {
         let url = URL(string: "www.google2.com")!
-		
+
 	//1
         URLProtocol.registerClass(MockURLProtocol.self)
-		
+
         let session = URLSession(configuration: .default)
         let task = session.dataTask(with: url)
         task.resume()
@@ -123,8 +134,8 @@ final class NativeContentEndpointTests: XCTestCase {
         XCTAssertNil(MockURLProtocol.lastTriedRequest.last?.url)
     }
 ```
-1. This is how one would register URLProtocol subclass globally. However, `URLSession` and its 
-   counterpart API wont respect this value. 
+1. This is how one would register URLProtocol subclass globally. However, `URLSession` and its
+   counterpart API wont respect this value.
 
 ```swift
 
@@ -133,19 +144,19 @@ final class NativeContentEndpointTests: XCTestCase {
          *  Although we registerd our custom URLProtocol and as per the documentation
          *  the last one will be searched first for -canInit(:)
          *  However, with the introduction of URLSession and URLSessionConfiguration,
-         *  things changed. 
+         *  things changed.
          *
-         *  Reason: The registerClass method registers a protocol with NSURLConnection 
+         *  Reason: The registerClass method registers a protocol with NSURLConnection
          *  and with the shared session only
          *  See link: http://stackoverflow.com/a/38560677/2419589
-         * 
+         *
          *  Apple docs for URLProtocol.register(:) fails to document this behavior and
          *  hence I had to painfully pull my hair for several hours in vain.
          *
          */
 
         URLProtocol.registerClass(MockURLProtocol.self)
-        
+
         //uses Alamofire
         HTTPManager().loadNativeContent(template: "test-page") { _ in }
 
@@ -161,15 +172,12 @@ final class NativeContentEndpointTests: XCTestCase {
 
 ## Conclusion
 
-Testing apps using third party networking library require us to inject `protocolClasses` into the sessionConfiguration.  As each `URLSessionConfiguration` copies the list of system provided default URL Protocols, our custom subclass wont be looked up by default. 
+>If we don't explicitly set the **protocolClasses** for the **URLSessionConfiguration** that we would use to create **URLSession**, our custom protocol class would not intercept network requests.
 
-Hence, this approach of trying to Unit Test was a failure for our case. 
+Each `URLSessionConfiguration` (`default`, `ephemeral` ) searches the list of system provided default URL Protocols, our custom subclass wont be looked up by default. Testing apps using third party networking library require us to inject `protocolClasses` into the sessionConfiguration object. This is not straightforward as we have to dissect third party  dependencies.
 
->If we dont explicitly set the **protocolClasses** for the **URLSessionConfiguration** that we would pass into **URLSession**, our custom class would not intercept calls. 
+Our app uses [**Alamofire**](https://github.com/Alamofire/Alamofire) for networking.  Alamofire internally uses the new APIs: `NSURLSession` constructed with one of `NSURLSessionConfiguration`. How would we add `protocolClasses` to this configuration object given this is a third party library. Its possible but is it worth it?
 
-Our app uses [**Alamofire**](https://github.com/Alamofire/Alamofire) for networking.  Alamofire internally uses the new APIs: `NSURLSession` constructed with one of `NSURLSessionConfiguration`. How would we add `protocolClasses` to this configuration object given this is a third party library. Its possible but the solution would involve lots of step and therby inducing lots of extra hacks just for the sake of Unit Testing. 
+Hence, this approach of trying to Unit Test was a failure for our case.
 
-**Alamofire** internally uses the same approach of subclassing `URLProtocol` to test the `SessionManager` object internally. If you are interested heres the [link for the Github Issue and Discussion](https://github.com/Alamofire/Alamofire/issues/1160).
- 
-        
-         
+**Alamofire** internally uses the same approach of subclassing `URLProtocol` to test the `SessionManager` object **internally**. If you are interested here is the [link for the Github Issue and Discussion](https://github.com/Alamofire/Alamofire/issues/1160).
