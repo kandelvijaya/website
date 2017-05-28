@@ -6,6 +6,7 @@ copyright = "Vijaya P. Kandelvijaya"
 googleAnalytics = "UA-46775685-3"
 disqusShortname = "kandelvijayacom"
 PygmentsCodeFences = true
+PygmentsStyle = "monokai"
 
 [Author]
     name = "kandelvijaya"
