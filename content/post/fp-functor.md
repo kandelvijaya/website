@@ -17,7 +17,7 @@ In FP, Function is the unit of reasoning. In OOP, we constructed/invented many c
 
 What is surprising is the amount of new ideas and papers written on how to deal with certain problems in FP is huge compared to what is being done on OOP or imperative programming. For instance, what are all those funky names like Functor, Applicative, Monad, Monoid, etc. My take on this is: what do you do when all you have is a function? Sure enough you examine it extensively, study the properties and try to exploit certain patterns and prove things like Monad can help FP be pure and still do IO. 
 
-> Find a quote
+> The more constraints one imposes, the more one frees one's self. And the arbitrariness of the constraint serves only to obtain precision of execution. - Igor Stravinsky
 
 FP is of great interest to Academics, Mathematician, Logicians and pragmatic engineer. It however, requires a different attitude and mindset. 
 
@@ -437,6 +437,13 @@ To summerize:
 Lets say a functor has a partially applied function inside it like `Some (*3)`and we have `Some(4)`, can we map this partially applied function over a data type. Yes, we will see **Applicative Functor** next time around. 
 
 
+# References:
+1. SwiftFunctor [Github Repo](https://github.com/kandelvijaya/SwiftFunctor)
+2. Why Functional Programming Matters? [Paper](https://www.cs.kent.ac.uk/people/staff/dat/miranda/whyfp90.pdf)
+3. Bulb Paradox [Article](http://wiki.c2.com/?BlubParadox)
+4. Learn you a haskell for Great Good [Book](http://learnyouahaskell.com)
+5. How to make Ad-Hoc polymorphism less ad-hoc [Paper](https://people.csail.mit.edu/dnj/teaching/6898/papers/wadler88.pdf)
+6. Why FP matters? [ebook](http://book.realworldhaskell.org/read/why-functional-programming-why-haskell.html)
 
 *Happy Coding.*
 *Cheers!*
