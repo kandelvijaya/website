@@ -42,7 +42,7 @@ Lets see list: `Array<Int>`,
 - Its a container data type. It can hold bunch of `Int`s.
 
 ## Problem
-```
+```swift
 let naturalNumbers = [1,2,3,4,5]
 ```
 
@@ -51,7 +51,7 @@ let naturalNumbers = [1,2,3,4,5]
 
 ## Solution
 Lets do the Imperative way:
-```
+```swift
 //1.
 var output:[Int] = []
 for n in naturalNumbers {
@@ -69,7 +69,7 @@ for n in naturalNumbers {
 
 What if we wanted to get squares of items in the list? Do we write another imperative code block:
 
-```
+```swift
 var output: [Int] = []
 for n in naturalNumbers {
     let applied = n * n
@@ -85,7 +85,7 @@ for n in naturalNumbers {
 ### Improvising 1
 Lets try to encapsulate what varies. The right encapsulation here is a function. Naturally right!
 
-```
+```swift
 func something(input: [Int]) -> [Int] {
     var output: [Int] = []
     for n in input {
@@ -104,7 +104,7 @@ The above code has 3 problems:
 
 ### Improvising 2
 Lets think for a moment on these 3 lines:
-```
+```swift
 let applied = n * 2
 let applied = String(n)
 let applied = n * n
@@ -118,13 +118,15 @@ Let's think more
 - The function returns 1 value of any other type. The other type can be the same one as `n`. 
 
 Can we generalize this three lines as a transform function:
-```
+```swift
 let applied = transform(n)
 ```
 
 where transform would be (dont worry about the T and U. They are placeholder types):
+
 ```
 func transform<T,U>(input: T) -> U
+
 ```
 
 Now we know what applied is goging to be: its a transform on the current value. Can we get this transform function as input to the function. 
@@ -133,7 +135,7 @@ Now we know what applied is goging to be: its a transform on the current value. 
 
 Lets get back to naming this; for starters we will call `map` (Its takes one type and maps to other)
 
-```
+```swift
 func map<T, U>(input: [T], transform: ((T) -> U)) -> [U] {
     var output: [U] = []
     for n in input {
@@ -156,7 +158,7 @@ What about Dictionary? They seem to be in need of `map`. Swift has this baked in
 
 What is this all for? In fact, we have just create a **functor**. In the example code above, List is a **functor** type.
 
-```
+```swift
 Array<T> => container of zero or more `T` typed items
 Optional<T> = container of either .none or .some(T) 
 Dictionary<K,V> = container of zero or more (K,V) pairs
@@ -177,7 +179,7 @@ Seems like we need a type `Functor` which is polymorphic in `T`. Remember until 
 # Laws
 Lets talk about the laws. There are only 2 laws for a type to be functor.
 1. If a Functor is applied with identity function it should be the same output.
-```
+```swift
 
 // Identity function in haskell
 id :: a -> a
@@ -190,12 +192,12 @@ func id<T>(input: T) -> T {
 ```
 
 Now the law:
-```
+```swift
 map(inputFunctor: [1,2,3,4], transform: id) == inputFunctor
 ```
 
 which will result as these:
-```
+```swift
 var output: [Int] = []
 for n in [1,2,3,4] {
     let applied = id(n)  // this `id` just returns what it was passed
@@ -207,7 +209,7 @@ for n in [1,2,3,4] {
 
 Before we can state and prove this law in swift, we need a function composition operator. 
 
-```
+```swift
 infix operator <>
 
 public func <> <T,U, V>(value1: @escaping((U) -> V),  value2: @escaping ((T) -> U)) -> ((T)-> V) {
@@ -221,7 +223,7 @@ public func <> <T,U, V>(value1: @escaping((U) -> V),  value2: @escaping ((T) -> 
 The above function `<>` takes 2 function and combines into 1; the types should align. 
 
 Now lets see what it means:
-```
+```swift
 let mult2 = { x in x * 2 }
 let mult3 = { x in x * 3 }
 
@@ -285,7 +287,7 @@ class Functor f where
 In Haskell, like other FP, a function can only take 1 parameter as input and return 1 parameter as output. Multi argument is acheived via function currying. So the above `fmap` is a function that take a function `a -> b` and returns another function where `f a -> f b`. Appreciate the fact that there is no clutter in the declaration site as the haskell compiler knows how to curry functions and infer types. This makes writing haskell so intuitive (once you get a hang of it). 
 
 Back to the point, the above Swift Functor declaration won't work because protocol cannot be themself generic similar to 
-```
+```swift
 struct Functor<A> {
     // struct can be generic in this way
 }
@@ -315,7 +317,7 @@ Its bit verbose and angle bracketted but it does the work.
 
 ## Conforming List to Functor
 Time to conform Array<Element> to be Functor. 
-```
+```swift
 extension Array: Functor {
     public typealias A = Element  // 1
 
@@ -339,7 +341,7 @@ Couple of things to keep in mind:
 
 ## Taking Array Functor for a spin
 Lets see the Array Functor in action; shall we!
-```
+```swift
 let inputFunctor = [1,2,3]
 
 // 1. See the implicit type annotation
@@ -351,7 +353,7 @@ To see more example and documented source code; please check this [Github Repo: 
 
 ## Conforming Optional To Functor
 Optional is a bit tricky to conform to Functor. First lets see the code and we shall see why exactly?
-```
+```swift
 extension Optional: Functor {
 
     // 1. 
@@ -382,7 +384,7 @@ Hence, **Optional<Wrapped>**  cannot be represented as true Functor. It only wor
 
 ### Can we model Optional somehow to be Functor?
 We can by using another wrapper type that is **`Maybe`** type.
-```
+```swift
 public struct Maybe<T> {
     //1. 
     public let value: Optional<Any>
@@ -403,7 +405,7 @@ Notes:
 1. We encapsulate the real optional inside a **Maybe** struct. We also type erase the eventual value that the optional would have. Dont worry, we can get the value back to original type. 
 
 Conforming to Functor is pretty similar as:
-```
+```swift
 extension Maybe: Functor {
 
     public func fmap<F, B>(_ by: ((T) -> B)) -> F where F : Functor, F.A == B {
