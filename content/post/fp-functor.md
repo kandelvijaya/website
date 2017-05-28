@@ -112,9 +112,10 @@ let applied = n * n
 
 We are transforming `n` into some other type by applying a function. `*` is a operator/function. `String()` is a constructor function. 
 
-Let's think more. 
-- The function takes 1 parameter only which is `n`
-- The function returns 1 value of any other type. The other type can be the same one as `n`.
+Let's think more  
+
+- The function takes 1 parameter only which is `n` 
+- The function returns 1 value of any other type. The other type can be the same one as `n`. 
 
 Can we generalize this three lines as a transform function:
 ```
@@ -127,7 +128,8 @@ func transform<T,U>(input: T) -> U
 ```
 
 Now we know what applied is goging to be: its a transform on the current value. Can we get this transform function as input to the function. 
-- Sure, swift has closures and higher order function. 
+
+> Sure, swift has closures and higher order function. 
 
 Lets get back to naming this; for starters we will call `map` (Its takes one type and maps to other)
 
@@ -146,7 +148,7 @@ The above function is a map that takes input as List of `T` and a transform para
 
 Aha now we have a function that encapsulates the mutation. This function is capable of handling any types of list and any types of transform. 1 function to rule the transform. Nice, right. 
 
-1. Chances are you know this all by heart, this is the standard `map` function on Collection type of Swift. 
+Chances are you know this all by heart, this is the standard `map` function on Collection type of Swift. 
 
 Now lets go beyond the normal comfort zone. Do we need `map` or mapping only on List types. Turns out, especially in FP, maps are essential utility to convert one type to another. A lots of types can be mapped. There another such type in Swift which has `map`; **Optional**
 
@@ -252,7 +254,7 @@ Notice haskell uses `fmap` as the name of the method. We used `map` thats all ok
 Lets create analogous data type to `Optional` from Swift in Haskell and conform it to be Functor. 
 
 ```
-- declaration
+-- declaration
 data Optional a = None | Some a
 
 -- conformance to Functor
@@ -301,11 +303,12 @@ public protocol Functor {
 }
 ```
 
-The above declaration states:
-    1. Current Functor is container of `A` types
-    2. fmap is a function that works on current functor
-    3. fmap takes a transform function `A -> B` where input is `A`: current functor item type
-    4. fmap returns a Functor `F` whose `A` is equal to `B` that is emitted by transform function
+The above declaration states 
+
+1. Current Functor is container of `A` types
+2. fmap is a function that works on current functor
+3. fmap takes a transform function `A -> B` where input is `A`: current functor item type
+4. fmap returns a Functor `F` whose `A` is equal to `B` that is emitted by transform function
 
 Its bit verbose and angle bracketted but it does the work.
 
@@ -329,6 +332,7 @@ extension Array: Functor {
 
 
 Couple of things to keep in mind:
+
 1. Array has a Element associated type which will be the real item model type. We will use that to denote Functor's Item Type. This is analogous to `Array<Element> ~~~ Functor<Element>`
 2. note that we downcasted forcefully to produce a Functor. It wont crash as we just confromed list to be Functor. This is just getting around invented type system. 
 
@@ -369,6 +373,7 @@ extension Optional: Functor {
 ```
 
 Things to note:
+
 1. `Optional<Wrapped>~~~~Functor<Wrapped>`
 2. `.none` cannot be casted to Functor because `!` operator is defined on Optional such that it unwraps the eventual value from optional. In our case, its `.none` so it will crash. Think of doing this: `let a: Int? = nil` then `a! + 2`.
 3. This wont crash because we do have something. 
@@ -394,6 +399,7 @@ public struct Maybe<T> {
 ```
 
 Notes:
+
 1. We encapsulate the real optional inside a **Maybe** struct. We also type erase the eventual value that the optional would have. Dont worry, we can get the value back to original type. 
 
 Conforming to Functor is pretty similar as:
@@ -416,12 +422,14 @@ extension Maybe: Functor {
 ```
 
 Points to consider:
+
 1. Immediately we see that when we have `.none` value we return a empty `Maybe` type. This now doesnot crash. 
 2. Remember the type erasure we had to do when storing the eventual value. Here we know the correct type and hence safely force downcast. 
 
 # Conclusion
 
 To summerize:
+
 1. **Functor** is a type that provides `mapping` capability. A type that can be mapped. 
 2. Swift has **Collection** and **Optional** types which are Functor. (Optional  is not pure Functor and we saw why.)
 3. Functor are useful abstraction that can turn one kind of data into another. 
