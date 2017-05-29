@@ -9,11 +9,11 @@ title = "Functor: Mapping over things!"
 
 # Prelude
 
-Specialization is the key to mastery; functional programming specializes only on function. Thats all there is. The mastery with FP is to reduce complexity, which is what software engineering is all about. Dont get me wrong, Software engineering is also about delivering product not only over engineering. Delivering real world products used to be the stressful part about functional programming. Not anymore. 
+Specialization is the key to mastery; functional programming specializes only on function. Thats all there is. The mastery with FP is to reduce complexity, which is what software engineering is all about. Don't get me wrong, Software engineering is also about delivering product not only over engineering. Delivering real world products used to be the stressful part about functional programming. Not anymore. 
 
-Specialization on functions creates a whole new paridigm. In FP, there is no overhead to think of object, assignment, mutation, shared data. You are left to think only how you glue functions and keep gluing them until your product is a function of given input that produces output. Imagine a web server written in FP; it would take path and query as input and return the resource located there. 
+Specialization on functions creates a whole new paradigm. In FP, there is no overhead to think of object, assignment, mutation, shared data. You are left to think only how you glue functions and keep gluing them until your product is a function of given input that produces output. Imagine a web server written in FP; it would take path and query as input and return the resource located there. 
 
-In FP, Function is the unit of reasoning. In OOP, we constructed/invented many cleaver hacks and syntax to get around to solve a particular problem. For instance, we have locks, semaphore, mutex to allow one to do concurrent task while managing a shared resource without deadlocking and getting into race condition. This in itself is a whole new area of study, all because we have mutability. Immutability is de facto in Functional Programming. In such, FP programs can make use of multi cores without any special construct as the order of function execution doesnot really matter. 
+In FP, Function is the unit of reasoning. In OOP, we constructed/invented many cleaver hacks and syntax to get around to solve a particular problem. For instance, we have locks, semaphore, mutex to allow one to do concurrent task while managing a shared resource without deadlocking and getting into race condition. This in itself is a whole new area of study, all because we have mutability. Immutability is de facto in Functional Programming. In such, FP programs can make use of multi cores without any special construct as the order of function execution doesn't really matter. 
 
 What is surprising is the amount of new ideas and papers written on how to deal with certain problems in FP is huge compared to what is being done on OOP or imperative programming. For instance, what are all those funky names like Functor, Applicative, Monad, Monoid, etc. My take on this is: what do you do when all you have is a function? Sure enough you examine it extensively, study the properties and try to exploit certain patterns and prove things like Monad can help FP be pure and still do IO. 
 
@@ -21,7 +21,7 @@ What is surprising is the amount of new ideas and papers written on how to deal 
 
 FP is of great interest to Academics, Mathematician, Logicians and pragmatic engineer. It however, requires a different attitude and mindset. 
 
-I grew up learning QBasic, ActionScript3, C, Java, PHP. I now work on Obj-C/Swift. These all use the same prinicple to tackle a problem. The imperative style. For comparision, I picked up Python in 1 day. I had to mull over 1 month to get Scheme into my mind and more recently I spent 2 weeks besides work and finally did `print("hello world")` equivalent in Haskell. All the things we know in this Imperative world is useless on the other side, FP world. 
+I grew up learning QBasic, ActionScript3, C, Java, PHP. I now work on Obj-C/Swift. These all use the same principle to tackle a problem. The imperative style. For comparison, I picked up Python in 1 day. I had to mull over 1 month to get Scheme into my mind and more recently I spent 2 weeks besides work and finally did `print("hello world")` equivalent in Haskell. All the things we know in this Imperative world is useless on the other side, FP world. 
 
 In such, FP is not just function composition but equally a different mindset to building software. Similar to the quote; 
 
@@ -29,7 +29,7 @@ In such, FP is not just function composition but equally a different mindset to 
 
 FP is not a hammer. Its different. We need to tackle problems differently. Read on this awesome paper (The intro section especially) [Paper: Why Functional Programming?](https://www.cs.kent.ac.uk/people/staff/dat/miranda/whyfp90.pdf) to get more insight.
 
-I have been learning haskell intensely for about a month or more now and surprising things do make sense, lately. A lot. I sometimes even feel enlightened temporarily and bemused a bit later thinking; did I got it completely or my mind just ran out of working memory. Its a fascinating paradigm. I will now attempt to show some cool stuffs that I grasped and implement them with Swift. Before I do that, I highly encourage you to go through this [Bulb Paradox Article](http://wiki.c2.com/?BlubParadox). I hope you have read it long time ago, every programmer does. 
+I have been learning Haskell intensely for about a month or more now and surprising things do make sense, lately. A lot. I sometimes even feel enlightened temporarily and bemused a bit later thinking; did I got it completely or my mind just ran out of working memory. Its a fascinating paradigm. I will now attempt to show some cool stuffs that I grasped and implement them with Swift. Before I do that, I highly encourage you to go through this [Bulb Paradox Article](http://wiki.c2.com/?BlubParadox). I hope you have read it long time ago, every programmer does. 
 
 >As long as our hypothetical Blub programmer is looking down the power continuum, he knows he's looking down. Languages less powerful than Blub are obviously less powerful, because they're missing some feature he's used to. But when our hypothetical Blub programmer looks in the other direction, up the power continuum, he doesn't realize he's looking up. What he sees are merely weird languages. He probably considers them about equivalent in power to Blub, but with all this other hairy stuff thrown in as well. Blub is good enough for him, because he thinks in Blub.
 
@@ -77,7 +77,7 @@ for n in naturalNumbers {
 }
 ```
 
-### Critisizing:
+### Criticizing:
 1. We have a lot of repeating code, this is minor to the second point.
 2. We are mutating output in every pass. What if this variable is declared 100 lines above the looping construct. What if other parts of code mutate this variable while we are trying to apply a function in loop. 
 3. We have a repeating code for a repeating pattern. Can we encapsulate what varies?
@@ -122,14 +122,14 @@ Can we generalize this three lines as a transform function:
 let applied = transform(n)
 ```
 
-where transform would be (dont worry about the T and U. They are placeholder types):
+where transform would be (don't worry about the T and U. They are placeholder types):
 
 ```
 func transform<T,U>(input: T) -> U
 
 ```
 
-Now we know what applied is goging to be: its a transform on the current value. Can we get this transform function as input to the function. 
+Now we know what applied is going to be: its a transform on the current value. Can we get this transform function as input to the function. 
 
 > Sure, swift has closures and higher order function. 
 
@@ -166,12 +166,12 @@ Dictionary<K,V> = container of zero or more (K,V) pairs
 
 These 3 types do provide a interface to supply transform function. Its called `map`. 
 
-Hence, We already have **functors** in swift but haven't realised we did. To make things easy, a type that can be mapped is a functor. However, for a type to be a functor it has to have these properties. 
+Hence, We already have **functors** in swift but haven't realized we did. To make things easy, a type that can be mapped is a functor. However, for a type to be a functor it has to have these properties. 
 
 # Properties
 ```
-fmap :: (a -> b) -> f a -> f b  //haskell 
-func map(inputFunctor: Functor<T>, transfrom: (T -> U)) -> Functor<U> //Psuedo Swift
+fmap :: (a -> b) -> f a -> f b  //Haskell 
+func map(inputFunctor: Functor<T>, transform: (T -> U)) -> Functor<U> //Pseudo Swift
 ```
 
 Seems like we need a type `Functor` which is polymorphic in `T`. Remember until this point, we have 3 `map` functions on each `Collection` and `Optional` type. There is no rule that specifies that a new user type will be a functor or that type's `map` will abide by the law and do the right job. Its all informal conformance. 
@@ -181,7 +181,7 @@ Lets talk about the laws. There are only 2 laws for a type to be functor.
 1. If a Functor is applied with identity function it should be the same output.
 ```swift
 
-// Identity function in haskell
+// Identity function in Haskell
 id :: a -> a
 id x = x
 
@@ -201,11 +201,11 @@ which will result as these:
 var output: [Int] = []
 for n in [1,2,3,4] {
     let applied = id(n)  // this `id` just returns what it was passed
-    ouput.append(applied)
+    output.append(applied)
 }
 ```
 
-2. Composing two functions and then mapping the resulting function over a Functor should be the same as first mapping one function onver the functor and then mapping the other one.
+2. Composing two functions and then mapping the resulting function over a Functor should be the same as first mapping one function over the functor and then mapping the other one.
 
 Before we can state and prove this law in swift, we need a function composition operator. 
 
@@ -229,29 +229,29 @@ let mult3 = { x in x * 3 }
 
 let x = map(inputFunctor: [1,2,3], transform: mult2 <> mult3)
 
-let y1 = map(inputFunctor: [1,2,3], transfrom: mult3)
+let y1 = map(inputFunctor: [1,2,3], transform: mult3)
 let y2 = map(inputFunctor: y1, transform: mult2)
 
 x == y2
 ```
 
-In haskell this would be:
+In Haskell this would be:
 ```
 map (f.g) = map f . map g
 ```
 where `f` and `g` are functions and to `.` is equivalent to our `<>` operator.
 
-*Note: Haskell can infer types almost at all times leaving you to denote the type maybe on 1% case when ambuiguity occurs. However, swift is verbose and can cause angle bracket blindness when using generics to provide type placeholder*   
+*Note: Haskell can infer types almost at all times leaving you to denote the type maybe on 1% case when ambiguity occurs. However, swift is verbose and can cause angle bracket blindness when using generics to provide type placeholder*   
 
 # Haskell
 
-Functor defination
+Functor definition
 ```
 class Functor f where
   fmap :: (a -> b) -> f a -> f b
 ```
 
-Notice haskell uses `fmap` as the name of the method. We used `map` thats all okay. NOTE: **class** creates a type class which is not related anyway to class from OOP. 
+Notice Haskell uses `fmap` as the name of the method. We used `map` thats all okay. NOTE: **class** creates a type class which is not related anyway to class from OOP. 
 
 Lets create analogous data type to `Optional` from Swift in Haskell and conform it to be Functor. 
 
@@ -266,10 +266,10 @@ instance Functor Optional where
 ```
 
 # Making true Functor type in Swift
-Informal conformance is a weak promise that can be broken without consent. List, Optional , Dictionaries are Functor in Swift informally. There is no type gurantee. Lets make this **Functor** type and tie them once and for all. 
+Informal conformance is a weak promise that can be broken without consent. List, Optional , Dictionaries are Functor in Swift informally. There is no type guarantee. Lets make this **Functor** type and tie them once and for all. 
 
 ## How can we model Functor?
-Well, its a perfect candidate for Protocol. However, we will run into some limitation of Protocols in swift that will make us go the rough path. Modeling Functor with Struct is a bit easy but well, we cant conform List to a Struct! A class would work but but we want a lightweight inteface. 
+Well, its a perfect candidate for Protocol. However, we will run into some limitation of Protocols in swift that will make us go the rough path. Modeling Functor with Struct is a bit easy but well, we cant conform List to a Struct! A class would work but but we want a lightweight interface. 
 
 Ideally, I wanted to express Functor like such
 ```
@@ -284,19 +284,19 @@ class Functor f where
     fmap:: (a -> b) -> f a -> f b
 ```
 
-In Haskell, like other FP, a function can only take 1 parameter as input and return 1 parameter as output. Multi argument is acheived via function currying. So the above `fmap` is a function that take a function `a -> b` and returns another function where `f a -> f b`. Appreciate the fact that there is no clutter in the declaration site as the haskell compiler knows how to curry functions and infer types. This makes writing haskell so intuitive (once you get a hang of it). 
+In Haskell, like other FP, a function can only take 1 parameter as input and return 1 parameter as output. Multi argument is achieved via function currying. So the above `fmap` is a function that take a function `a -> b` and returns another function where `f a -> f b`. Appreciate the fact that there is no clutter in the declaration site as the Haskell compiler knows how to curry functions and infer types. This makes writing Haskell so intuitive (once you get a hang of it). 
 
-Back to the point, the above Swift Functor declaration won't work because protocol cannot be themself generic similar to 
+Back to the point, the above Swift Functor declaration won't work because protocol cannot be them-self generic similar to 
 ```swift
 struct Functor<A> {
     // struct can be generic in this way
 }
 ```
 
-To get a better grasp of why this is the limitation and how haskell **typeclass** is superior to Swift's type system, I recommend reading this [research papaer on How to Make Ad-Hoc polymorphism less Ad-hoc](http://homepages.inf.ed.ac.uk/wadler/papers/class/class.ps).
+To get a better grasp of why this is the limitation and how Haskell **typeclass** is superior to Swift's type system, I recommend reading this [research paper on How to Make Ad-Hoc polymorphism less Ad-hoc](http://homepages.inf.ed.ac.uk/wadler/papers/class/class.ps).
 
 ## Improvising
-Fortunately, protocol has associated types that can be used in our modelling case.
+Fortunately, protocol has associated types that can be used in our modeling case.
 
 ```
 public protocol Functor {
@@ -312,7 +312,7 @@ The above declaration states
 3. fmap takes a transform function `A -> B` where input is `A`: current functor item type
 4. fmap returns a Functor `F` whose `A` is equal to `B` that is emitted by transform function
 
-Its bit verbose and angle bracketted but it does the work.
+Its bit verbose and angle bracketed but it does the work.
 
 
 ## Conforming List to Functor
@@ -336,7 +336,7 @@ extension Array: Functor {
 Couple of things to keep in mind:
 
 1. Array has a Element associated type which will be the real item model type. We will use that to denote Functor's Item Type. This is analogous to `Array<Element> ~~~ Functor<Element>`
-2. note that we downcasted forcefully to produce a Functor. It wont crash as we just confromed list to be Functor. This is just getting around invented type system. 
+2. note that we down-casted forcefully to produce a Functor. It wont crash as we just conformed list to be Functor. This is just getting around invented type system. 
 
 
 ## Taking Array Functor for a spin
@@ -402,7 +402,7 @@ public struct Maybe<T> {
 
 Notes:
 
-1. We encapsulate the real optional inside a **Maybe** struct. We also type erase the eventual value that the optional would have. Dont worry, we can get the value back to original type. 
+1. We encapsulate the real optional inside a **Maybe** struct. We also type erase the eventual value that the optional would have. Don't worry, we can get the value back to original type. 
 
 Conforming to Functor is pretty similar as:
 ```swift
@@ -425,24 +425,24 @@ extension Maybe: Functor {
 
 Points to consider:
 
-1. Immediately we see that when we have `.none` value we return a empty `Maybe` type. This now doesnot crash. 
+1. Immediately we see that when we have `.none` value we return a empty `Maybe` type. This now doesn't crash. 
 2. Remember the type erasure we had to do when storing the eventual value. Here we know the correct type and hence safely force downcast. 
 
 # Conclusion
 
-To summerize:
+To summarize:
 
 1. **Functor** is a type that provides `mapping` capability. A type that can be mapped. 
 2. Swift has **Collection** and **Optional** types which are Functor. (Optional  is not pure Functor and we saw why.)
 3. Functor are useful abstraction that can turn one kind of data into another. 
 4. Check out this [Github Repo & Playground: SwiftFunctor](https://github.com/kandelvijaya/SwiftFunctor) for updates and implementation details. 
-5. Functional Programming is scrutinizing pure function to produce mathematically proveable, robust and composable software. FP is on the rise. 
-6. Dont get stuck on **Bulb Paradox**
+5. Functional Programming is scrutinizing pure function to produce mathematically provable, robust and compose-able software. FP is on the rise. 
+6. Don t get stuck on **Bulb Paradox**
 
 
 # Whats next:
 1. Next issue will go deep into what a total pure function is. 
-2. What is referentialy equality.
+2. What is referential transparency.
 3. OOh!!!! This should be pretty awesome.
 Lets say a functor has a partially applied function inside it like `Some (*3)`and we have `Some(4)`, can we map this partially applied function over a data type. Yes, we will see **Applicative Functor** next time around. 
 
@@ -451,9 +451,9 @@ Lets say a functor has a partially applied function inside it like `Some (*3)`an
 1. SwiftFunctor [Github Repo](https://github.com/kandelvijaya/SwiftFunctor)
 2. Why Functional Programming Matters? [Paper](https://www.cs.kent.ac.uk/people/staff/dat/miranda/whyfp90.pdf)
 3. Bulb Paradox [Article](http://wiki.c2.com/?BlubParadox)
-4. Learn you a haskell for Great Good [Book](http://learnyouahaskell.com)
+4. Learn you a Haskell for Great Good [Book](http://learnyouahaskell.com)
 5. How to make Ad-Hoc polymorphism less ad-hoc [Paper](https://people.csail.mit.edu/dnj/teaching/6898/papers/wadler88.pdf)
-6. Why FP matters? [ebook](http://book.realworldhaskell.org/read/why-functional-programming-why-haskell.html)
+6. Why FP matters? [e book](http://book.realworldhaskell.org/read/why-functional-programming-why-haskell.html)
 
 *Happy Coding.*
 *Cheers!*
