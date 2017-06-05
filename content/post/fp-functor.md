@@ -29,14 +29,14 @@ In such, FP is not just function composition but equally a different mindset to 
 
 FP is not a hammer. Its different. We need to tackle problems differently. Read on this awesome paper (The intro section especially) [Paper: Why Functional Programming?](https://www.cs.kent.ac.uk/people/staff/dat/miranda/whyfp90.pdf) to get more insight.
 
-I have been learning Haskell intensely for about a month or more now and surprising things do make sense, lately. A lot. I sometimes even feel enlightened temporarily and bemused a bit later thinking; did I got it completely or my mind just ran out of working memory. Its a fascinating paradigm. I will now attempt to show some cool stuffs that I grasped and implement them with Swift. Before I do that, I highly encourage you to go through this [Bulb Paradox Article](http://wiki.c2.com/?BlubParadox). I hope you have read it long time ago, every programmer does. 
+I have been learning Haskell intensely for about a month or more now and surprising things do make sense, lately. A lot. I sometimes even feel enlightened temporarily and bemused a bit later thinking; did I got it completely or my mind just ran out of working memory. Its a fascinating paradigm. I will now attempt to show some cool stuffs that I grasped and implement them with Swift. Before I do that, I highly encourage you to go through this [Blub Paradox Article](http://wiki.c2.com/?BlubParadox). I hope you have read it long time ago, every programmer does. 
 
 >As long as our hypothetical Blub programmer is looking down the power continuum, he knows he's looking down. Languages less powerful than Blub are obviously less powerful, because they're missing some feature he's used to. But when our hypothetical Blub programmer looks in the other direction, up the power continuum, he doesn't realize he's looking up. What he sees are merely weird languages. He probably considers them about equivalent in power to Blub, but with all this other hairy stuff thrown in as well. Blub is good enough for him, because he thinks in Blub.
 
-So lets not be the Bulb programmer, shall we. Today, we will jump directly into **Functor**. Trust me, its not that hard. We will even see Functors in Swift and create some more. 
+So lets not be the Blub programmer, shall we. Today, we will jump directly into **Functor**. Trust me, its not that hard. We will even see Functors in Swift and create some more. 
 
 # Intro
-**Functor** is a container data type that provides an interface through which client can pass a function which will be applied the items inside that container to produce a new container data type.
+**Functor** is a container data type that provides an interface through which client can pass a function which will be applied to the items inside that container to produce a new container data type.
 
 Lets see list: `Array<Int>`, 
 - Its a container data type. It can hold bunch of `Int`s.
@@ -152,11 +152,11 @@ Aha now we have a function that encapsulates the mutation. This function is capa
 
 Chances are you know this all by heart, this is the standard `map` function on Collection type of Swift. 
 
-Now lets go beyond the normal comfort zone. Do we need `map` or mapping only on List types. Turns out, especially in FP, maps are essential utility to convert one type to another. A lots of types can be mapped. There another such type in Swift which has `map`; **Optional**
+Now lets go beyond the normal comfort zone. Do we need `map` or mapping only on List types. Turns out, especially in FP, maps are essential utility to convert one type to another. A lots of types can be mapped. There's another such type in Swift which has `map`; **Optional**
 
 What about Dictionary? They seem to be in need of `map`. Swift has this baked in. 
 
-What is this all for? In fact, we have just create a **functor**. In the example code above, List is a **functor** type.
+What is this all for? In fact, we have just created a **functor**. In the example code above, List is a **functor** type.
 
 ```swift
 Array<T> => container of zero or more `T` typed items
@@ -178,6 +178,7 @@ Seems like we need a type `Functor` which is polymorphic in `T`. Remember until 
 
 # Laws
 Lets talk about the laws. There are only 2 laws for a type to be functor.
+
 1. If a Functor is applied with identity function it should be the same output.
 ```swift
 
@@ -191,7 +192,7 @@ func id<T>(input: T) -> T {
 }
 ```
 
-Now the law:
+Now the identity law:
 ```swift
 map(inputFunctor: [1,2,3,4], transform: id) == inputFunctor
 ```
@@ -387,14 +388,14 @@ We can by using another wrapper type that is **`Maybe`** type.
 ```swift
 public struct Maybe<T> {
     //1. 
-    public let value: Optional<Any>
+    public let value: Optional<T>
 
     public init() {
         value = .none
     }
 
     public init(with: T) {
-        value = .some(with as Any)
+        value = .some(with)
     }
 
 }
@@ -402,7 +403,7 @@ public struct Maybe<T> {
 
 Notes:
 
-1. We encapsulate the real optional inside a **Maybe** struct. We also type erase the eventual value that the optional would have. Don't worry, we can get the value back to original type. 
+1. We encapsulate the real optional inside a **Maybe** struct.
 
 Conforming to Functor is pretty similar as:
 ```swift
@@ -415,7 +416,7 @@ extension Maybe: Functor {
             return Maybe<B>() as! F
         case .some(let v):
             //2. 
-            let newv = by(v as! T)
+            let newv = by(v)
             return Maybe<B>(with: newv) as! F
         }
     }
@@ -426,7 +427,6 @@ extension Maybe: Functor {
 Points to consider:
 
 1. Immediately we see that when we have `.none` value we return a empty `Maybe` type. This now doesn't crash. 
-2. Remember the type erasure we had to do when storing the eventual value. Here we know the correct type and hence safely force downcast. 
 
 # Conclusion
 
@@ -437,7 +437,7 @@ To summarize:
 3. Functor are useful abstraction that can turn one kind of data into another. 
 4. Check out this [Github Repo & Playground: SwiftFunctor](https://github.com/kandelvijaya/SwiftFunctor) for updates and implementation details. 
 5. Functional Programming is scrutinizing pure function to produce mathematically provable, robust and compose-able software. FP is on the rise. 
-6. Don t get stuck on **Bulb Paradox**
+6. Don t get stuck on **Blub Paradox**
 
 
 # Whats next:
@@ -450,7 +450,7 @@ Lets say a functor has a partially applied function inside it like `Some (*3)`an
 # References:
 1. SwiftFunctor [Github Repo](https://github.com/kandelvijaya/SwiftFunctor)
 2. Why Functional Programming Matters? [Paper](https://www.cs.kent.ac.uk/people/staff/dat/miranda/whyfp90.pdf)
-3. Bulb Paradox [Article](http://wiki.c2.com/?BlubParadox)
+3. Blub Paradox [Article](http://wiki.c2.com/?BlubParadox)
 4. Learn you a Haskell for Great Good [Book](http://learnyouahaskell.com)
 5. How to make Ad-Hoc polymorphism less ad-hoc [Paper](https://people.csail.mit.edu/dnj/teaching/6898/papers/wadler88.pdf)
 6. Why FP matters? [e book](http://book.realworldhaskell.org/read/why-functional-programming-why-haskell.html)
