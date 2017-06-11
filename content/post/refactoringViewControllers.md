@@ -1,6 +1,6 @@
 +++
 author = "kandelvijaya"
-date = "2017-06-04T20:17:50+02:00"
+date = "2017-06-11T20:17:50+02:00"
 description = "Basic approach to refactoring large/legacy view controller"
 tags = ["Refactoring", "SwiftLang", "Swift", "MVC"]
 title = "Refactoring MassiveViewController"
