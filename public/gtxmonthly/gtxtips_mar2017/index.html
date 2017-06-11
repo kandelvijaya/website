@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns#">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>GTX March: Git Auto Deployment.. &middot; kandelvijaya</title>
+        <meta name="description" content="GTX March 2017.">
+        <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="320">
+        <meta name="generator" content="Hugo 0.20.2" />
+        <meta name="robots" content="index,follow">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta property="og:title" content="GTX March: Git Auto Deployment..">
+<meta property="og:description" content="GTX March 2017.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="http://kandelvijaya.com/gtxmonthly/gtxtips_mar2017/">
+        <link rel="stylesheet" href="http://kandelvijaya.com/dist/styles.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin,cyrillic-ext,latin-ext,cyrillic">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        
+    </head>
+    <body>
+        
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-46775685-3', 'auto');
+ga('send', 'pageview');
+</script>
+
+
+        <div id="wrapper">
+            <header class="site-header">
+                <div class="container">
+                    <div class="site-title-wrapper">
+                        
+                            <h1 class="site-title">
+                                <a title="Kandelvijaya" href="http://kandelvijaya.com/">Kandelvijaya</a>
+                            </h1>
+                        
+                        <a class="button-square" href="http://kandelvijaya.com/index.xml"><i class="fa fa-rss"></i></a>
+                        
+                            <a class="button-square button-social hint--top" data-hint="Twitter" title="Twitter" href="https://twitter.com/kandelvijaya">
+                                <i class="fa fa-twitter"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Github" title="Github" href="https://github.com/kandelvijaya">
+                                <i class="fa fa-github-alt"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="LinkedIn" title="LinkedIn" href="https://linkedin.com/in/kandelvijaya/">
+                                <i class="fa fa-linkedin"></i>
+                            </a>
+                        
+                        
+                        
+                    </div>
+
+                    <ul class="site-nav">
+                        
+    <li class="site-nav-item">
+        <a title="Blog" href="/post/">Blog</a>
+    </li>
+
+    <li class="site-nav-item">
+        <a title="GTX Monthly" href="/gtxmonthly/">GTX Monthly</a>
+    </li>
+
+                    </ul>
+                </div>
+            </header>
+
+            <div id="container">
+
+
+<div class="container">
+    <article class="post-container">
+        <header class="post-header">
+    <h1 class="post-title">GTX March: Git Auto Deployment..</h1>
+    
+        <p class="post-description">GTX March 2017.</p>
+    
+</header>
+
+        <div class="post-content clearfix">
+    
+
+    
+
+<h2 id="git">Git</h2>
+
+<p>Last few months, I spent my off work time migrating one of the old app to self hosted
+Parse Server. Although, writing about Parse Server on dedicated Linux machine is out of scope for
+this post, I got few useful points regarding the use of terminal and git.</p>
+
+<p>Lets say you have a website. You want to use <code>git</code>. When you <code>git push</code>, it should
+deploy your site automatically. Plus, your teammate should also be able to push and pull.
+Lets do this.</p>
+
+<h3 id="1-creating-a-bare-repo">1. Creating a bare repo</h3>
+
+<p>Bare repo is used for sharing code. Typically shared for collaboration. Bare repos are good candidates for remote,
+where all teammates can push the code to.</p>
+
+<p>Bare repos have <code>.git</code>(<em>for most case</em>) extension on their path. For more detail
+    read this blog post. <a href="http://www.saintsjd.com/2011/01/what-is-a-bare-git-repository/">Difference between bare and normal git repo</a>.</p>
+
+<p>To make a bare repo for a existing repository (which is usually the case).</p>
+
+<pre><code>$ git clone --bare ~/my-website ~/my-website.git
+</code></pre>
+
+<p><em>my-website should be a normal git repository.</em>
+Creating a bare repo is easy too. We wont be using this one for the example case.</p>
+
+<pre><code>$ git clone --bare init
+</code></pre>
+
+<p><em>Read Terminal Section for; how to push the bare repo to server.</em></p>
+
+<h3 id="2-git-hooks">2. Git hooks</h3>
+
+<p>Hooks are like callbacks. Maybe that&rsquo;s a programming view. Anyways, hooks let you run script after some event occurs on git. The event could be push, commit, merge, pull or etc. Here, we will focus on <code>post-receive</code>.</p>
+
+<p>Now say you moved the bare repo to the server machine, and want to configure git to
+deploy the site when someone pushes to this repo.</p>
+
+<pre><code>$ cd &lt;yourpath&gt;/&lt;yourbarerepo.git&gt;/hooks/
+$ touch post-receive  // (1)
+$ nano post-receive   
+</code></pre>
+
+<p><em>(1)</em>:: <em>Hooks are just shell script with special filename.</em>
+Now we will clone the repo to a public website serving directory.</p>
+
+<pre><code>#!/bin/bash
+
+GIT_REPO=$HOME/&lt;yourbarerepo.git&gt;
+WORKING_DIRECTORY=$HOME/WWW/&lt;yourwebsitePublicDir&gt;/
+
+set -e
+
+rm -rf $WORKING_DIRECTORY       # remove old files
+
+git clone $GIT_REPO $WORKING_DIRECTORY  #clone new content
+
+trap - EXIT
+</code></pre>
+
+<p><strong>NOTE</strong> If you have critical project, I strongly suggest using <code>rsync</code> and creating a backup dir during the cloning process.
+ If something goes wrong, the script can back it up easily.</p>
+
+<p>Finally, make the hook script executable.</p>
+
+<pre><code>$ chmod +x post-receive
+</code></pre>
+
+<p>Thats the basics of automatic deployment. For more info please refer to:
+<a href="https://www.digitalocean.com/community/tutorials/how-to-deploy-a-hugo-site-to-production-with-git-hooks-on-ubuntu-14-04">This fantastic in depth deployment guide from DigitalOcean</a></p>
+
+<h2 id="terminal">Terminal</h2>
+
+<h3 id="1-background-job-yes-job">1. Background job, yes job.</h3>
+
+<p>Did you ever want to run a script repeatedly 1 am in the morning OR every time there is a new content for the app to consume OR database backup, periodic emailing, OR what have you. Enter cron job. Don&rsquo;t get afraid. There&rsquo;s just 1 line. Thats it.</p>
+
+<pre><code>$ crontab -e    # available by default on Mac and Linux
+</code></pre>
+
+<p>Then edit the file. Lines starting with <code>#</code>, as you guessed, are comments.
+At the end of the file, I could do:</p>
+
+<pre><code>1 1 * * * ~/jobs/backupMongoDb.sh
+</code></pre>
+
+<p>Save and exit. Every <em>1(first) minute of every 1(hour) of every * (day) , of every * (week) of every year</em>
+ run the script <code>~/jobs/backupMongoDb.sh</code>. Simple and neat right.</p>
+
+<p>So for the script part.</p>
+
+<pre><code>#!/bin/sh
+
+BACKINGDIR=$HOME/backup/
+DESTNAME=&lt;yourappname&gt;+`date +&quot;%m-%d-%y&quot;`
+
+cd $BACKINGDIR
+mongodump --db &lt;yourdbname&gt; -o $DESTNAME
+</code></pre>
+
+<p>The last command <code>mongodump</code> is the one that will dump the database. Finally, make this
+file executable.</p>
+
+<pre><code>$ chmod +x ~/jobs/backupMongoDb.sh
+</code></pre>
+
+<p>You could extend this script to remove the older directories in order to save space, zip the dumped database. This is left for your research.</p>
+
+<h3 id="2-zipping-and-scp-ping">2. Zipping and Scp(ping)</h3>
+
+<p>Lets get back to where we created bare cloned repo. Now we need to transfer that to server.
+We want to do it via the terminal.</p>
+
+<pre><code>$ scp -r &lt;yourBareRepo.git&gt; &lt;yourname&gt;@&lt;ServerIP-or-domain&gt;:~/website/&lt;yourBareRepo.git&gt;
+</code></pre>
+
+<p>SCP, stands for secure copy. For this step, you need to have local machine&rsquo;s SSH Keys added to
+the server beforehand. Transferring a file opens a network connection. Transferring 1000 files might need tons of connection to be opened and closed. This adds latency wherby 20 MB directory that contains 10000 files could take 10 minutes. Lets speed the transfer by transferring 1 file. 1 zipped file.</p>
+
+<pre><code>$ tar -czf bareRepo.zip &lt;yourBareRepo.git&gt;
+
+$ scp bareRepo.zip &lt;yourname&gt;@&lt;ServerIP-or-domain&gt;:~/website/bareRepo.zip
+</code></pre>
+
+<p>I have left for you to extract the zipped folder in the server. HINT: <code>$ man tar</code></p>
+
+<p>Now on the local machine set the remote to be this bare repo on the server.</p>
+
+<pre><code>$ git remote add origin &lt;username&gt;@&lt;SERVER_IP_ADDRESS&gt;:website/bareRepo.git
+</code></pre>
+
+<h2 id="xcode">Xcode</h2>
+
+<h3 id="1-regexp-find-and-replace">1. Regexp find and replace</h3>
+
+<p>Last week, while at work in Zalando SE, I was refactoring Flexible Layout Kit. Every Element is represented by a <strong>ElementController</strong> which has <code>var model: &lt;Some&gt;Element?</code> by conforming to a protocol.
+We have 25 element controller. During the refactor, lets suppose, I want to make all, <code>var model: &lt;Some&gt;Element?</code> to <code>var model: &lt;Some&gt;Element</code>.</p>
+
+<p>There are many manual ways. Xcode isn&rsquo;t powerful like AndroidStudio when it comes to refactoring. The way to do it quickly is to regex find replace.</p>
+
+<p><img src="/img/GTXMarch-Xcode-FindReplace.png" alt="Regexp find replace" /></p>
+
+<p><strong>(.*)</strong> is a capture group. It can be used later by referring it via <strong>$1</strong> which is what we did in the replace section.</p>
+
+<h3 id="2-lldb-po-broken-fix">2. LLDB &lsquo;po&rsquo; broken fix</h3>
+
+<p>After Swift came out, LLDB gets broken for various reason. It complains a lot. I cant debug effectively without <code>po</code>. This is how I have been fixing this AST issue with LLDB. This is not the silver bullet.</p>
+
+<ul>
+<li>First Clean the project. Restart Xcode. Try lldb.</li>
+<li>(IF above doesn&rsquo;t work) Go to the derived data. Remove everything. Maybe <code>$rm -rf</code> at that folder. Restart Xcode. Try lldb.</li>
+<li>(If above doesn&rsquo;t work) Change the derived data directory. <img src="/img/GTX-March-xcodeLLDB.jpg" alt="Changeing Derived Data directory easy way" /></li>
+</ul>
+
+<h3 id="thanks-to">Thanks To</h3>
+
+<ol>
+<li><a href="https://twitter.com/arashadbm">Ahmed Rashad Basuony</a></li>
+</ol>
+
+<h3 id="contributing">Contributing</h3>
+
+<p>Suggesting / Commenting or editing this post can be done via <a href="https://github.com/kandelvijaya/com/blob/master/content/gtxMonthly/gtxTips_mar2017.mdown">github</a>.</p>
+
+<p><strong>Thanks for reading until this point. Comments, suggestions and edits are appreciated. Cheers!</strong></p>
+
+</div>
+
+        <footer class="post-footer clearfix">
+    
+        <p class="post-tags">
+            <span>Tagged:</span>
+            
+            
+                <a href="/tags/gtx/">gtx</a>, 
+            
+                <a href="/tags/git/">git</a>, 
+            
+                <a href="/tags/terminal/">terminal</a>, 
+            
+                <a href="/tags/xcode/">XCode</a>
+            
+        </p>
+    
+
+    <div class="share">
+        
+            <a class="icon-twitter" href="https://twitter.com/share?text=GTX%20March%3a%20Git%20Auto%20Deployment..&url=http%3a%2f%2fkandelvijaya.com%2fgtxmonthly%2fgtxtips_mar2017%2f"
+                onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                <i class="fa fa-twitter"></i>
+                <span class="hidden">Twitter</span>
+            </a>
+        
+
+        
+            <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http%3a%2f%2fkandelvijaya.com%2fgtxmonthly%2fgtxtips_mar2017%2f"
+                onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                <i class="fa fa-facebook"></i>
+                <span class="hidden">Facebook</span>
+            </a>
+        
+
+        
+            <a class="icon-google-plus" href="https://plus.google.com/share?url=http%3a%2f%2fkandelvijaya.com%2fgtxmonthly%2fgtxtips_mar2017%2f"
+              onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+              <i class="fa fa-google-plus"></i>
+                <span class="hidden">Google+</span>
+            </a>
+        
+        
+    </div>
+</footer>
+    </article>
+</div>
+
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="site-title-wrapper">
+                    <h1 class="site-title">
+                        <a title="Kandelvijaya" href="http://kandelvijaya.com/">Kandelvijaya</a>
+                    </h1>
+                    <a class="button-square button-jump-top js-jump-top" href="#">
+                        <i class="fa fa-angle-up"></i>
+                    </a>
+                </div>
+
+                <p class="footer-copyright">
+                    <span>&copy; 2017 / Powered by <a href="https://gohugo.io/">Hugo</a></span>
+                </p>
+                <p class="footer-copyright">
+                    <span><a href="https://github.com/roryg/ghostwriter">Ghostwriter theme</a> By <a href="http://jollygoodthemes.com">JollyGoodThemes</a></span>
+                    <span>/ <a href="https://github.com/jbub/ghostwriter">Ported</a> to Hugo By <a href="https://github.com/jbub">jbub</a></span>
+                </p>
+            </div>
+        </footer>
+
+        <script src="http://kandelvijaya.com/js/jquery-1.11.3.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js"></script>
+        <script src="http://kandelvijaya.com/js/jquery.fitvids.js"></script>
+        <script src="http://kandelvijaya.com/js/scripts.js"></script>
+    </body>
+</html>
+

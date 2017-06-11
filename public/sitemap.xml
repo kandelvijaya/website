@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <url>
+    <loc>http://kandelvijaya.com/2017/06/04/refactoringviewcontrollers/</loc>
+    <lastmod>2017-06-04T20:17:50+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://kandelvijaya.com/2017/05/28/fp-functor/</loc>
+    <lastmod>2017-05-28T18:43:48+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://kandelvijaya.com/2017/04/30/urlprotocolandunittesting/</loc>
+    <lastmod>2017-04-30T00:45:00+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://kandelvijaya.com/2017/03/19/parseservermigration/</loc>
+    <lastmod>2017-03-19T23:02:15+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://kandelvijaya.com/gtxmonthly/gtxtips_mar2017/</loc>
+    <lastmod>2017-03-11T17:16:52+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://kandelvijaya.com/gtxmonthly/gtxtips_nov2016/</loc>
+    <lastmod>2016-11-20T14:28:01+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://kandelvijaya.com/2016/10/25/precisiontiminginios/</loc>
+    <lastmod>2016-10-25T19:36:52+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://kandelvijaya.com/gtxmonthly/gtxtips_oct2016/</loc>
+    <lastmod>2016-10-16T16:10:42+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://kandelvijaya.com/2016/10/15/spicingterminal/</loc>
+    <lastmod>2016-10-15T13:53:43+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://kandelvijaya.com/2016/10/11/swiftstringrange/</loc>
+    <lastmod>2016-10-11T21:57:04+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://kandelvijaya.com/2016/10/10/swift3-why-anyhashable-how-does-it-work-internally/</loc>
+    <lastmod>2016-10-10T21:57:04+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://kandelvijaya.com/2016/10/10/xcode-code-zstyle-code-formatter/</loc>
+    <lastmod>2016-10-10T21:57:04+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://kandelvijaya.com/about/</loc>
+    <lastmod>2016-10-09T22:55:28+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://kandelvijaya.com/tags/fp/</loc>
+    <lastmod>2017-05-28T18:43:48+02:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://kandelvijaya.com/tags/functional-programming/</loc>
+    <lastmod>2017-05-28T18:43:48+02:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://kandelvijaya.com/tags/git/</loc>
+    <lastmod>2017-03-11T17:16:52+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://kandelvijaya.com/tags/gtx/</loc>
+    <lastmod>2017-03-11T17:16:52+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://kandelvijaya.com/gtxmonthly/</loc>
+    <lastmod>2017-03-11T17:16:52+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://kandelvijaya.com/tags/haskell/</loc>
+    <lastmod>2017-05-28T18:43:48+02:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://kandelvijaya.com/tags/ios/</loc>
+    <lastmod>2016-10-25T19:36:52+02:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://kandelvijaya.com/tags/ios-engineering/</loc>
+    <lastmod>2016-10-11T21:57:04+02:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://kandelvijaya.com/</loc>
+    <lastmod>2017-06-04T20:17:50+02:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://kandelvijaya.com/tags/mvc/</loc>
+    <lastmod>2017-06-04T20:17:50+02:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://kandelvijaya.com/post/</loc>
+    <lastmod>2017-06-04T20:17:50+02:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://kandelvijaya.com/tags/refactoring/</loc>
+    <lastmod>2017-06-04T20:17:50+02:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://kandelvijaya.com/tags/swift/</loc>
+    <lastmod>2017-06-04T20:17:50+02:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://kandelvijaya.com/tags/swift3/</loc>
+    <lastmod>2017-05-28T18:43:48+02:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://kandelvijaya.com/tags/swiftlang/</loc>
+    <lastmod>2017-06-04T20:17:50+02:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://kandelvijaya.com/tags/</loc>
+    <lastmod>2017-05-28T18:43:48+02:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://kandelvijaya.com/tags/tdd/</loc>
+    <lastmod>2017-04-30T00:45:00+02:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://kandelvijaya.com/tags/terminal/</loc>
+    <lastmod>2017-03-11T17:16:52+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://kandelvijaya.com/tags/urlprotocol/</loc>
+    <lastmod>2017-04-30T00:45:00+02:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://kandelvijaya.com/tags/xcode/</loc>
+    <lastmod>2017-03-11T17:16:52+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://kandelvijaya.com/tags/xcode8/</loc>
+    <lastmod>2016-10-10T21:57:04+02:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+</urlset>

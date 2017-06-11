@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Urlprotocol on Kandelvijaya</title>
+    <link>http://kandelvijaya.com/tags/urlprotocol/</link>
+    <description>Recent content in Urlprotocol on Kandelvijaya</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Vijaya P. Kandelvijaya</copyright>
+    <lastBuildDate>Sun, 30 Apr 2017 00:45:00 +0200</lastBuildDate>
+    
+	<atom:link href="http://kandelvijaya.com/tags/urlprotocol/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Testing Network Calls with URLProtocol</title>
+      <link>http://kandelvijaya.com/2017/04/30/urlprotocolandunittesting/</link>
+      <pubDate>Sun, 30 Apr 2017 00:45:00 +0200</pubDate>
+      
+      <guid>http://kandelvijaya.com/2017/04/30/urlprotocolandunittesting/</guid>
+      <description>URLProtocol and Unit Testing  An NSURLProtocol object handles the loading of protocol-specific URL data. The NSURLProtocol class itself is an abstract class that provides the infrastructure for processing URLs with a specific URL scheme. You create subclasses for any custom protocols or URL schemes that your app supports.
+ The main point is:
+ All you have to do is define your protocol class and call the registerClass(_:) class method during your app’s launch time so that the system is aware of your protocol.</description>
+    </item>
+    
+  </channel>
+</rss>

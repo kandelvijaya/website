@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns#">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Backend As Service from Scratch &middot; kandelvijaya</title>
+        <meta name="description" content="Running self hosted Parse Server with dashboard.">
+        <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="320">
+        <meta name="generator" content="Hugo 0.20.2" />
+        <meta name="robots" content="index,follow">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta property="og:title" content="Backend As Service from Scratch">
+<meta property="og:description" content="Running self hosted Parse Server with dashboard.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="http://kandelvijaya.com/2017/03/19/parseservermigration/">
+        <link rel="stylesheet" href="http://kandelvijaya.com/dist/styles.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin,cyrillic-ext,latin-ext,cyrillic">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        
+    </head>
+    <body>
+        
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-46775685-3', 'auto');
+ga('send', 'pageview');
+</script>
+
+
+        <div id="wrapper">
+            <header class="site-header">
+                <div class="container">
+                    <div class="site-title-wrapper">
+                        
+                            <h1 class="site-title">
+                                <a title="Kandelvijaya" href="http://kandelvijaya.com/">Kandelvijaya</a>
+                            </h1>
+                        
+                        <a class="button-square" href="http://kandelvijaya.com/index.xml"><i class="fa fa-rss"></i></a>
+                        
+                            <a class="button-square button-social hint--top" data-hint="Twitter" title="Twitter" href="https://twitter.com/kandelvijaya">
+                                <i class="fa fa-twitter"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Github" title="Github" href="https://github.com/kandelvijaya">
+                                <i class="fa fa-github-alt"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="LinkedIn" title="LinkedIn" href="https://linkedin.com/in/kandelvijaya/">
+                                <i class="fa fa-linkedin"></i>
+                            </a>
+                        
+                        
+                        
+                    </div>
+
+                    <ul class="site-nav">
+                        
+    <li class="site-nav-item">
+        <a title="Blog" href="/post/">Blog</a>
+    </li>
+
+    <li class="site-nav-item">
+        <a title="GTX Monthly" href="/gtxmonthly/">GTX Monthly</a>
+    </li>
+
+                    </ul>
+                </div>
+            </header>
+
+            <div id="container">
+
+
+<div class="container">
+    <article class="post-container" itemscope="" itemtype="http://schema.org/BlogPosting">
+        <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Backend As Service from Scratch</h1>
+    
+        <p class="post-description" itemprop="description">Running self hosted Parse Server with dashboard.</p>
+    
+    <p class="post-date">
+        <span>Published <time datetime="2017-03-19" itemprop="datePublished">Sun, Mar 19, 2017</time></span>
+        <span>by</span>
+        <span itemscope="" itemprop="author" itemtype="https://schema.org/Person">
+            <span itemprop="name">
+                <a href="" itemprop="url" rel="author">kandelvijaya</a>
+            </span>
+        </span>
+    </p>
+</header>
+
+        <div class="post-content clearfix" itemprop="articleBody">
+    
+
+    
+
+<p>Parse was a great initiative. Sadly it went down. It was a fantastic solution for those who want to quickly
+get their app done and backend was just a breeze. Things changed. However, not all is lost. Parse became open
+source. The source for Server and Dashboard are both out in the open. I had a mobile app that used Parse heavily
+. Parse shutdown was really hard for me. I went through all the alternatives but none got me more interested than
+actually running the infrastructure on my own dedicated linux server.</p>
+
+<p>This blog points out various reference which helped along the way, various setbacks(which became experience) and
+tips that will help you guide through.</p>
+
+<p>The end result, I moved everything to my hosted parse server and the app works just as it did before. Rest assure,
+its pretty easy.</p>
+
+<h2 id="prerequisites-my-way">Prerequisites (My way)</h2>
+
+<ol>
+<li><p>DigitalOcean 10$ instance</p>
+
+<ul>
+<li><p><em><a href="https://www.digitalocean.com">DigitalOcean</a></em> provides linux instance with various configuration. They have sensible defaults and extremely easy way of setting up server or remote VPS.  Moreover, the documentation, they are detailed and covers the whole spectrum of things you want/wish/need to do.</p></li>
+
+<li><p><em>I was a AWS user. Their humungous options drove me nuts to find the right thing(Paradox of Choice).  Plus, after 1 free year, it costs a lot.</em></p></li>
+</ul></li>
+
+<li><p>Be able to <strong>ssh</strong> into remote machine via terminal</p>
+
+<ul>
+<li><em><a href="https://www.digitalocean.com/community/tutorials/how-to-configure-ssh-key-based-authentication-on-a-freebsd-server">How to configure SSH connection</a></em></li>
+</ul></li>
+
+<li><p>Install <code>nodejs</code>. This will install <code>npm</code> with it.</p>
+
+<ul>
+<li><a href="https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-16-04">To install Nodejs</a></li>
+<li><a href="https://nodejs.org/en/">Nodejs</a> is a javascript runtime. It uses V8 Javascript engine and adds server specific features via
+C++ and are exposed to JS. V8 is open source and used in Chrome and Chromium browser.<br /></li>
+</ul></li>
+
+<li><p>Install <a href="https://www.mongodb.com">Mongodb</a>: NoSQL database which Parse Server prefers.</p>
+
+<ul>
+<li><a href="https://www.digitalocean.com/community/tutorials/how-to-install-mongodb-on-ubuntu-16-04">Here is the installation guide</a></li>
+<li>Its very <strong>important to not use <code>mongodb-runner</code> npm package that Parse-Server example uses</strong>. This particular package
+contains bunch of script to automate mongodb installation and running with a single command. The downside is <strong>your database will be purged if the mongodb-runner is terminated or restarted</strong>. This could happen for many reasons even in server environment.</li>
+</ul></li>
+
+<li><p>Lets now get <strong>Parse-Sever</strong></p>
+
+<ul>
+<li><a href="https://github.com/ParsePlatform/parse-server">Parse-Sever github Repo.</a></li>
+<li>Issue this command to install it:</li>
+</ul>
+
+<pre><code>$ npm install -g parse-server
+</code></pre>
+
+<ul>
+<li>This command is all you need to get and install <strong>parse-server</strong>.</li>
+<li><strong>dont install mongodb-runner</strong>. Mongodb-runner is for 1 time testing only.</li>
+</ul></li>
+
+<li><p>If you want easy way to get started then, cloning this <strong>parse-server-example</strong> is a valid option. <a href="https://github.com/ParsePlatform/parse-server-example">Check the details in the Readme</a>.</p>
+
+<ul>
+<li>This is how I got my first parse server working in a maintainable way.</li>
+<li>If you clone this repo, this will download <strong>parse-server</strong> as a dependency; if not found or installed previously.</li>
+<li>Modify your <strong>index.js</strong> file to customize. Refer to the Readme if its little confusing. Don&rsquo;t panic, if you are afraid of javascript. We wont need much of it. Just some variable assignment.</li>
+</ul></li>
+
+<li><p>Okay we have almost done everything besides 2 things.</p>
+
+<ul>
+<li>We don&rsquo;t have dashboard so we cant see/edit/add new data to the backend.</li>
+<li>We will do both in the next section. Now take a drink and lets get going.</li>
+</ul></li>
+</ol>
+
+<h2 id="intermediate-server-work">Intermediate Server work</h2>
+
+<p>Apache is a well known Web Server but we will be using NGINX on this particular case. You could go with Apache but I prefer NGINX as it is more memory effecient <em>(at least thats what I heard)</em> and has nice configurations for us.</p>
+
+<ol>
+<li>Install and configure <a href="https://www.digitalocean.com/community/tutorials/how-to-install-nginx-on-ubuntu-16-04">NGINX as described in this article</a>.</li>
+<li>Open up port 4040 if you want to view the dashboard served from the server. <em>If you want the dashboard to be client side then thats totally fine.</em>
+
+<ul>
+<li><code>$ sudo ufw allow 4040/tcp</code></li>
+</ul></li>
+
+<li><p>Install <strong>parse-dashboard</strong>.</p>
+
+<ul>
+<li>I prefer dashboard be in server. The reasons are 2. First, I can access server from any machine on the go. Second, it just a website interface to the parse-server. I would rather expose parse-dashboard than parse-server to the outside world.</li>
+<li>install via<br /></li>
+</ul>
+
+<pre><code>$npm install -g parse-dashboard
+</code></pre>
+
+<ul>
+<li><a href="https://github.com/ParsePlatform/parse-dashboard">Official parse-dashboard github repo</a></li>
+<li><code>Readme</code> on the repo should help you get using the dashboard.</li>
+<li>I prefer to have a <code>index.js</code> file with all the configuration wrapped in <code>express</code> app. This is more flexible than tedious command line options argument and json config based setup.</li>
+<li>Again, Read the <strong>readme</strong> very carefully. It helps a lot. It saves lots of googling for some minor things. Its all there. Waiting to be read. I thought I read all then, after some days, I kept googling how to pass 1 argument. Its not fun. Read the README.</li>
+</ul></li>
+
+<li><p>Now, if you have followed through step by step. You should be able to run <strong>parse-dashboard</strong> on port 4040. Remember we allowed 4040 to be reached from outside. Its time to check your dashboard.</p>
+
+<ul>
+<li>From anywhere outside the server, browse to <code>&lt;your-server-ip&gt;:4040</code></li>
+<li>You should be able to see the dashboard with the parse-server app we created in the first place.</li>
+<li>Get inside and add some data.</li>
+<li>Notice, there is a section for <strong>CloudCode</strong>, <strong>Push</strong>, <strong>WebHooks</strong> and <strong>Logs</strong>. Exactly, the open source community have grown to implement almost all that was in Parse.com</li>
+</ul></li>
+
+<li><p>Now lets make our life simpler.</p></li>
+</ol>
+
+<h2 id="intermediate-ii-server-work">Intermediate II Server Work</h2>
+
+<p>Lets assume, your Parse-Server is working fine. What if at somepoint in time, the system crashes due to many requests (usually a good sign to indicate your customer base has grown) or any other reason. What if parse-server crashes? Will you log in and restart yourself? I don&rsquo;t think so.</p>
+
+<p>Enter <strong>pm2</strong>. A easy way to manage process. <em>We will use pm2 to restart parse-server if the existing instance crashes automatically</em>. This will also make sure parse-server is started on system reboot. Nice!!</p>
+
+<ol>
+<li><h2 id="install-pm2-http-pm2-keymetrics-io">Install <a href="http://pm2.keymetrics.io">PM2</a></h2>
+
+<pre><code>$sudo npm install -g pm2
+</code></pre>
+
+<ul>
+<li>To make this <em>pm2</em> package start on reboot or crash, you need to configure <em>Systemd</em> or <em>Service</em>. <a href="https://www.digitalocean.com/community/tutorials/how-to-set-up-a-node-js-application-for-production-on-ubuntu-16-04">Look at PM2 section on this exhustive article</a></li>
+<li>Start the parse server using <code>$pm2 start &lt;your-Parse-app-ServerPath&gt;/index.js --name &lt;yourappname&gt;</code></li>
+<li>Start the parse dashboard using <code>$pm2 start &lt;dashboardPath&gt;/index.js --name &lt;dashboardName&gt;</code></li>
+<li>Now you should be able to see the running process via <code>$pm2 list</code></li>
+<li>To see logs for specific process, you can use <code>$pm2 logs &lt;either app name or process id assigned by pm2&gt;</code>. This will be helpful in debugging certain queries and cloud code or in general what the server is doing.</li>
+</ul>
+
+<p><img src="/img/pm2list.png" alt="PM2 list" /></p></li>
+
+<li><p>If you want to associate this IP to a domain name.</p>
+
+<ul>
+<li>To get the domain name, I prefer <a href="www.namecheap.com">Namecheap</a></li>
+<li>To configure DNS for the domain with common domain name registrars, <a href="https://www.digitalocean.com/community/tutorials/how-to-point-to-digitalocean-nameservers-from-common-domain-registrars">read this guide.</a></li>
+<li><a href="https://www.digitalocean.com/community/tutorials/how-to-set-up-a-host-name-with-digitalocean">How to configure to use domain name in the droplet</a></li>
+<li>To encrypt your domain name for free with TLS and have <em>https:</em> <a href="https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-16-04">follow this guide</a>.
+
+<ul>
+<li>Make sure to forward-proxy <code>ipaddress:4040</code> to <code>domainname.com/dashboardPath</code>.</li>
+<li>Look at <a href="https://www.digitalocean.com/community/tutorials/how-to-set-up-a-node-js-application-for-production-on-ubuntu-16-04">Configuring HTTPS for NGINX section on this article</a></li>
+</ul></li>
+</ul></li>
+
+<li><p>Daily MongoDB backup. Yes, you might need to protect your data after all.</p>
+
+<ul>
+<li>Either choose to take snapshot every day and pay digitalocean some small amount.</li>
+<li>Or, use cronjob to backup every day.</li>
+<li>Backing up existing database is easy.
+
+<ul>
+<li><code>$mongodump</code></li>
+</ul></li>
+<li>Restoring dumped data into database is easy too.
+
+<ul>
+<li><code>$mongorestore &lt;dumpfile&gt;</code></li>
+</ul></li>
+<li><a href="https://coderwall.com/p/hdmmnq/easy-automatic-nightly-backups-for-mongodb">This article will walk through making daily backups</a></li>
+</ul></li>
+
+<li><p>Thats all. The rest will fall into place.</p></li>
+</ol>
+
+<p>Hope you could manage to code your big app using a simple Parse backend.</p>
+
+<p>As always, you can contribute to make this article more accurate or extend openly via <a href="https://github.com/kandelvijaya/com/tree/master/content/post">Github repo</a></p>
+
+<h3 id="thanks-for-contribution">Thanks for Contribution</h3>
+
+<ol>
+<li><a href="https://twitter.com/arashadbm">Ahmed Rashad Basuony</a></li>
+</ol>
+
+<h3 id="cheers">Cheers!</h3>
+
+</div>
+
+        <footer class="post-footer clearfix">
+    
+
+    <div class="share">
+        
+            <a class="icon-twitter" href="https://twitter.com/share?text=Backend%20As%20Service%20from%20Scratch&url=http%3a%2f%2fkandelvijaya.com%2f2017%2f03%2f19%2fparseservermigration%2f"
+                onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                <i class="fa fa-twitter"></i>
+                <span class="hidden">Twitter</span>
+            </a>
+        
+
+        
+            <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http%3a%2f%2fkandelvijaya.com%2f2017%2f03%2f19%2fparseservermigration%2f"
+                onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                <i class="fa fa-facebook"></i>
+                <span class="hidden">Facebook</span>
+            </a>
+        
+
+        
+            <a class="icon-google-plus" href="https://plus.google.com/share?url=http%3a%2f%2fkandelvijaya.com%2f2017%2f03%2f19%2fparseservermigration%2f"
+              onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+              <i class="fa fa-google-plus"></i>
+                <span class="hidden">Google+</span>
+            </a>
+        
+        
+    </div>
+</footer>
+
+        
+    <div class="comments">
+        <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'kandelvijayacom';
+    var disqus_identifier = 'http:\/\/kandelvijaya.com\/2017\/03\/19\/parseservermigration\/';
+    var disqus_title = 'Backend As Service from Scratch';
+    var disqus_url = 'http:\/\/kandelvijaya.com\/2017\/03\/19\/parseservermigration\/';
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    </div>
+
+    </article>
+</div>
+
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="site-title-wrapper">
+                    <h1 class="site-title">
+                        <a title="Kandelvijaya" href="http://kandelvijaya.com/">Kandelvijaya</a>
+                    </h1>
+                    <a class="button-square button-jump-top js-jump-top" href="#">
+                        <i class="fa fa-angle-up"></i>
+                    </a>
+                </div>
+
+                <p class="footer-copyright">
+                    <span>&copy; 2017 / Powered by <a href="https://gohugo.io/">Hugo</a></span>
+                </p>
+                <p class="footer-copyright">
+                    <span><a href="https://github.com/roryg/ghostwriter">Ghostwriter theme</a> By <a href="http://jollygoodthemes.com">JollyGoodThemes</a></span>
+                    <span>/ <a href="https://github.com/jbub/ghostwriter">Ported</a> to Hugo By <a href="https://github.com/jbub">jbub</a></span>
+                </p>
+            </div>
+        </footer>
+
+        <script src="http://kandelvijaya.com/js/jquery-1.11.3.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js"></script>
+        <script src="http://kandelvijaya.com/js/jquery.fitvids.js"></script>
+        <script src="http://kandelvijaya.com/js/scripts.js"></script>
+    </body>
+</html>
+

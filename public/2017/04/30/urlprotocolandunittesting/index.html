@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns#">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Testing Network Calls with URLProtocol &middot; kandelvijaya</title>
+        <meta name="description" content="Intercepting Network Calls to Test!!!">
+        <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="320">
+        <meta name="generator" content="Hugo 0.20.2" />
+        <meta name="robots" content="index,follow">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta property="og:title" content="Testing Network Calls with URLProtocol">
+<meta property="og:description" content="Intercepting Network Calls to Test!!!">
+<meta property="og:type" content="article">
+<meta property="og:url" content="http://kandelvijaya.com/2017/04/30/urlprotocolandunittesting/">
+        <link rel="stylesheet" href="http://kandelvijaya.com/dist/styles.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin,cyrillic-ext,latin-ext,cyrillic">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        
+    </head>
+    <body>
+        
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-46775685-3', 'auto');
+ga('send', 'pageview');
+</script>
+
+
+        <div id="wrapper">
+            <header class="site-header">
+                <div class="container">
+                    <div class="site-title-wrapper">
+                        
+                            <h1 class="site-title">
+                                <a title="Kandelvijaya" href="http://kandelvijaya.com/">Kandelvijaya</a>
+                            </h1>
+                        
+                        <a class="button-square" href="http://kandelvijaya.com/index.xml"><i class="fa fa-rss"></i></a>
+                        
+                            <a class="button-square button-social hint--top" data-hint="Twitter" title="Twitter" href="https://twitter.com/kandelvijaya">
+                                <i class="fa fa-twitter"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Github" title="Github" href="https://github.com/kandelvijaya">
+                                <i class="fa fa-github-alt"></i>
+                            </a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="LinkedIn" title="LinkedIn" href="https://linkedin.com/in/kandelvijaya/">
+                                <i class="fa fa-linkedin"></i>
+                            </a>
+                        
+                        
+                        
+                    </div>
+
+                    <ul class="site-nav">
+                        
+    <li class="site-nav-item">
+        <a title="Blog" href="/post/">Blog</a>
+    </li>
+
+    <li class="site-nav-item">
+        <a title="GTX Monthly" href="/gtxmonthly/">GTX Monthly</a>
+    </li>
+
+                    </ul>
+                </div>
+            </header>
+
+            <div id="container">
+
+
+<div class="container">
+    <article class="post-container" itemscope="" itemtype="http://schema.org/BlogPosting">
+        <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Testing Network Calls with URLProtocol</h1>
+    
+        <p class="post-description" itemprop="description">Intercepting Network Calls to Test!!!</p>
+    
+    <p class="post-date">
+        <span>Published <time datetime="2017-04-30" itemprop="datePublished">Sun, Apr 30, 2017</time></span>
+        <span>by</span>
+        <span itemscope="" itemprop="author" itemtype="https://schema.org/Person">
+            <span itemprop="name">
+                <a href="" itemprop="url" rel="author">kandelvijaya</a>
+            </span>
+        </span>
+    </p>
+</header>
+
+        <div class="post-content clearfix" itemprop="articleBody">
+    
+
+    
+
+<h1 id="urlprotocol-and-unit-testing">URLProtocol and Unit Testing</h1>
+
+<blockquote>
+<p>An NSURLProtocol object handles the loading of protocol-specific URL data. The NSURLProtocol class itself is an abstract class that provides the infrastructure for processing URLs with a specific URL scheme. You create subclasses for any custom protocols or URL schemes that your app supports.</p>
+</blockquote>
+
+<p>The main point is:</p>
+
+<blockquote>
+<p>All you have to do is define your protocol class and call the <strong>registerClass(_:)</strong> class method during your app’s launch time so that the system is aware of your protocol.</p>
+</blockquote>
+
+<p>The bright idea in me was: what if I have a custom MockURLProtocol class which will intercept and store all requests. Thereby, during unit test; I could register this custom class and test the application logic without ever hitting the network layer (the wire/less).</p>
+
+<blockquote>
+<p>Tests should be fast and reliable.</p>
+</blockquote>
+
+<p>This approach could be perfect candidate. But I found the hard way that this was not possible for every cases. Nonetheless, I wrote this post just to highlight first: the <strong>URLProtocol</strong> itself and second, lacking documentation for this <strong>behaviour.</strong></p>
+
+<h2 id="the-custom-mockurlprotocol">The custom MockURLProtocol</h2>
+
+<p>Subclassing the <code>URLProtocol</code> is straightforward.</p>
+
+<ol>
+<li><code>canInit(with: URLRequest)</code> is called to check if the Protocol can handle given kind of request.</li>
+<li>If it can, then <code>canonicalRequest(</code> is called. For starters, we are returning the same request here.</li>
+<li>Then comes the actual fetching part. This are handled by <code>startLoading()</code> which is responsible to do all it can to fetch remote content. <code>stopLoading()</code> can be called to either cancel or mark completion.</li>
+</ol>
+
+<p>Here is a basic subclass implementation. Keep in mind, we are not interested to fetch content but rather to intercept the request that would otherwise be used to make actual fetch.</p>
+
+<pre><code class="language-swift">final class MockURLProtocol: URLProtocol {
+
+    static var lastTriedRequest: [URLRequest] = []
+
+    override class func canInit(with request: URLRequest) -&gt; Bool {
+        lastTriedRequest.append(request)
+        return false
+    }
+
+    override class func canonicalRequest(for request: URLRequest) -&gt; URLRequest {
+        return request
+    }
+
+    override func startLoading() {
+        //do nothing
+    }
+
+    override func stopLoading() {
+        //do nothing
+    }
+
+}
+</code></pre>
+
+<h2 id="registering-custom-urlprotocol">Registering custom URLProtocol</h2>
+
+<p>After all, we need to tell the URL Loading system to use our custom protocol.</p>
+
+<h3 id="registerclass-documentation">.registerClass() documentation</h3>
+
+<blockquote>
+<p>When the URL loading system begins to load a request, each registered protocol class is consulted in turn to see if it can be initialized with the specified request. The first NSURLProtocol subclass to return true when sent a <strong>canInit(with:)</strong> message is used to perform the URL load. There is no guarantee that all registered protocol classes will be consulted.
+<strong>Classes are consulted in the reverse order of their registration</strong>. A similar design governs the process to create the canonical form of a request with canonicalRequest(for:).</p>
+</blockquote>
+
+<p>And here is <strong>one</strong> way of registering custom protocol class only for the test target.</p>
+
+<pre><code class="language-swift">class TestingAppDelegate: AppDelegate {
+
+    override func application(_ application..., didFinishLaunchingWithOptions ...) -&gt; Bool {
+        URLProtocol.registerClass(MockURLProtocol.self)
+        return true
+    }
+
+}
+</code></pre>
+
+<p>I actually prefer to register the mock protocol class at the site of use. So my preferred way is to register in each <strong>testcase</strong>.</p>
+
+<h2 id="unit-tests-and-the-catch">Unit Tests and the Catch</h2>
+
+<pre><code class="language-swift">import XCTest
+@testable import yourNiceTarget
+import Alamofire
+
+final class NativeContentEndpointTests: XCTestCase {
+
+    override func setUp() {
+        super.setUp()
+        MockURLProtocol.lastTriedRequest = []
+    }
+
+    func testWhenConfigProtocolClassIsExplicitlyModified_thenRequestIsIntercepted() {
+        let url = URL(string: &quot;www.google.com&quot;)!
+
+	//1
+        let config = URLSessionConfiguration.default
+        config.protocolClasses = [MockURLProtocol.self]
+
+        let session = URLSession(configuration: config)
+        let task = session.dataTask(with: url)
+        task.resume()
+
+	//2
+        sleep(1)
+
+        XCTAssertNotNil(MockURLProtocol.lastTriedRequest.last?.url)
+        XCTAssertEqual(url, MockURLProtocol.lastTriedRequest.last?.url!)
+    }
+</code></pre>
+
+<ol>
+<li>This is how we could specify explicitly to use our custom URLProtocol subclass.</li>
+<li><code>sleep(1)</code> might not be required. Its used here assuming that there might
+be delay on request execution.</li>
+</ol>
+
+<pre><code class="language-swift">    func testWhenURLProtocolIsRegisteredGlobally_thenRequestIsNotIntercepted() {
+        let url = URL(string: &quot;www.google2.com&quot;)!
+
+	//1
+        URLProtocol.registerClass(MockURLProtocol.self)
+
+        let session = URLSession(configuration: .default)
+        let task = session.dataTask(with: url)
+        task.resume()
+
+        sleep(1)
+        XCTAssertNil(MockURLProtocol.lastTriedRequest.last?.url)
+    }
+</code></pre>
+
+<ol>
+<li>This is how one would register URLProtocol subclass globally. However, <code>URLSession</code> and its
+counterpart API wont respect this value.</li>
+</ol>
+
+<pre><code class="language-swift">
+    func testWhenURLProtocolIsRegistedGloballyWhileUsingAlamofire_thenRequestIsNotIntercepted() {
+        /*
+         *  Although we registerd our custom URLProtocol and as per the documentation
+         *  the last one will be searched first for -canInit(:)
+         *  However, with the introduction of URLSession and URLSessionConfiguration,
+         *  things changed.
+         *
+         *  Reason: The registerClass method registers a protocol with NSURLConnection
+         *  and with the shared session only
+         *  See link: http://stackoverflow.com/a/38560677/2419589
+         *
+         *  Apple docs for URLProtocol.register(:) fails to document this behavior and
+         *  hence I had to painfully pull my hair for several hours in vain.
+         *
+         */
+
+        URLProtocol.registerClass(MockURLProtocol.self)
+
+        //uses Alamofire
+        HTTPManager().loadNativeContent(template: &quot;test-page&quot;) { _ in }
+
+        sleep(1)
+        XCTAssertNil(MockURLProtocol.lastTriedRequest.last?.url)
+    }
+
+
+}
+
+
+</code></pre>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<blockquote>
+<p>If we don&rsquo;t explicitly set the <strong>protocolClasses</strong> for the <strong>URLSessionConfiguration</strong> that we would use to create <strong>URLSession</strong>, our custom protocol class would not intercept network requests.</p>
+</blockquote>
+
+<p>Each <code>URLSessionConfiguration</code> (<code>default</code>, <code>ephemeral</code> ) searches the list of system provided default URL Protocols, our custom subclass wont be looked up by default. Testing apps using third party networking library require us to inject <code>protocolClasses</code> into the sessionConfiguration object. This is not straightforward as we have to dissect third party  dependencies.</p>
+
+<blockquote>
+<p>registerClass method registers a protocol with NSURLConnection
+ and with the shared session only.
+ See link: <a href="http://stackoverflow.com/a/38560677/2419589">http://stackoverflow.com/a/38560677/2419589</a></p>
+</blockquote>
+
+<p>Our app uses <a href="https://github.com/Alamofire/Alamofire"><strong>Alamofire</strong></a> for networking.  Alamofire internally uses the new APIs: <code>NSURLSession</code> constructed with one of <code>NSURLSessionConfiguration</code>. How would we add <code>protocolClasses</code> to this configuration object given this is a third party library. Its possible but is it worth it?</p>
+
+<p>Hence, this approach of trying to Unit Test was a failure for our case.</p>
+
+<p><strong>Alamofire</strong> internally uses the same approach of subclassing <code>URLProtocol</code> to test the <code>SessionManager</code> object <strong>internally</strong>. If you are interested here is the <a href="https://github.com/Alamofire/Alamofire/issues/1160">link for the Github Issue and Discussion</a>.</p>
+
+<h2 id="cheers">Cheers!</h2>
+
+<p>If you want to edit/improve this post, feel free to edit the content on <a href="https://github.com/kandelvijaya/com/blob/master/content/post/URLProtocolAndUnitTesting.mdown">Edit on Github</a>.</p>
+
+</div>
+
+        <footer class="post-footer clearfix">
+    
+        <p class="post-tags">
+            <span>Tagged:</span>
+            
+            
+                <a href="/tags/urlprotocol/">URLProtocol</a>, 
+            
+                <a href="/tags/swift3/">Swift3</a>, 
+            
+                <a href="/tags/tdd/">TDD</a>
+            
+        </p>
+    
+
+    <div class="share">
+        
+            <a class="icon-twitter" href="https://twitter.com/share?text=Testing%20Network%20Calls%20with%20URLProtocol&url=http%3a%2f%2fkandelvijaya.com%2f2017%2f04%2f30%2furlprotocolandunittesting%2f"
+                onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                <i class="fa fa-twitter"></i>
+                <span class="hidden">Twitter</span>
+            </a>
+        
+
+        
+            <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http%3a%2f%2fkandelvijaya.com%2f2017%2f04%2f30%2furlprotocolandunittesting%2f"
+                onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                <i class="fa fa-facebook"></i>
+                <span class="hidden">Facebook</span>
+            </a>
+        
+
+        
+            <a class="icon-google-plus" href="https://plus.google.com/share?url=http%3a%2f%2fkandelvijaya.com%2f2017%2f04%2f30%2furlprotocolandunittesting%2f"
+              onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+              <i class="fa fa-google-plus"></i>
+                <span class="hidden">Google+</span>
+            </a>
+        
+        
+    </div>
+</footer>
+
+        
+    <div class="comments">
+        <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'kandelvijayacom';
+    var disqus_identifier = 'http:\/\/kandelvijaya.com\/2017\/04\/30\/urlprotocolandunittesting\/';
+    var disqus_title = 'Testing Network Calls with URLProtocol';
+    var disqus_url = 'http:\/\/kandelvijaya.com\/2017\/04\/30\/urlprotocolandunittesting\/';
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    </div>
+
+    </article>
+</div>
+
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="site-title-wrapper">
+                    <h1 class="site-title">
+                        <a title="Kandelvijaya" href="http://kandelvijaya.com/">Kandelvijaya</a>
+                    </h1>
+                    <a class="button-square button-jump-top js-jump-top" href="#">
+                        <i class="fa fa-angle-up"></i>
+                    </a>
+                </div>
+
+                <p class="footer-copyright">
+                    <span>&copy; 2017 / Powered by <a href="https://gohugo.io/">Hugo</a></span>
+                </p>
+                <p class="footer-copyright">
+                    <span><a href="https://github.com/roryg/ghostwriter">Ghostwriter theme</a> By <a href="http://jollygoodthemes.com">JollyGoodThemes</a></span>
+                    <span>/ <a href="https://github.com/jbub/ghostwriter">Ported</a> to Hugo By <a href="https://github.com/jbub">jbub</a></span>
+                </p>
+            </div>
+        </footer>
+
+        <script src="http://kandelvijaya.com/js/jquery-1.11.3.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js"></script>
+        <script src="http://kandelvijaya.com/js/jquery.fitvids.js"></script>
+        <script src="http://kandelvijaya.com/js/scripts.js"></script>
+    </body>
+</html>
+

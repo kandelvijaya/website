@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Git on Kandelvijaya</title>
+    <link>http://kandelvijaya.com/tags/git/</link>
+    <description>Recent content in Git on Kandelvijaya</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Vijaya P. Kandelvijaya</copyright>
+    <lastBuildDate>Sat, 11 Mar 2017 17:16:52 +0100</lastBuildDate>
+    
+	<atom:link href="http://kandelvijaya.com/tags/git/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>GTX March: Git Auto Deployment..</title>
+      <link>http://kandelvijaya.com/gtxmonthly/gtxtips_mar2017/</link>
+      <pubDate>Sat, 11 Mar 2017 17:16:52 +0100</pubDate>
+      
+      <guid>http://kandelvijaya.com/gtxmonthly/gtxtips_mar2017/</guid>
+      <description>Git Last few months, I spent my off work time migrating one of the old app to self hosted Parse Server. Although, writing about Parse Server on dedicated Linux machine is out of scope for this post, I got few useful points regarding the use of terminal and git.
+Lets say you have a website. You want to use git. When you git push, it should deploy your site automatically.</description>
+    </item>
+    
+    <item>
+      <title>GTX Nov: Bisecting, Emacs and killing line. </title>
+      <link>http://kandelvijaya.com/gtxmonthly/gtxtips_nov2016/</link>
+      <pubDate>Sun, 20 Nov 2016 14:28:01 +0100</pubDate>
+      
+      <guid>http://kandelvijaya.com/gtxmonthly/gtxtips_nov2016/</guid>
+      <description>Welcome to this months GTX. How are you? Its cold here in Berlin. Lets get to this months GTX(Git, Terminal, XCode) tips.
+Git 1. Finding which commit broke the project first git-bisect is the command you are looking for if you happen to search for a commit in the past week which silently broke the project and the CI is failing.
+I was introduced to this command while at work from my colleague, @ramy_kfoury.</description>
+    </item>
+    
+    <item>
+      <title>GTX [Git, Terminal, Xcode] 2tips for October</title>
+      <link>http://kandelvijaya.com/gtxmonthly/gtxtips_oct2016/</link>
+      <pubDate>Sun, 16 Oct 2016 16:10:42 +0200</pubDate>
+      
+      <guid>http://kandelvijaya.com/gtxmonthly/gtxtips_oct2016/</guid>
+      <description>GTX: I planned to find 2 tips for Git, Terminal and Xcode each, last weekend. Which should help me be more productive at work. Later, I thought to write it up and shere. This should be a series of mini tips, each month.
+GTX stands for Git, Terminal and Xcode. This abbreviation has local scope to this blog only. Other way to say, I made this GTX shortform.
+GTX October 2016 1.</description>
+    </item>
+    
+  </channel>
+</rss>
