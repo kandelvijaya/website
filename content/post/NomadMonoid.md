@@ -2,7 +2,7 @@
 author = "kandelvijaya"
 date = "2017-07-16T14:16:26+02:00"
 description = "Lets hang out with Monoid and see what they are for!"
-tags = [swift, fp, monoid]
+tags = ["swift", "fp", "monoid"]
 title = "Exploring FP: Nomad's Monoid"
 
 +++
