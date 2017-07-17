@@ -22,6 +22,24 @@ One thing you need to have in mind as we go is that all we are trying to do is c
 
 **Monoid** is not a direct relative of **Monad**. *It is not a semi-monad or a smaller form of Monad. Its a separate concept that has not much to do with Monad*
 
+## Lets establish a mental picture of monoid now!
+![Monoid Of Int](/img/monoidOfInt.png) 
+
+- Lets represnt `Int` type as a Set/Box of raw numbers. 
+- `id` is the identity function. 
+- `f` is the function that will compose 1 or more values of `Int` type. Functoion `f` has to return another `Int` vlaue to satisfy the **closure** property.
+
+- Lets try to prove Int is `monoid in addition (+)`. `+` is a operator function. 
+  + `any number + id = any number` so `id` = 0
+  + `f` is the `+` operator. Its signature statisfies that the output is also a value in type `Int` 
+  
+  ```swift
+  func +(_ lhs: Int, _ rhs: Int) -> Int {...}
+  ```
+- Thus, `Int` is a monoid in terms of `+` operation. You could do the same with `Int` in terms of `*` but not `-`. 
+
+With that picture in mind, let move on!
+
 ## Problem
 Let say we are making a POS(Point Of Sale) application where given a bunch of BillReceipts we need to calculate and print the total amount. Jack happens to be our loyal frequent customer. 
 
@@ -214,7 +232,7 @@ These are associative as the order of operation application doesnot matter.
 ("Hello " + "there") + "Monoid"  == "Hello " + ("there" + "Monoid")
 ```
 
-However, substraction although had `identity` and `closure` property doesnot hold true for associativity.
+However, substraction satisfied `identity` and `closure` property but it doesnot hold true for associativity.
 ```swift
 (1 - 2) - 3 != 1 - (2 - 3)
 ```
@@ -260,7 +278,7 @@ However,
 Before going too far, lets appreciate what have we got from Monoids.
 
 ## Benifits of Associativity
-- Parallelization. Take for instance how Hadoop works? 
+- **Parallelization:** Take for instance how Hadoop works? 
   
   ```swift
   12 + 10 + 6 + 9 + 100 + 20 + 13
@@ -270,10 +288,10 @@ Before going too far, lets appreciate what have we got from Monoids.
   ==> Core1(170)          | Core2(...)    | Core3(...)      | Core4(...)
   ```
 
-- Incrementalism
+- **Incrementalism:**
   We saw this one before with Jack's last minute bananas purchase addition.
 
-- Divide And Conquer
+- **Divide And Conquer:**
   The first point on parallelization is good example of how a compiler might choose to divide and conquer strategy. 
   
 - Composability
