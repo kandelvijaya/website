@@ -7,19 +7,20 @@ title = "Monadic Networking: I Promise!"
 
 +++
 
-In functional programming (Haskell), Monad is used to encapsulate side effects. This is how IO (printing to console, getting line feed) and networking (getting things asynchronously from cloud) is done. In the end, we hide all the impurity behind the Monad and work in pure functional grounds. Can we hide our dirty async tasks and callback behind a monad in Swift? Can we achieve the same purity, declarative and composable properties in Swift? 
+This post abstracts handling async tasks and come up with declarative linearized API model. Async tasks includes nested networking, nested animation and even nested multithreading compute intensive code blocks. Async task is one of side effect programming technique. 
 
-This post is about taking a simple async task and encapsulating in a monad and then composing on top of this abstraction. This is not the definitive way to solve such problem but it is to me very simple and elegant. We will talk about some alternatives when possible.
+Side effect is integral part of programming; mutating state, printing to screen/paper, asynctask to download JSON, keeping a running counter, locking/unlocking thread are all examples of side effect programming technique. Any useful programming language must provide a way to interact with side effects. This is how we build real world application. However, complexity increases as we increase side effect; for example, think how a view controller with 10 mutable properties is easier to reason, debug and maintain than a view controller with 20 mutable properties. Compare nested callback code to a normal code. Functional Programming (FP) and Imperative programming (IP) takes different stance on tackling this issue at hand. IP uses callbacks while FP prefers monadic approach. We are interested to see monadic approach in this particular case.
 
-## In the end we will have done 3 things:
+Functional Programming takes monadic approach to hide the impurity behind a type and work with pure functions. Can we do the same in Swift?
+
+
+## We will do 3 things:
 
 - Understand and know how to encapsulate async tasks (getting rid of callback hell)
 - See how we can use this type to encapsulate and create declarative animation API. 
 - See how 30 lines can do all these above tasks. 
 
-### For minors:
-- The type we will implement is common or popular as **Promise**. We will see what it is.
-- We will see how **Functor** is a requirement for **Monad**. 
+As a side note, the monadic type that we will implement is popular as Promise or Future or Deferred on various texts. We will stick with Promise for this post. 
 
 
 # The callback hell
@@ -40,9 +41,14 @@ session.dataTask(with: kvurl) { (dataO, responseO, errorO) in
 }.resume()
 ```
 
-The problem however is not that this is a playground code and is thus not fine tuned. The problem we face is, this is how we think of aysnc code. This kind of nested callback baked code gets into release and when we want to add 1 more feature down the line; we add 1 more nesting. See the picture; we go off the screen. This to me is not real bad. I can scroll the screen. The real trouble here is; Its a lot manual, concerned and fragile process of tackling repeating pattern. DRY. Is it?  See the two `resume()` method calls. 
+Thinking linearly is easy and preferred. The above code breaks the linear progressive thinking. Code exposes the branching/completion or nested model.
 
-A immediate solution to clean up is to move the nested network call and supply via a completion handler. Its 1 step in our direction but to me it doesn't provide a good enough abstraction. 
+![Nested completion](/img/callBacks.png)
+
+This kind of nested callback baked code gets into release and when we want to add 1 more request down the line; we add 1 more nesting. See the picture; we go off the screen. The real trouble here is; It’s a lot of manual, concerned and fragile process of tackling repeated nesting. See the 2 resume() above. See the 2 places where we need to handle error/success.  Is it really DRY (Don’t Repeat Yourself)? 
+
+A immediate solution to clean up is to move the nested network call and supply via a completion handler. It’s a step in our direction but to me it doesn't provide a good enough abstraction.  One can also break nesting into functions to leave minimum impact to readability but still the code has repeating parts and exposes its nature of async. 
+
 
 # Our solution:
 
@@ -55,6 +61,8 @@ Network(kvurl).get().bind { _ in
 ```
 
 Thats it!. Don't worry about `bind` and `then`. We shall see they are very simple functions too.
+
+![Monadic AsyncTask](/img/monadicPromise.png)
 
 Some might find it coming. The promise / future which ever you call it. Lets not get there yet. 
 
@@ -105,10 +113,13 @@ If you are interested into declarative animation then I highly suggest **John Su
 
 The only price you pay to do such declarative programming is either language to support directly or third party libraries which you can embed and forget about how it works. The cost you pay for if you want to use Promise / Future is to understand them. 
 
-There exists numerous third party libraries that provide this feature of linear progression of async tasks and more. However, I find it more interesting to implement them myself and with a different twist. 
+There exists numerous third party libraries that provide this feature of linear progression of async tasks and more features. It’s easy to get lost in details of feature laden library when all you want is to understand the core. That’s exactly why, I find it more interesting to implement them myself and with a different twist. 
+
 
 ## Enter Promise (It shall be monadic)
 A promise is a return type of a async task. All it represents is the type of the eventual result it will have, immediately. 
+
+![Monadic AsyncTask](/img/monadicPromise.png)
 
 Think of it as a box which will provide a liquid pipe to the caller. The caller knows what kind of liquid he/she will get when the box is filled. Maybe water, alcohol or beer. This is the BOX's promise (the liquid type). While the box might take time to fill before pushing to caller, the caller can act as if he already has such liquid. Thats all.
 
@@ -210,6 +221,32 @@ which allows one to then do these things:
 
 ```swift
 view.animate(duration: 2) {
+    $0.backgroundColor = .yellow
+    }.then { view -> UIView in
+        view.animate(duration: 3) {
+            $0.backgroundColor = .green
+        }.execute()
+        return view
+    }.then {
+        $0.animate(duration: 4) {
+            $0.backgroundColor = .purple
+        }.execute()
+}.execute()
+
+```
+
+A negligible improvement. Repitition of `execute()` and nesting of promise is a remarkable sign we have work to do.
+
+Currently `then` takes `UIView`, animates and return `UIView`. Chained `then` (the second one) is called immediately without waiting for the animation inside to finish.
+
+    then :: ((T) -> U) -> Promise<U>
+
+To be able to wait until the inner animation is done, we need to wrap the inner animation into a promise and return that promise instead of UIView. But, we will have a double layered Promise for the next `then`.  
+
+    then :: ((T) -> Promise<A>) -> Promise<Promise<A>> //U is Promise<A>
+
+```swift
+view.animate(duration: 2) {
     $0.backgroundColor = .red
 }.then { view -> Promise<UIView> in
     return view.animate(duration: 3) {
@@ -219,23 +256,32 @@ view.animate(duration: 2) {
     promise.then {
         $0.animate(duration: 4) {
             $0.backgroundColor = .purple
-        }
-    }
-}
+        }.execute()
+    }.execute()
+}.execute()
 ```
+    
+    
+Didn’t help get rid of the multiple `execute()`.  Let's take a another approach of generalizing this. 
 
-Fair enough this is quite dumb code. 
+How can we semantically differentiate these two ways of calling then? 
+    
+    then :: ((T) -> U) -> Promise<U>
+    then2 :: ((T) -> Promise<U>) -> Promise<Promise<U>>
 
-1. `then :: ((T) -> U) -> Promise<U>`
+Remeber `(T) -> U` doesnot refrain one from specializing as `UIView -> Promise<UIView>`. When `then2` is used, the second chainer has to extract the promise and then only can do his real work. This is exactly what happened up there. How can we get this semantics?
 
-This is because `then` expects `(T) -> U` which does not refrain one to supply `(UIView) -> Promise<UIView>` in which case the result of the `then` is going to be `Promise<U> == Promise<Promise<UIView>>>`. 
+    then2 :: ((T) -> Promise<U>) -> Promise<U>
 
-This is exactly what happened up there. Now 1 way to solve it is by flattening/ joining the nested `Promises`. 
+Now a way to solve it is by flattening/ joining the nested Promises. Similar to the `flatMap`  approach taken by `Collection` in swift. 
 
-1. `join :: Promise<Promise<A>> -> Promise<A>`
+    join :: Promise<Promise<A>> -> Promise<A>
 
+This is exactly what monad's bind solves. Lets rename this `then2` to `bind`.
 
-This is exactly what monad's `bind` solves.
+    bind :: ((T) -> Promise<U>) -> Promise<U>
+
+Lets review the implementation details. 
 
 ## Enter Monadic Promise.
 
@@ -245,7 +291,7 @@ This is exactly what monad's `bind` solves.
         return Promise.join(transformed)   //2. Promise<U>
     }
 
-    static public func join<A>(_ input: Promise<Promise<A>>) -> Promise<A> {
+    static private func join<A>(_ input: Promise<Promise<A>>) -> Promise<A> {
         return Promise<A>{ aCompletion in
             input.then { innerPromise in
                 innerPromise.then { innerValue in
@@ -260,6 +306,8 @@ Its important to note the type signature of `bind` and `then`.
 
 -  `then :: ((T) -> U)          -> Promise<U>`
 -  `bind :: ((T) -> Promise<U>) -> Promise<U>`
+
+`bind` is a generalization which uses `join` function that takes care of flattening double layered promise into a single layered. Now we can chain the next `then` in usual ways.
 
 Our animation API can now be in terms of `bind`:
 
@@ -306,3 +354,64 @@ view.animate(with: 2) {
 }.execute()
 ```
 
+Isn't that declarative? I bet! 👍🤓
+
+
+## Summerizing:
+1. The entire `Promise<T>` is then the below code:
+
+```swift
+public struct Promise<T> {
+
+    public typealias Completion = (T) -> Void
+
+    var aTask: ((Completion?) -> Void)? = nil
+
+    public init(_ task: @escaping ((Completion?) -> Void)) {
+        self.aTask = task
+    }
+
+    @discardableResult public func then<U>(_ transform: @escaping (T) -> U) -> Promise<U> {
+        return Promise<U>{ upcomingCompletion in
+            self.aTask?() { tk in
+                let transformed = transform(tk)
+                upcomingCompletion?(transformed)
+            }
+        }
+    }
+
+    public func bind<U>(_ transform: @escaping (T) -> Promise<U>) -> Promise<U> {
+        let transformed = then(transform)  //1. Promise<Promise<U>>
+        return Promise.join(transformed)   //2. Promise<U>
+    }
+
+    static private func join<A>(_ input: Promise<Promise<A>>) -> Promise<A> {
+        return Promise<A>{ aCompletion in
+            input.then { innerPromise in
+                innerPromise.then { innerValue in
+                    aCompletion?(innerValue)
+                }.execute()
+            }.execute()
+        }
+    }
+
+    public func execute() {
+        aTask?(nil)
+    }
+
+}
+```
+
+2. Given this basic type, we can linearize async task (networking and animation to name a few).
+3. Hopefully, one can appreciate how simple generalization can be powerful force to allow expressive and declarative programming framework. 
+4. Other approaches people came with are Deffered, Future and PromiseKit. They all allow one to generalize async code in one way or another. They do provide other features like dispatching on certain threads, catching error and other utility functions. The core code is tucked away and has larger surface area than this monadic approach we took. To me thats a big win. 
+
+
+## 1 more thing
+- What is a Monad? How is `Promise<T>` a Monad? 
+
+In fact, `Promise<T>` is a complete Functor and Monad. We will see finally what it takes to be a Monad in the next blog post. Happy coding until then! Cheers!
+
+
+### Thanks 
+- [Said Marouf](https://twitter.com/saidmarouf) for reviewing the post.
