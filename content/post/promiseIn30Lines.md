@@ -9,7 +9,7 @@ title = "Monadic Networking: I Promise!"
 
 This post abstracts handling async tasks and come up with declarative linearized API model. Async tasks includes nested networking, nested animation and even nested multi-threading compute intensive code blocks. Async task is one of side effect programming technique. 
 
-Side effect is integral part of programming; mutating state, printing to screen/paper, asynctask to download JSON, keeping a running counter, locking/unlocking thread are all examples of side effect programming technique. Any useful programming language must provide a way to interact with side effects. This is how we build real world application. However, complexity increases as we increase side effect; for example, think how a view controller with 10 mutable properties is easier to reason, debug and maintain than a view controller with 20 mutable properties. Compare nested callback code to a normal code. Functional Programming (FP) and Imperative programming (IP) takes different stance on tackling this issue at hand. IP uses callbacks while FP prefers monadic approach. We are interested to see monadic approach in this particular case.
+Side effect is integral part of programming; mutating state, printing to screen/paper, asynctask to download JSON, keeping a running counter, locking/unlocking thread are all examples of side effect programming technique. Any useful programming language must provide a way to interact with side effects. This is how we build real world application. However, complexity increases as we increase side effect; for example, think how a view controller with 10 mutable properties is easier to reason, debug and maintain than a view controller with 20 mutable properties. Compare nested callback code to a normal code. Functional Programming (FP) and Imperative programming (IP) take different stance on tackling this issue at hand. IP uses callbacks while FP prefers monadic approach. We are interested to see monadic approach in this particular case.
 
 Functional Programming takes monadic approach to hide the impurity behind a type and work with pure functions. Can we do the same in Swift?
 
@@ -50,7 +50,7 @@ This kind of nested callback baked code gets into release and when we want to ad
 A immediate solution to clean up is to move the nested network call and supply via a completion handler. It's a step in our direction but to me it doesn't provide a good enough abstraction.  One can also break nesting into functions to leave minimum impact to readability but still the code has repeating parts and exposes its nature of async. 
 
 
-# Our solution:
+# Our final solution:
 
 ```swift
 Network(kvurl).get().bind { _ in
@@ -63,8 +63,6 @@ Network(kvurl).get().bind { _ in
 Thats it!. Don't worry about `bind` and `then`. We shall see they are very simple functions too.
 
 ![Monadic AsyncTask](/img/monadicPromise.png)
-
-Some might find it coming. The promise / future which ever you call it. Lets not get there yet. 
 
 Let me show you yet another example:
 
@@ -116,7 +114,7 @@ The only price you pay to do such declarative programming is either language to 
 There exists numerous third party libraries that provide this feature of linear progression of async tasks and more features. It's easy to get lost in details of feature laden library when all you want is to understand the core. That's exactly why, I find it more interesting to implement them myself and with a different twist. 
 
 
-## Enter Promise (It shall be monadic)
+# Enter Promise (It shall be monadic)
 A promise is a return type of a async task. All it represents is the type of the eventual result it will have, immediately. 
 
 ![Monadic AsyncTask](/img/monadicPromise.png)
@@ -166,7 +164,7 @@ That's almost it! I removed the documentation which you can find at [Github MPro
 
 Promise contains expression. This is a subtle design choice I made on this type. The implication being we can build a big expression that doesn't necessarily have to evaluated when the program sees. We can store it in a property, pass to a function or copy it. We can also call the execute multiple times. The compiler then can also choose to optimize the expression when possible. One can compose 2 promises in ways never thought. And all this is good because a **Promise is a Value type**. 
 
-Lets see how we can construct a Promise to being with.
+Lets see how we can construct a Promise to start with.
 
 ### The constructor 
 
@@ -279,7 +277,7 @@ Now a way to solve it is by flattening/ joining the nested Promises. Similar to 
 
     join :: Promise<Promise<A>> -> Promise<A>
 
-This is what monad's bind solves. Lets rename this `then2` to `bind`.
+This is what monad's bind function signature looks like. Lets rename this `then2` to `bind`. 
 
     bind :: ((T) -> Promise<U>) -> Promise<U>
 
@@ -306,8 +304,9 @@ Lets review the implementation details.
 
 Its important to note the type signature of `bind` and `then`.
 
--  `then :: ((T) -> U)          -> Promise<U>`
--  `bind :: ((T) -> Promise<U>) -> Promise<U>`
+    `then :: ((T) -> U)          -> Promise<U>`
+
+    `bind :: ((T) -> Promise<U>) -> Promise<U>`
 
 `bind` is a generalization which uses `join` function that takes care of flattening double layered promise into a single layered. Now we can chain the next `then` in usual way.
 
