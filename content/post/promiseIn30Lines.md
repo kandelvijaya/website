@@ -1,6 +1,6 @@
 +++
 author = "kandelvijaya"
-date = "2017-08-06T22:05:02+02:00"
+date = "2017-08-13T22:05:02+02:00"
 description = "Liner composition of async tasks using Monad."
 tags = ["Monadic Networking", "Promise", "Monad", "Swift"]
 title = "Monadic Networking: I Promise!"
