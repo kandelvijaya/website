@@ -3,6 +3,7 @@ title: "Recap of RoMobos 2018 conference"
 date: 2018-02-18T12:20:27+01:00
 author: "kandelvijaya"
 tags: ["haskell", "swift3", "functional programming", "fp"]
+draft: true
 ---
 
 # Table of Contents
