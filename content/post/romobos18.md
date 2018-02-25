@@ -43,9 +43,8 @@ reach out to him <https://twitter.com/PreusslerBerlin>. We met few months back a
 
 The conference started with Human Computer Interaction which to be honest did have good intent but the 
 presentation could be made much interesting. Followed was a interesting presentation on Beyond Engineering
-by Oleg ### which demonstrated difference between working in out-sourcing and product company. To me the 
-take-away was to give a damn about the product and the company you are working along with being superior 
-on engineering skills. Oleg did a good job making us stay awake and interested at all times. 
+by Oleg Anghelov which demonstrated difference between working in out-sourcing and product company. To me the 
+take-away was to give a damn about the product and the company you are working. Engineering is still the top priotity. Oleg did a good job making us stay awake and interested at all times. 
 
 Now I'm heading to meet John Sundell and see his presentation. The man behind <https://swiftbysundell.com>. 
 
@@ -57,11 +56,11 @@ Now I'm heading to meet John Sundell and see his presentation. The man behind <h
 
 ### Takeaways from John Sundell presentation
 
-1.  CoreAnimation is great intermediate compromise for playing with CALayer, creating icons and assets.
-2.  There exists a CAReplicator (I didn't knew before) that replicates instances however allowing to 
+1.  CoreAnimation is great intermediate compromise for playing with CALayer, creating icons, assets and animation.
+2.  There exists a CAReplicatorLayer (I didn't knew before) that replicates instances. It allows one to 
     apply transformation function on each. This way one can build a loading indicator in some handful 
     lines of code.
-3.  ImagineEngine and the code structure.
+3.  ImagineEngine and the code structure. <https://github.com/JohnSundell/ImagineEngine>
     
     I talked to John about how is he managing to write a post each week, creating podcast and working 
     on open source projects alongside his job. It was a nice conversation and I will follow up with hom on 
@@ -70,19 +69,19 @@ Now I'm heading to meet John Sundell and see his presentation. The man behind <h
 
 <a id="org74de003"></a>
 
-### Paul Ardeleanu on Test for GTFO
+### Paul Ardeleanu on "Test or GTFO – a guide on how to write better Swift for iOS"
 
 Paul had amazing presentation on TDD, practical tips and todos. Despite the fact that I have been doing TDD for some 
 time, I could get some real takeaways. One of them was to not use literal values in test. For instance, 
 not to put "ThatString" literal on some struct Initializer or function parameter while under test. Get 
-a random generator and use it. Similar is the case for using Factory pattern. The other thing I learnt 
-is how one can test existence of correct storyboard and Xcode configuration in unit test. Today I also 
-learn how to test NSLayoutConstraints in unit tests. Its pretty cleaver. Good talk. I enjoyed a lot.
+a random generator and use it. Similar is the case for using Factory pattern. The other thing I learned 
+is how one can test existence of correct storyboard and Xcode configuration in unit test. Also 
+how to test NSLayoutConstraints in unit tests. Its pretty cleaver. Good talk. I enjoyed a lot.
 
 
 <a id="orgb8c24d5"></a>
 
-### Simone Civetta
+### Simone Civetta on "Reusable Cross-Platform Frameworks with Kotlin/Native"
 
 Simone did a interesting talk where he showed how one can use kotlin to write business/domain logic and produce 
 iOS framework and Android package which then can be consumed by both platform. I was surprised to know 
@@ -93,41 +92,39 @@ JetBrains is working hard to make Kotlin interoperable with Swift/Obj-C. Good st
 
 ### Others
 
-There were couple of talks that were generic and common. Oleg Anghelov had a interesting presentation 
-on beyond engineering. The key takeaways was how does it differ working in OutSourcing company to 
-product company. His message was to giving a damn about the company and product is win situation. 
+There were couple of talks that were generic and common.
 There was a talk on Security which had solid content on how to preserve users secure data from leaking. 
-For instance blurring the screenshot of credit card entry during the task switching or disallowing 
-third party keyboards to log everything. 
+For instance blurring the screenshot of credit card entry during the task switcher or disallowing 
+third party keyboards to log everything. I completely missed Fumiya Nakamura on “Optimizing iOS Development” which I wanted to attend. I was busy preparing for my talk.
 
 
 <a id="org8e4f2c2"></a>
 
 ## Day 3: The workshop
 
-Needless to say the previous night we partyed. Van Der Lee and I started with Chuk (Romanian fire water), 
+Needless to say the previous night we partyed. Van Der Lee and I started with Țuică (Romanian fire water), 
 later joined by the likes of John, Pedro, Simione, Ostop, Nakamura-san and Assaf. Later we went to club, 
 then to a bar and then back to Doner (as expected) place before heading to bed pretty late at night. The 
 following day (today, 16 Feb 2018) I had a 3.5 hours to explain what the heck is Monad in Swift. Needless 
-to confess I had hoped for a open ended discussion model workshop, I had to do last minute preparation.  
+to confess I had hoped for a open ended discussion model workshop, I had to do some last minute preparation.  
 
 I planned the workshop in the morning after late breakfast therby missing one of the most interesting 
 session on Build System by Pedro. Explaining Monad is hard, although is based around the generalization 
-for composing 2 functions where each one has a signature of a -> M b.
+for composing 2 functions where each one has a signature of a -> M b. Where M stands for any kind of Contextaul type (i.e. Optional, Result, Collection)
 
     (a -> M b) -> (b -> M c) -> M c
 
-I often struggled in times to give proper example that would be used in real life directly resorting. I had to 
-use some sample game. I gave attendees some space to think, time to implement map and flatMap on Result and List types. 
-I did't bother asking them to model Monad as protocol. This is such a nice brain teaser. All in all, I found people 
-dropping off couple of times. However they were interested to stick around and see what monad was. Several people 
+I often struggled in times to give proper example that would be used in real life. I had to 
+use MAD.A.DAM game. I gave attendees some space to think, time to implement map and flatMap on Result and List types. 
+I did't bother asking them to model Monad as protocol like I did back in SwiftAveiro (It was fun exercise). This is such a nice brain teaser. At times, I found people 
+dropping off and had to get them back. I was constantly pushing code changes so people could follow. They were interested to stick around and see what monad was. Several people 
 did manage to get the hang of it and struggle through the 3.5 hour to see and create a Monad for themselves. 
 Seeing that satisfaction on their face is rewarding. Next time around I would love to increase the smiling face at the end. 
 
-Later that evening, we went old city and enjoyed authentic romanian cousine at the "wheels" restaurant. Bogdan, Iaran
+Later that evening, we went to old city center and enjoyed authentic romanian cousine at the "wheels" restaurant. Bogdan, Iaran
 and Mircha were wonderful organisers. We then went for walk, see the roman wall remains and some 
 other monuments of history. Later we went to Enigma bar which was decorated interestingly with a rounded bulbs on 
-ceiling synchornized to move vertically, a giant wall clock with mechanical wheels attached to mortar and a robot that 
+ceiling synchornized to move vertically, a giant wall clock with mechanical wheels attached to motor and a robot that 
 was pedalling a cycle all night long. Soon we were back to the hotel, already past 12 midnight. 
 
 
@@ -137,13 +134,13 @@ was pedalling a cycle all night long. Soon we were back to the hotel, already pa
 
 Today morning, John, I and Nakamura-san planned for city sightseeing in the daylight. I joined them for few hour 
 as I had a plane to catch at 1PM. Romania being in EU means I could use 4g with my existing data plan and therby 
-Uber. Uber was pretty cheap for transportation too. 
+Uber. Uber was pretty cheap for transportation. 
 
 Finally, I parted John and Nakamura-san, met with Alex and Danny and headed towards the Airport. Oh Alex, works 
-on Microsoft TODO app for iOS in Berlin (Next building to where my apartment is). And now, I'm trying to wrap 
+on Microsoft's TODO iOS app in Berlin (Next building to my previous apartment was). And now, I'm trying to wrap 
 up my experience from Romobos conference as I fly over somewhere between Cluj and Munich. 
 
 Thank you @Romobos for inviting me, orginising a wonderful conference. Great work guys! Thank you all the 
 participant who might be reading this for enduring Monads (talk on first day, workshop on second); I believe 
-you learn something. Thank you all the speakers turned friends, most of whom I never met before, for having good
+you learned something. Thank you all the speakers turned friends, most of whom I never met before, for having good
 conversation, drinks and fun.
