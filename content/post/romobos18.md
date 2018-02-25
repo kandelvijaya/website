@@ -1,18 +1,19 @@
 ---
-title: "Recap of RoMobos 2018 conference"
+title: "Romobos 2018"
 date: 2018-02-18T12:20:27+01:00
 author: "kandelvijaya"
-tags: ["haskell", "swift3", "functional programming", "fp"]
-draft: true
+description: "Explaining Monadic types"
+tags: ["haskell", "swift", "functional programming", "fp"]
+draft: false
 ---
 
 # Table of Contents
 
 1.  [Romobos 2018: My take!](#orgff0627b)
     1.  [Day 1: Presentation day](#orgc79a63a)
-        1.  [Takeaways from John Sundell presentation](#org5682cd8)
+        1.  [John Sundell on CoreAnimation](#org5682cd8)
         2.  [Paul Ardeleanu on Test for GTFO](#org74de003)
-        3.  [Simone Civetta](#orgb8c24d5)
+        3.  [Simone Civetta on Kotlin for cross platform](#orgb8c24d5)
         4.  [Others](#org698c72d)
     2.  [Day 3: The workshop](#org8e4f2c2)
     3.  [Day 3: Back to Berlin](#org56a6a70)
@@ -101,6 +102,7 @@ third party keyboards to log everything. I completely missed Fumiya Nakamura on 
 <a id="org8e4f2c2"></a>
 
 ## Day 3: The workshop
+{{< tweet 964810856704954369 >}}
 
 Needless to say the previous night we partyed. Van Der Lee and I started with Țuică (Romanian fire water), 
 later joined by the likes of John, Pedro, Simione, Ostop, Nakamura-san and Assaf. Later we went to club, 
@@ -140,7 +142,14 @@ Finally, I parted John and Nakamura-san, met with Alex and Danny and headed towa
 on Microsoft's TODO iOS app in Berlin (Next building to my previous apartment was). And now, I'm trying to wrap 
 up my experience from Romobos conference as I fly over somewhere between Cluj and Munich. 
 
-Thank you @Romobos for inviting me, orginising a wonderful conference. Great work guys! Thank you all the 
+Thank you `@Romobos` for inviting me, orginising a wonderful conference. Great work guys! Thank you all the 
 participant who might be reading this for enduring Monads (talk on first day, workshop on second); I believe 
 you learned something. Thank you all the speakers turned friends, most of whom I never met before, for having good
 conversation, drinks and fun.
+
+### Materials
+1. Slides 
+    {{< speakerdeck 4f90f7572a8042d2b0dbde1cf0b36e85 >}}
+2. [Workshop material for Monadic Types can be found here](https://github.com/kandelvijaya/mobosFPWorkshop)
+3. Presentation (from UAMobile conf)
+    {{< youtube 6UHGDrFcCdA >}}
