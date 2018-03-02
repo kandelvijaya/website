@@ -72,7 +72,7 @@ code.
 # Modeling interface based on Enum
 
 And this is how we could have implemented the OneTapFeature. This makes for a concise and readable API.
-
+```swift
     public enum OneTapFeature {
     
         case cart
@@ -100,7 +100,7 @@ And this is how we could have implemented the OneTapFeature. This makes for a co
         }
     
     }
-
+```
 
 <a id="org7bc4b44"></a>
 
@@ -109,7 +109,7 @@ And this is how we could have implemented the OneTapFeature. This makes for a co
 The above enum based API is very nice and declarative. This is the only public facing entry to the 
 feature. The only 2 things it lets you do is ask if the feature is enabled from either cart or product 
 page and second present the feature. Lets see how they can be used by client.
-
+```swift
     class CartViewController: UIViewController {
         @IBAction func checkout() {
             if OneTapFeature.cart.isEnabled {
@@ -119,9 +119,9 @@ page and second present the feature. Lets see how they can be used by client.
             }
         }
     }
-
+```
 And for the product page, we want to only present oneTap button when it is enabled. 
-
+```swift
     class ProductViewController: UIViewController {
     
         @IBOutlet var oneTapButton: UIButton?
@@ -141,7 +141,7 @@ And for the product page, we want to only present oneTap button when it is enabl
         }
     
     }
-
+```
 Important thing to note about the \`isEnabled\` checks weather feature is ready for the asking entry point. The feature
 could be AB testing value, internal feature toggle or a feature toggle strategy to push code but not display until everything is ready. It 
 uses \`AppFeature\` to get this information, which can be accessed anywhere from the app. To read more on feature toggle and 
@@ -208,7 +208,7 @@ On the second case (3) we will need to rethingk how we test. (Lets hold on to th
 we see a counter argument and then we will improvise).
 
 Test Case 1: 
-
+```swift
     class OneTapFeatureTests: XCTestCase {
     
         func test_whenCartFeatureToggleIsOff_thenCartOneTapIsDisabled() {
@@ -217,7 +217,7 @@ Test Case 1:
         }
     
     }
-
+```
 There is a problem. We know that the \`isEnabled\` is going to use OneTapCartFeatureToggle internally. 
 Unit testing is suppoed to be a black box test. Meaning, you provide a input and test for output. 
 NOT, how it computes and what it uses to compute the output. That is white box testing.  
@@ -235,7 +235,7 @@ Lets do that up next.
 <a id="orgfcff107"></a>
 
 # Refactoring the OneTapFearure to make it testable
-
+```swift
     struct OneTapCheckoutFeature {
     
         enum OneTapEntryPoint {
@@ -281,9 +281,9 @@ Lets do that up next.
         }
     
     }
-
+```
 Now lets revisit the test case.
-
+```swift
     class OneTapFeatureTests: XCTestCase {
     
         func test_whenCartFeatureToggleIsOff_thenCartOneTapIsDisabled() {
@@ -292,7 +292,7 @@ Now lets revisit the test case.
         }
     
     }
-
+```
 We now can control the input and hence test for the output. This is future proof too: if I were to 
 refactor the \`isEnabled\` to use country locale after few months, I would change the constructor and 
 my CI would notify me as the tests won't compile. Not compiling tests is failed test too.  
@@ -308,7 +308,7 @@ In tests however, we will swap them. Nice right!
 
 We can now follow the same principle and in constructor argument inject the AppNavigator type. Since AppNavigator 
 can be modeled as protocol this can be mocked in test independently.
-
+```swift
     class OneTapFeatureTests: XCTestCase {
     
         func test_whenProductFeatureIsNotEnabled_thenPresentDoesNotNavigate() {
@@ -328,7 +328,7 @@ can be modeled as protocol this can be mocked in test independently.
         }
     
     }
-
+```
 As we have used the constructor injection with default parameter for navigator, client implementation of production code can
 be as is. They dont need to pass in Navigator type. It will sensibly default. For the test, we have an oppurtunity to use 
 our mocked Navigator. This helps us check for side effects (some call it behavior). I usually prefer
@@ -354,7 +354,7 @@ enum which cannot be represented in Obj-C.
 There are couple of strategy to solve this issue. I wont muster the details here but present a solution I resort most of the 
 times. Its by wrapping the enum into a class. All the cases would in turn be static functions so that the API still feels the 
 same. Lets see it in action.
-
+```swift
     public final class OneTapEntryPoint: NSObject {
     
         enum _OneTapEntryPoint {
@@ -377,7 +377,7 @@ same. Lets see it in action.
         }
     
     }
-
+```
 There are minimal changes to be made in the actual OneTapCheckoutFeature type.
 
 -   \`convenience init\` just exposes the entryPoint to be passed. Others will default.
@@ -386,7 +386,7 @@ There are minimal changes to be made in the actual OneTapCheckoutFeature type.
 -   both \`isEnabled\` and \`present()\` are exposed by \`@objc\` and \`public\`
 -   on the switch, we now switch on the internal \`value\` (the backing storage swifty enum)
 
-    ```
+    ```swift
     public final class OneTapCheckoutFeature: NSObject {
     
         // instance members as is
@@ -412,7 +412,7 @@ There are minimal changes to be made in the actual OneTapCheckoutFeature type.
     ```
 
 Then the Obj-C class can call the module very similar to Swifty Enum like this:
-
+``` swift
     /// Obj-C usage
     
     // very similar to Enum
@@ -428,7 +428,7 @@ Then the Obj-C class can call the module very similar to Swifty Enum like this:
     if (feature.isEnabled) {
         [feature present];
     }
-
+```
 Other approaches that Im aware of is either by extending the type and creating factory method. Or creating 
 a class that waraps each enum case. I however believe this is very neat way to expose swift enum based 
 api to obj-c. Note that, Obj-C can only create the OnePointEntryPoint. Given two instances of different 
