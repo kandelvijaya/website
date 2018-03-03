@@ -24,11 +24,11 @@ draft: true
 
 # Writing Testable Swift API with Enums
 
-Encapsulate everything and try to show nothing. Greedy approach.  Works quite well in software 
+Encapsulate everything and try to show as little as possible. Greedy approach.  Works quite well in software 
 development. Today we are going to focus on the interface API for a fictious module: OneTapCheckout.
 Basic idea: when you tap checkout button on a product/cart page, it buys the product without asking 
 address, payment and coupon code (given you have them already). We want to provide this feature as 
-a iOS framework (aka module). A easy Public interface is all we need to expose so that cart viewcontroller 
+a iOS framework (aka module). A simple public interface is all we need to expose so that cart viewcontroller 
 can make use of it. Moreover product page is also interested to integrate this feature already. So lets get to 
 code.  
 
@@ -106,9 +106,9 @@ And this is how we could have implemented the OneTapFeature. This makes for a co
 
 # Using the OneTapFeature
 
-The above enum based API is very nice and declarative. This is the only public facing entry to the 
-feature. The only 2 things it lets you do is ask if the feature is enabled from either cart or product 
-page and second present the feature. Lets see how they can be used by client.
+The above enum based API is nice and declarative. This is the only public facing entry to the 
+feature/module. It only lets you do 2 things. First check if feature is enabled from either cart or product 
+page. Second present the feature. Lets see how they can be used by client.
 ```swift
     class CartViewController: UIViewController {
         @IBAction func checkout() {
@@ -120,7 +120,7 @@ page and second present the feature. Lets see how they can be used by client.
         }
     }
 ```
-And for the product page, we want to only present oneTap button when it is enabled. 
+And for the product page, we have 2 choice. We want to show OneTap button when the feature is enabled/ready. If not, we will show the old checkout button. 
 ```swift
     class ProductViewController: UIViewController {
     
@@ -142,12 +142,14 @@ And for the product page, we want to only present oneTap button when it is enabl
     
     }
 ```
-Important thing to note about the \`isEnabled\` checks weather feature is ready for the asking entry point. The feature
-could be AB testing value, internal feature toggle or a feature toggle strategy to push code but not display until everything is ready. It 
+\`isEnabled\` checks weather feature is ready for the asking entry point. The feature
+could be AB test value, internal feature toggle or a feature toggle strategy to push code but not display until everything is ready. It 
 uses \`AppFeature\` to get this information, which can be accessed anywhere from the app. To read more on feature toggle and 
-strategy [read indepth on Martin Fowler's blog.](https://martinfowler.com/articles/feature-toggles.html) Lets move on! Although recently I have started TDD with test first, I dont 
-expect everyone is doing it. I recommend. Had we done TDD then we could see the pitfalls of the above approach already. However, 
-like usual lets now finally write retroactive tests so there wont be breaking changes in the feature. If there will, CI will detect.  
+strategy [read indepth on Martin Fowler's blog.](https://martinfowler.com/articles/feature-toggles.html)\\
+
+Lets move on! Although recently I have started TDD with test first, I dont 
+expect everyone to do the same. I can only recommend. Had we done TDD then we could see the pitfalls of the above approach already. However, 
+like usual, lets now finally write retroactive tests so there wont be breaking changes in the feature. If there will, CI will detect.  
 
 
 <a id="orgafdc04b"></a>
@@ -203,9 +205,9 @@ Lets think how can we test this piece of interface.
 </tbody>
 </table>
 
-We will write unit tests for 2 cases here (1) and (3), others is left as exercise
-On the second case (3) we will need to rethingk how we test. (Lets hold on to this thought until 
-we see a counter argument and then we will improvise).
+We will write unit tests for 2 cases here (1) and (3), others are left as exercise
+On the second case (3) we will need to rethink how we test. (Lets hold on to this thought until 
+we see a counter argument).
 
 Test Case 1: 
 ```swift
@@ -220,12 +222,13 @@ Test Case 1:
 ```
 There is a problem. We know that the \`isEnabled\` is going to use OneTapCartFeatureToggle internally. 
 Unit testing is suppoed to be a black box test. Meaning, you provide a input and test for output. 
-NOT, how it computes and what it uses to compute the output. That is white box testing.  
+**NOT**, how it computes and what it uses to compute the output. That is white box testing.\\
+
+I mentioned unit testing should be black box testing, this can be debatable. However, my perspective here is a method is a unit. You are responsible to define what a unit means to your specific need. It could be a entire class or a method or a couple of methods. The point of unit testing is that you treat that unit you defined as a black box. Given a input, you test for output. Not side effects. This however can be debated to be white box testing if you think your app is a unit and your classes are internal pieces. I don't recommend this thinking. I believe in divide and conquer, recursively. A function is a smallest unit. A class is merely collection of functions (collection of smaller units == unit). A program is composition of classes (collection of smaller units == unit). Lets not debate here! Define your unit.\\
 
 The above approach is not only bad principally but also practically. Lets say sometime later, \`isEnabled\` is refactored to be enabled only 
 in Germany. If you were running the test on german locale app, then the above would pass. I work in Berlin. 
-So if this was my test, it would pass. I wouldn't spot a difference. Now I bet you spotted the difference. 
-Dont test the internal implementation. Unit test is strictly tesing output from the input.  
+So if this was my test, it would pass. I wouldn't spot a difference. **Dont test the internal implementation. Unit test is strictly tesing output from the input.**\\
 
 How can we write proper test here? Tough! We need to get rid of \`enum\`. Sad but true. Enums don't allow you to inject
 dependencies. They don't have constructor. If this were a class/struct, we could use constructor injection to provide the feature toggles. 
@@ -334,11 +337,11 @@ be as is. They dont need to pass in Navigator type. It will sensibly default. Fo
 our mocked Navigator. This helps us check for side effects (some call it behavior). I usually prefer
 to nest the mock type declaration inside the namespace of the test case. This avoids leaking mocks outside. However if there 
 are other tests that need the same mock then create a factory to generate the mocks. Other important thing to note is, 
-\`.product(with: UUID().uuidString)\` rather than using \`.product(with: "someId")\`. I leanred form Paul to not use literal as 
+\`.product(with: UUID().uuidString)\` rather than using \`.product(with: "someId")\`. I leanred form [@Paul](https://twitter.com/pardel) to not use literal as 
 values in test.  
 
 However, although all looks fine. We are certainly not following proper Unit Testing rule. We said its supposed to be black box 
-testing. In the \`present()\` test, we are not testing for the output directly. \`present()\` doesnot return anything back. We are testing 
+test. In the \`present()\` test, we are not testing for the output directly. \`present()\` doesnot return anything back. We are testing 
 outcome of calling present. The outcome is calling into the navigtor object. Its a side effect. This is very common sight in 
 Object Oriented Programming but certainly could be improved. We will see how to do so in the follow up post!
 
@@ -429,10 +432,10 @@ Then the Obj-C class can call the module very similar to Swifty Enum like this:
         [feature present];
     }
 ```
-Other approaches that Im aware of is either by extending the type and creating factory method. Or creating 
+Other approaches that I'm aware of is either by extending the enum type and creating factory method. Or creating 
 a class that waraps each enum case. I however believe this is very neat way to expose swift enum based 
 api to obj-c. Note that, Obj-C can only create the OnePointEntryPoint. Given two instances of different 
-OneTapEntryPoint, Obj-C doesnot have the ability to read what case a instance has internally. You can still do  memory comparision. 
+OneTapEntryPoint, Obj-C doesnot have the ability to read what case a instance has internally. You can still do memory comparision. 
 
 
 <a id="org13ee52f"></a>
@@ -440,7 +443,7 @@ OneTapEntryPoint, Obj-C doesnot have the ability to read what case a instance ha
 # Conclusion
 
 Enum are powerful type. Swift is awesome; it features enum with associated values. This allows for neat 
-pattern matching and api design. However it does have few corner cases especially on testability and objc interoperability.  
+api design with powerful pattern matching ability. However it does have few corner cases especially on testability and objc interoperability.  
 
 We saw that for unit test to be practical we need to be able to control input and assert on the output. Enums don't 
 allow arbitary argument via constructor injection nor property injection (I dont prefer this mutation). 
