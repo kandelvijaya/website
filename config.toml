@@ -5,8 +5,6 @@ languageCode = "en-us"
 copyright = "Vijaya P. Kandel"
 googleAnalytics = "UA-46775685-3"
 disqusShortname = "kandelvijayacom"
-## PygmentsCodeFences = true
-## PygmentsStyle = "monokai"
 
 [Author]
     name = "kandelvijaya"
