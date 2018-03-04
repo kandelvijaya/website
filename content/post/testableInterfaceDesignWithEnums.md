@@ -1,6 +1,6 @@
 ---
 title: "Testable Interface design with Enums"
-date: 2018-03-02T12:20:27+01:00
+date: 2018-04-02T13:20:27+01:00
 author: "kandelvijaya"
 description: "Using enums for API design"
 tags: ["swift", "ios", "architecture"]
