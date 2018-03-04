@@ -494,8 +494,8 @@ configuration object, using dependency container and so on. I will focus on the
 classic delegate pattern to tackle this issue. We can go into the others in the
 follow up post, if needed.  
 
-****Goal here is to remove AppNavigator and FeatureToggle from
-OneTapCheckoutFeature****. I don't like to enforce embedding app to use 
+**Goal here is to remove AppNavigator and FeatureToggle from
+OneTapCheckoutFeature**. I don't like to enforce embedding app to use 
 specific navigation pattern or feature toggle strategy.  
 
 Enter classic delegate pattern:
@@ -602,8 +602,8 @@ interoperability.
 We saw that for unit test to be practical we need to be able to control input
 and assert on the output. Enums don't allow arbitary argument via constructor
 injection nor property injection (I dont prefer this mutation). 
-********Thereby methods on enum that depend on anything other than the enum cases immediately
-makes it hard to test.********  
+**Thereby methods on enum that depend on anything other than the enum cases immediately
+makes it hard to test.**
 
 Second, in case we use enum based api then we might run into problems when
 exposing to Obj-c caller. In this instance, we mimicked enum type with class
