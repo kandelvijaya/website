@@ -1,9 +1,9 @@
 ---
-title: "Extensible Analytics Library Design with final tagless concept"
+title: "Extensible Analytics Library Design with final tag-less concept"
 date: 2018-03-11
 author: "kandelvijaya"
 description: "Testing new concept with analytics system library"
-tags: ["swift", "ios", "architecture", "analytics", "expression-problem"]
+tags: ["swift", "iOS", "architecture", "analytics", "expression-problem"]
 draft: false
 ---
 
@@ -113,7 +113,7 @@ which is itself a response to [Matt Diephouse's article](http://matt.diephouse.c
 ## Not following the ritual
 
 Today we are going to look at how can we write a analytics library that can be extended but not modified. Remember, the 
-open close priniciple. Our library must be open for extension but closed for modification. We will briefly walk 
+open close principle. Our library must be open for extension but closed for modification. We will briefly walk 
 through different approaches iOS devs have put before me and evaluate those under 2 points from outside the 
 library. I will use analytics as an example. There is a wonderful talk by [obj.io guys and Brandon Kase](https://talk.objc.io/episodes/S01E89-extensible-libraries-2-protocol-composition) which uses 
 drawing instead of analytics. That talk was the inspiration for me to tackle analytics problem in similar realm.  
@@ -275,7 +275,7 @@ Although, below code shows class subclassing approach, one can emulate similar r
 
 ## The limitation of class/(struct+protocol) based approach
 
--   Its easy to add new case/event type wither by suclassing or new struct conforming to the type. We will stick 
+-   Its easy to add new case/event type wither by subclassing or new struct conforming to the type. We will stick 
     with subclassing here.
 
 ```swift
@@ -303,7 +303,7 @@ Although, below code shows class subclassing approach, one can emulate similar r
     firebase analytics system. At first, it seems like its doable. It might be in this case. But this is a contrived example. 
     In this scenario, you can put a extension on super class with \`send(usingService: FireAnalyticsService)\` and
     add a method to return \`FirePayload\`. Then for each subtype, without the compiler helping, override the 
-    2 methods. Lots of work. What if the the overriden method is a customization hook of a internal method on 
+    2 methods. Lots of work. What if the the overridden method is a customization hook of a internal method on 
     superclass. What if the super class maintains specific state for GoogleAlanlytis purpose which makes no 
     sense for other analytics system.
 
@@ -314,7 +314,7 @@ Although, below code shows class subclassing approach, one can emulate similar r
 
 1.  Enums are great if the cases/types are fixed and will never have to change. Great examples are Optional, 
     Result. You can easily use enums to intrepret different things.
-2.  Class/struct are great if all types/cases cannot be defined upfront. They are however dont allow to change the 
+2.  Class/struct are great if all types/cases cannot be defined upfront. They are however don't allow to change the 
     intrepretation of what it means to be a subtype.
 
 
@@ -369,7 +369,7 @@ now will allow the client to choose both benefits.
     // library code ends here
 ```
 
-By default, we are using GoogleAnalytics specific intrepretation. And we have provided client with only two types 
+By default, we are using GoogleAnalytics specific interpretation. And we have provided client with only two types 
 of tracking; event and view. Pretty limited. We now have given responsibility of extension to the client. Every code 
 below from here is a client side code. 
 
@@ -426,8 +426,8 @@ We have effectively extended the library from outside to support new type/case. 
     }
 ```
 
-We have effectively extended to intrepret event as firebase event . A event by default could 
-intrepreted for GoogleAnalytics. Now it can also be intrepreted for FirebaseAnalytics. This is what 
+We have effectively extended to interpret event as firebase event . A event by default could 
+interpreted for GoogleAnalytics. Now it can also be interpreted for FirebaseAnalytics. This is what 
 class (product types) lacked. 
 
 
@@ -435,9 +435,9 @@ class (product types) lacked.
 
 ## Summarizing:
 
-1.  This is a cleaver way to model the cases. We used protocol which will return Self. The library doesnt care who 
+1.  This is a cleaver way to model the cases. We used protocol which will return Self. The library doesn't care who 
     Self is.
-2.  ForceTapEventProtocol has only GoogleAnalytics Intrepretation. When we use it with firebase, the compiler will 
+2.  ForceTapEventProtocol has only GoogleAnalytics Interpretation. When we use it with firebase, the compiler will 
     stop compiling to tell us that it doesnot support it. This is good. We then can either choose to extend this 
     event or discard it.
 
@@ -550,7 +550,7 @@ that happened with time.
 
 Here you can appreciate the same events, are type inferred without any extra transformation to 2 different 
 services/backends. One is the GoogleAnalytics tracker. Other is a event diagram logger. Since, Swift 
-doesnot allow incomplete type (Protocol with Self ) to be used as type we had to duplicate the events. 
+doesn't allow incomplete type (Protocol with Self ) to be used as type we had to duplicate the events. 
 
 
 <a id="orgf3f0b1d"></a>
@@ -558,12 +558,12 @@ doesnot allow incomplete type (Protocol with Self ) to be used as type we had to
 # Conclusion
 
 We saw yet another way to write analytics library. However the intention here is how can we create extensible 
-lirary by allowing client to do 1) add new types/cases  2) alther what a type means. All from outside the 
+library by allowing client to do 1) add new types/cases  2) alter what a type means. All from outside the 
 library code.  
 
 I highly recommend watching this amazing talk by [Brandon Kase on finally solving the expression problem](https://www.dotconferences.com/2018/01/brandon-kase-finally-solving-the-expression-problem) and 
-wonderful in-depth talk at [objc.io](https://talk.objc.io/episodes/S01E89-extensible-libraries-2-protocol-composition) to grasp the concept fully. I know I didnt really outline how things work 
-in this post. It is intentional and the topic itself spans couple of posts. However, I belive you now saw yet 
+wonderful in-depth talk at [objc.io](https://talk.objc.io/episodes/S01E89-extensible-libraries-2-protocol-composition) to grasp the concept fully. I know I didn't really outline how things work 
+in this post. It is intentional and the topic itself spans couple of posts. However, I believe you now saw yet 
 another approach and I have linked in the resource if you want to explore this territory. 
 
 I hope you saw something new in this post. I am excited to see more areas to apply the final tagless approach in 
