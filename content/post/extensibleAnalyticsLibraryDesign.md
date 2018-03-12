@@ -1,8 +1,8 @@
 ---
-title: "Extensible Analytics Library Design with final tag-less concept"
+title: "Extensible Analytics Library Design with Tagless final concept"
 date: 2018-03-11
 author: "kandelvijaya"
-description: "Testing new concept with analytics system library"
+description: "Lets extend analytics library on both dimension"
 tags: ["swift", "iOS", "architecture", "analytics", "expression-problem"]
 draft: false
 ---
@@ -566,7 +566,7 @@ wonderful in-depth talk at [objc.io](https://talk.objc.io/episodes/S01E89-extens
 in this post. It is intentional and the topic itself spans couple of posts. However, I believe you now saw yet 
 another approach and I have linked in the resource if you want to explore this territory. 
 
-I hope you saw something new in this post. I am excited to see more areas to apply the final tagless approach in 
+I hope you saw something new in this post. I am excited to see more areas to apply the tagless final approach in 
 the upcoming days. If you know some specific use case this approach would help, I would love to hear about it. 
 Happy weekend. Happy coding!
 
