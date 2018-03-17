@@ -335,4 +335,4 @@ associativity). In swift it is the `()` parens.
 
 I hope you enjoyed this post and learned something new. I had fun explaining custom operators. I would love to know 
 how you use custom operators and which kinds? If you have any questions or suggestions; feel free to DM me on [@kandelvijaya](https://www.twitter.com/kandelvijaya) or 
-comment down below. Happy coding and enjoy your weekends.  
+comment down below. Happy coding and enjoy your weekend.  
