@@ -47,7 +47,7 @@ A function is the thing we know but with this limitations:
 2.  A function should produce the same result for the same input every single time. No matter if this is 
     executed in radioactive environment where bit flipping might corrode CPU registers thereby producing bad 
     result. (SpaceX's falcon rocket uses 3 or more CPU, computes a function on each and compares for the correctness.) Now think,
-    if `arc4random<sub>unifrom</sub>()` would satisfy this rule or not.
+    if `arc4random_unifrom()` would satisfy this rule or not.
 
 
 <a id="org6dac770"></a>
