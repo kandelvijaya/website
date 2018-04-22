@@ -174,7 +174,7 @@ back to \`Error\` type again.
 3.  This begs the fact that equality has to be done in 2 levels. Equality of Error
     by bridging to NSError and Equality on associated values of Error.
 
-4.  One cleaver way to check for associated values      are identical in `Error` is by swift 
+4.  One clever way to check for associated values      are identical in `Error` is by swift 
     standard representation of types with `String(describing:)`. As we know there can't be 
     two cases of `parseFailed` cases, the types of associated values are irrelevant to be checked for.
 ```swift
