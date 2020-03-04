@@ -1,6 +1,6 @@
 ---
 title: "Story of FastDiff."
-description: ""
+description: "A delayed project; learnings and diff library"
 date: 2020-03-03T22:57:53+02:00
 author: "kandelvijaya"
 tags: [ "swift", "diff", "toolbox", "experience"]
