@@ -1,36 +1,32 @@
 baseurl = "https://kandelvijaya.com/"
-title = "Kandelvijaya"
-theme = "ghostwriter"
-languageCode = "en-us"
 copyright = "Vijaya P. Kandel"
-googleAnalytics = "UA-46775685-3"
 disqusShortname = "kandelvijayacom"
-
+googleAnalytics = "UA-46775685-3"
+languageCode = "en-us"
+theme = "ghostwriter"
+title = "Kandelvijaya"
 [Author]
-    name = "kandelvijaya"
-
-[Taxonomies]
-    tag = "tags"
-
+name = "kandelvijaya"
 [Params]
-    intro = true
-    headline = "NSBlogging!"
-    github = "https://github.com/kandelvijaya"
-    linkedin = "https://linkedin.com/in/kandelvijaya/"
-    twitter = "https://twitter.com/kandelvijaya"
-    opengraph = true
-
+github = "https://github.com/kandelvijaya"
+headline = "NSBlogging!"
+intro = true
+linkedin = "https://linkedin.com/in/kandelvijaya/"
+opengraph = true
+twitter = "https://twitter.com/kandelvijaya"
 [Permalinks]
-    post = "/:year/:month/:day/:filename/"
-
-
-# Apply this settings once the gtx page is ready
+post = "/:year/:month/:day/:filename/"
+[Taxonomies]
+tag = "tags"
 [[menu.main]]
-    name = "Blog"
-    url = "/post/"
-    weight = 1
-
+name = "Lead Page"
+url = "https://le.kandelvijaya.com"
+weight = 3
 [[menu.main]]
-    name = "GTX Monthly"
-    url = "/gtxMonthly/"
-    weight = 2
+name = "GTX Monthly"
+url = "/gtxMonthly/"
+weight = 2
+[[menu.main]]
+name = "Blog"
+url = "/post/"
+weight = 1
