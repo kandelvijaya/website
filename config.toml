@@ -1,5 +1,6 @@
 baseurl = "https://test.kandelvijaya.com/"
 copyright = "Vijaya P. Kandel"
+theme = "ghostwriter"
 disqusShortname = "kandelvijayacom"
 googleAnalytics = "UA-46775685-3"
 languageCode = "en-us"

@@ -3,15 +3,15 @@
 <div id="post-index" class="container">
     {{ partial "intro.html" . }}
 
-    <ol class="post-list tag-list">
-        {{ $pag := .Paginate .Pages }}
+    <ol class="post-list">
+        {{ $pag := .Paginate .Data.Pages }}
         {{ range $pag.Pages }}
             {{ partial "page-stub.html" . }}
         {{ end }}
     </ol>
 
-    <div class="post-navigation tag-navigation">
-        {{ partial "tag-pagination.html" . }}
+    <div class="post-navigation">
+        {{ partial "pagination.html" . }}
     </div>
 </div>
 

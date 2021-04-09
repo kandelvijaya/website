@@ -1,4 +1,4 @@
-jQuery(function ($) {
+jQuery(function($) {
 
     /* ============================================================ */
     /* Responsive Videos */
@@ -10,9 +10,12 @@ jQuery(function ($) {
     /* Scroll To Top */
     /* ============================================================ */
 
-    $('.js-jump-top').on('click', function (e) {
+    $('.js-jump-top').on('click', function(e) {
         e.preventDefault();
 
-        $('html, body').animate({ 'scrollTop': 0 });
+        $('html, body').animate({'scrollTop': 0});
     });
 });
+hljs.initHighlightingOnLoad();
+
+

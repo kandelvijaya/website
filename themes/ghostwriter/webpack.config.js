@@ -1,12 +1,12 @@
 const path = require('path');
-const FixStyleOnlyEntriesPlugin = require('webpack-fix-style-only-entries');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const perfectionist = require('perfectionist');
+const discardComments = require('postcss-discard-comments');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 module.exports = {
   entry: {
-    site: path.join(__dirname, 'static', 'styles', 'site'),
-    syntax: path.join(__dirname, 'static', 'styles', 'syntax'),
+    styles: path.join(__dirname, 'static', 'styles'),
   },
   resolve: {
     modules: [
@@ -16,24 +16,27 @@ module.exports = {
   },
   output: {
     path: path.join(__dirname, 'static', 'dist'),
+    filename: '[name].css'
   },
   plugins: [
-    new FixStyleOnlyEntriesPlugin(),
-    new MiniCssExtractPlugin({
-      filename: '[name].css'
+    new ExtractTextPlugin('[name].css'),
+    new OptimizeCssAssetsPlugin({
+      cssProcessor: discardComments,
+      canPrint: false
     }),
+    new OptimizeCssAssetsPlugin({
+      cssProcessor: perfectionist,
+      cssProcessorOptions: {
+        format: 'compact'
+      },
+      canPrint: false
+    })
   ],
-  optimization: {
-    minimize: true,
-    minimizer: [
-      new CssMinimizerPlugin(),
-    ],
-  },
   module: {
-    rules: [
+    loaders: [
       {
         test: /\.scss$/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
+        loader: ExtractTextPlugin.extract({ fallback: 'style-loader', use: 'css-loader!sass-loader' })
       }
     ]
   }

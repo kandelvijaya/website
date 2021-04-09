@@ -1,8 +1,8 @@
+// ============================================================ //
 // Colours //
 // ============================================================ //
-// ============================================================ //
 
-$primary: #F03838;
+$primary: #4F97D7;
 $secondary: #303030;
 $background: #FEFEFE;
 
@@ -14,8 +14,8 @@ html, body { height: 100%; }
 
 body {
     background: $background;
-    color: #424242;
-    font-family: "Open Sans", arial, sans-serif;
+    color: #4D5055;
+    font-family: 'Lato', sans-serif;
     font-size: 18px;
 }
 
@@ -32,8 +32,10 @@ h5 { font-size: 16px; margin-bottom: 15px; }
 h6 { font-size: 14px; margin-bottom: 12px; }
 
 p {
-    line-height: 1.8;
+    line-height: 1.6;
     margin: 0 0 30px;
+    text-align: justify;
+    font-weight: 300;
 }
 
 a {
@@ -73,23 +75,10 @@ img {
     margin: 40px 0;
     width: auto;
     max-width: 100%;
-
-    &[src$="align-center"] {
-        margin: auto;
-    }
-
-    &[src$="align-left"] {
-        float: left;
-        margin-right: 40px;
-    }
-    
-    &[src$="align-right"] {
-        float: right;
-        margin-left: 40px;
-    }
 }
 
 pre {
+    background: #ffffff;
     border: 1px solid #DDDBCC;
     border-radius: 3px;
     margin: 0 0 20px;
@@ -105,8 +94,10 @@ pre {
 code {
     padding: 2px 4px;
     font-size: 90%;
+    color: $primary;
+    background-color: #ffffff;
     border-radius: 4px;
-    background-color: #f1f0ea;
+    font-family: 'Source Code Pro', monospace;
 }
 
 hr {
@@ -300,7 +291,6 @@ table {
 .page-title { margin: 15px 40px; }
 
 .post-date,
-.post-reading,
 .blog-description {
     color: #AEADAD;
     font-size: 14px;
@@ -310,9 +300,7 @@ table {
 
     a { color: #AEADAD; }
     a:hover { color: $primary; }
-}
 
-.post-line {
     &:after {
         border-bottom: 1px dotted $secondary;
         content: "";
@@ -330,7 +318,7 @@ table {
 
     &:last-child { margin-bottom: 0; }
 
-    .footnotes {
+    .footnote {
         border-spacing: 0;
         margin-bottom: 0;
 
@@ -544,7 +532,7 @@ table {
 .footer {
     background: $secondary;
     color: #D3D3D3;
-    height: 265px;
+    height: 195px;
     margin-top: 95px;
     overflow: auto;
 
