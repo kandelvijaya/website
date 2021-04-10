@@ -3,8 +3,12 @@ copyright = "Vijaya P. Kandel"
 theme = "harbor"
 disqusShortname = "kandelvijayacom"
 googleAnalytics = "UA-46775685-3"
-languageCode = "en-us"
 title = "Kandelvijaya"
+paginate = 3
+languageCode = "en"
+DefaultContentLanguage = "en"
+enableInlineShortcodes = true
+footnoteReturnLinkContents = "^"
 
 [Author]
 name = "kandelvijaya"
@@ -13,19 +17,12 @@ name = "kandelvijaya"
   section = ["JSON", "HTML"]
 
 
-# [Params]
-#     mainSections = ["post"]
-# github = "https://github.com/kandelvijaya"
-# headline = "NSBlogging!"
-# intro = true
-# linkedin = "https://linkedin.com/in/kandelvijaya/"
-# opengraph = true
-# twitter = "https://twitter.com/kandelvijaya"
-
 [Permalinks]
-post = "/:year/:month/:day/:filename/"
+    post = "/:year/:month/:day/:filename/"
+    page = "/:filename/"
+
 [Taxonomies]
-tag = "tags"
+    tag = "tags"
 
 [[params.social]]
   name="twitter"
@@ -54,7 +51,7 @@ tag = "tags"
   identifier = "search"
   name = "Search"
   icon = "fas fa-search fa-lg"
-  url = "/page/search/"
+  url = "/search/"
   weight = 3
 
 
@@ -62,7 +59,7 @@ tag = "tags"
   identifier = "about"
   name = "About"
   icon = "fas fa-user fa-lg"
-  url = "/page/about/"
+  url = "/about/"
   weight = 3
 
 
