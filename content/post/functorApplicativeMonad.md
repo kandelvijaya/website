@@ -6,35 +6,15 @@ author: "kandelvijaya"
 tags: ["fp", "functor", "applicative", "monad", "swift"]
 ---
 
-
-# Table of Contents
-
-1.  [What the heck are this FP terminology?](#orgd3b7290)
-2.  [Function](#org4106d78)
-3.  [Partial application](#org6dac770)
-4.  [Lifting](#org9eb080f)
-5.  [Currying](#orgd2a5a72)
-6.  [Function Composition](#orgaae5c67)
-7.  [Functor](#org7a4bfd5)
-8.  [Applicative](#orgff1f53e)
-9.  [Monad](#org3a37ba0)
-10. [Conclusion](#org9fbc2b4)
-
-
-
-<a id="orgd3b7290"></a>
-
-# What the heck are this FP terminology?
-
 Functional programming is out there. Partly rumor, partly practiced, partly understood. I have been 
 writing about them for around 6 months. In this post, I want to summarize the main terminologies (jargons)
 very concisely, with example and best of all, with swift code. For a full explanation, I will link to my 
 previous blogs and external resources as we go along. Lets get going. 
 
 
-<a id="org4106d78"></a>
+<!--more-->
 
-# Function
+## Function
 
 Really this is the simplest. You all know it. However in functional programming, the function are equivalent to 
 functions from mathematics. They were further enhanced based on lambda calculus. However please note that, 
@@ -52,7 +32,7 @@ A function is the thing we know but with this limitations:
 
 <a id="org6dac770"></a>
 
-# Partial application
+## Partial application
 
 Since a function can only take 1 argument, how do you make a function that take 2 int's to add. Good point! 
 Since a function can return 1 argument, that 1 argument can be a function. That output function takes second 
@@ -74,7 +54,7 @@ was `partialAdd5: (Int) -> Int`.
 
 <a id="org9eb080f"></a>
 
-# Lifting
+## Lifting
 
 There can be 2 kinds of values. A concrete value like `5` or `"Malcolm Gladwell"`. A wrapped value like Optional(5). When a concrete value is wrapped or boxed 
 in another type its a lifted value. Usually the wrapper or box adds some context. For instance, while any instance of `Int` is concrete, 
@@ -92,7 +72,7 @@ Here, function `div` will produce lifted value from concrete values.
 
 <a id="orgd2a5a72"></a>
 
-# Currying
+## Currying
 
 Remember the first point, a function in FP can only take 1 argument. How can we write the above `div` considering, in FP, a function
 can take 1 input and no more. Enter currying. (Nothing to do with cooking skill!).
@@ -108,7 +88,7 @@ can take 1 input and no more. Enter currying. (Nothing to do with cooking skill!
 
 <a id="orgaae5c67"></a>
 
-# Function Composition
+## Function Composition
 
 Given a value and a function, how can you apply the value to the function? That was pretty simple right! That's composition.\  
 
@@ -133,7 +113,7 @@ Given a value and a function, how can you apply the value to the function? That 
 
 <a id="org7a4bfd5"></a>
 
-# Functor
+## Functor
 
 The word comes from category theory. Let me explain a bit of it. No, don't run away. I was kidding, I wont explain.
 Keeping the math away, its very very simple. It answers this simple question.\
@@ -353,7 +333,7 @@ However we are going to see both.
 
 <a id="orgff1f53e"></a>
 
-# Applicative
+## Applicative
 
 This answers the question to:
 **How can I compose a contextual value: `F<A>` to a function: `F<(A->B)>` that is wrapped in contextual type**
@@ -401,7 +381,7 @@ I will write about when can one encounter such scenario during iOS development i
 
 <a id="org3a37ba0"></a>
 
-# Monad
+## Monad
 
 This is interesting one. It answers the question:
 **How can I compose when I have a contextual value and a function that lifts a concrete value?**

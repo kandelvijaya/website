@@ -4,30 +4,13 @@ description: "A delayed project; learnings and diff library"
 date: 2020-03-03T22:57:53+02:00
 author: "kandelvijaya"
 tags: [ "swift", "diff", "toolbox", "experience"]
+include_toc: true
 ---
-
-
-# Table of Contents
-
-1.  [Diff: Just because I can.](#org0b1bb1c)
-    1.  [FastDiff](#org73b30a0)
-    2.  [Why FastDiff](#org0f95efd)
-    3.  [OrgNoteApp.](#orge003977)
-    4.  [Back to work](#org70e3a9e)
-    5.  [let's try FastDiff](#org7728c9f)
-    6.  [The test](#orgc4e0ac4)
-    7.  [Conclusion](#orgc4dffd8)
-    8.  [PS](#orgafda51e)
-
-
-
-<a id="org0b1bb1c"></a>
-
-# Diff: Just because I can.
 
 I failed to publish OrgNoteApp. I created many small modules in the development process. I call them items in my engineering toolbox. Recently,
 one of the modules (diffing) is shipped to millions of customers. It's part success and part learning. Enter FastDiff and its little story.
 
+<!--more-->
 
 <a id="org73b30a0"></a>
 

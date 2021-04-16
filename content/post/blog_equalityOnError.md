@@ -4,33 +4,15 @@ description: "A better way to compare errors!"
 date: 2018-04-21T22:57:53+02:00
 author: "kandelvijaya"
 tags: [ "error", "NSError", "swift"]
+include_toc: true
 ---
-
-
-# Table of Contents
-
-1.  [Introduction](#org23637c6)
-2.  [Expectation](#orgd13c4d2)
-3.  [Inside Error](#org3d1eb9f)
-4.  [Inside NSError](#org11663de)
-5.  [NSError is bridged to Error](#org2b73e22)
-6.  [Equality on NSError](#orga1037aa)
-7.  [Equality on Error](#org6e31021)
-8.  [Equality for Error](#org271fe56)
-9.  [Reflection to the Rescue](#org78e9f91)
-10. [Conclusion](#org5a97a7e)
-11. [References](#orgcff0203)
-
-
-
-<a id="org23637c6"></a>
-
-# Introduction
 
 When do you really want to compare errors? → In the unit tests. 
 
-Imagine this scenario. By now you should be aware of how important \`Result<T>\` is. If not, 
+Imagine this scenario. By now you should be aware of how important `Result<T>` is. If not, 
 you can review the concept with the post [Result type in-depth blog](https://kandelvijaya.com/2017/06/25/whymondaiccomputation/). 
+
+<!--more-->
 
 ```swift
     func testWhenResultWithFailureIsMapped_thenOutputIsResultWithInitialFailure() {
@@ -59,7 +41,7 @@ First let's see what Error and NSError looks like behind the scene.
 
 <a id="orgd13c4d2"></a>
 
-# Expectation
+## Expectation
 
 What we really want to do by the end of this post is this. Its much readable and involves less code.
 ```swift
@@ -72,7 +54,7 @@ What we really want to do by the end of this post is this. Its much readable and
 
 <a id="org3d1eb9f"></a>
 
-# Inside Error
+## Inside Error
 Error is a protocol defined in ErrorType.swift file in Swift Standard Library. _domain and _code are both private properties and hence for the public side its just a empty protocol.
 ```swift
     public protocol Error {
@@ -83,7 +65,7 @@ Error is a protocol defined in ErrorType.swift file in Swift Standard Library. _
 
 <a id="org11663de"></a>
 
-# Inside NSError
+## Inside NSError
 
 Each NSError object encodes three critical pieces of information: 
 a \`status\` code, corresponding to a particular error \`domain\`,
@@ -98,7 +80,7 @@ a \`status\` code, corresponding to a particular error \`domain\`,
 
 <a id="org2b73e22"></a>
 
-# NSError is bridged to Error
+## NSError is bridged to Error
 
 Take a example of \`JSONSerialization\` Obj-C API which would take \`NSError\` pointer. This API 
 is interpolated to Swift with \`try..catch\` whereas \`try..catch\` uses Error not the NSError. NSError is bridged 
@@ -120,7 +102,7 @@ to Error.
 
 <a id="orga1037aa"></a>
 
-# Equality on NSError
+## Equality on NSError
 Equality on NSError is given by `isEqual()` API which is inhabited on every single NSObject subtype.
 ```swift
     let er = NSError(domain: "a", code: 1, userInfo: ["name": "something"])
@@ -135,7 +117,7 @@ This looks great.
 
 <a id="org6e31021"></a>
 
-# Equality on Error
+## Equality on Error
 
 1.  We can't extend \`Error\` to conform to \`Equatable\` as Error is a protocol.
 ```swift
@@ -189,7 +171,7 @@ back to \`Error\` type again.
 
 <a id="org271fe56"></a>
 
-# Equality for Error
+## Equality for Error
 ```swift
     // Equality on instance of same typed Errors
     public func areEqual<T: Erorr>(_ lhs: T, _ rhs: T) -> Bool {
@@ -225,7 +207,7 @@ back to \`Error\` type again.
 
 <a id="org78e9f91"></a>
 
-# Reflection to the Rescue
+## Reflection to the Rescue
 
 A better idea would be do the reflection on Error and compare the reflected values. 
 This is neither affected by improper implementation of `CustomStringConvertible` nor we need to do 
@@ -267,7 +249,7 @@ additional sanity check on `NSError`.
 
 <a id="org5a97a7e"></a>
 
-# Conclusion
+## Conclusion
 I knowingly went through the post in a exploration manner where I showed you what `Error` and `NSError` types look like. How are they bridged and How one might be tempted to use `String(describing:)` to compare them but might run into issues if `Error` instances conformed to malformed `CustomStringDescription` protocol. We finally had a solid reflection based 1 liner that would work in all the case. During the time of writing the blog, I also made a pull request to the `Apple Swift` github repo (Bonus point for me 🤓) on ErrorType.swift file. 
 
 With that information, now its time you can compare \`Error\` correctly and write nice 
@@ -277,11 +259,11 @@ I hope you liked the format of this post rather than presenting you the answer r
 
 <a id="orgcff0203"></a>
 
-# References
+### References
 
 1.  [Testing Swift Error Type: In depth exploration by Marius Rackwitz](https://academy.realm.io/posts/testing-swift-error-type/)
 
 
-# Footnotes
+### Footnotes
 
 <sup><a id="fn.1" href="#fnr.1">1</a></sup> [NSerror post on NSHipster](http://nshipster.com/nserror/)
