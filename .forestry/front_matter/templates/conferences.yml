@@ -1,0 +1,22 @@
+---
+label: Conferences
+hide_body: false
+fields:
+- type: text
+  name: title
+  label: title
+- type: text
+  name: description
+  label: description
+- type: datetime
+  name: date
+  label: date
+- type: text
+  name: author
+  label: author
+- type: list
+  name: tags
+  label: tags
+- type: boolean
+  name: include_toc
+  label: include_toc
