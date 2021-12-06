@@ -20,3 +20,5 @@ fields:
 - type: boolean
   name: include_toc
   label: include_toc
+pages:
+- content/post/conference-talks.md
