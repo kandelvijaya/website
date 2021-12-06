@@ -2,7 +2,6 @@
 author = "kandelbj"
 date = 2021-11-30T23:00:00Z
 description = "A list of conferences, meet-ups where I have presented"
-draft = true
 include_toc = true
 tags = ["conference"]
 title = "Conference Talks"
