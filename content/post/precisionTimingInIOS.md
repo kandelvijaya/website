@@ -1,12 +1,11 @@
 +++
 author = "kandelvijaya"
-date = "2016-10-25T19:36:52+02:00"
+date = 2016-10-25T17:36:52Z
 description = "A comparison of fast and precise timing API for Swift."
-tags = ["swift","iOS","Xcode"]
+tags = ["swift", "iOS", "Xcode", "precision-timing", "iOS timing", " iOS performance timing"]
 title = "Precision Timing in iOS & Swift"
 
 +++
-
 > Time is what we want most, but what we use worst. -_William Pen_
 
 Timestamp is a very important issue we deal with in every single iOS/OSX project. Unlike timestamp, sometimes we want to measure method performance. Practically, i would use it for fun exploration. However, there are cases especially in games development where the precise time helps maintain consistent gameplay with scores. I explored a bit on how we can leverage the systems provided APIs to just get the current time stamp as precisely as possible. 
